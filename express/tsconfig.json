@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": false,
+    "module": "commonjs",
+    "target": "es6",
+    "noImplicitAny": true,
+    "sourceMap": true,
+    "rootDir": "./",
+    "outDir": "./build",
+    "typeRoots": ["node_modules/@types", "src/types"]
+  },
+  "include": ["src/**/*"]
+}
