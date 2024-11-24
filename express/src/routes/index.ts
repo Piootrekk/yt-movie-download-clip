@@ -1,6 +1,8 @@
 import { Router } from "express";
-
+import ytRoute from "./yt-route";
 const router = Router();
+
+router.use(ytRoute);
 
 router.get("/", (_, res) => {
   res.send("Express + TypeScript Server");

@@ -1,4 +1,4 @@
-import express, { Express, Response } from "express";
+import express, { Express } from "express";
 import { config } from "dotenv";
 import router from "./routes";
 
