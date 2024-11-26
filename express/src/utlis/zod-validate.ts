@@ -1,12 +1,13 @@
-import { ZodType } from "zod";
+import { ZodSchema, z } from "zod";
 
-const zodValidator = <T>(schema: ZodType<T>, data: unknown): T => {
+const zodValidator = <T extends ZodSchema>(
+  schema: T,
+  data: unknown
+): z.infer<T> => {
   const result = schema.safeParse(data);
   if (result.success) {
     return result.data;
-  } else {
-    throw new Error(`ZOD: ${result.error.message}`);
-  }
+  } else throw new Error(`Validation Zod error: ${result.error.message}`);
 };
 
 export { zodValidator };
