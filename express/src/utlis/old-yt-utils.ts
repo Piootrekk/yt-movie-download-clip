@@ -1,49 +1,48 @@
-// const extractVideoId = (link: string): string => {
-//   const url = new URL(link);
-//   if (link.includes("youtu.be") || link.includes("youtube.com/shorts/")) {
-//     const videoId = url.pathname.split("/").pop();
-//     if (!videoId) throw new Error("Invalid YouTube link");
-//     return videoId;
-//   }
-//   const searchParams = new URLSearchParams(url.search);
-//   const videoId = searchParams.get("v");
-//   if (!videoId) throw new Error("Invalid YouTube link");
-//   return videoId;
-// };
+import { TResponseYt } from "../sechemas/yt-schema";
 
-// const extractVideoStreams = async (pageContent: string) => {
-//   const playerResponseMatch = pageContent.match(
-//     /ytInitialPlayerResponse\s*=\s*(\{.+?\});/
-//   );
-//   if (!playerResponseMatch) {
-//     throw new Error("Cannot extract video info");
-//   }
-//   const playerResponse = JSON.parse(playerResponseMatch[1]);
-//   console.log(playerResponse);
-//   const streamingData = playerResponse.streamingData;
+const extractVideoId = (link: string): string => {
+  const url = new URL(link);
+  if (link.includes("youtu.be") || link.includes("youtube.com/shorts/")) {
+    const videoId = url.pathname.split("/").pop();
+    if (!videoId) throw new Error("Invalid YouTube link");
+    return videoId;
+  }
+  const searchParams = new URLSearchParams(url.search);
+  const videoId = searchParams.get("v");
+  if (!videoId) throw new Error("Invalid YouTube link");
+  return videoId;
+};
 
-//   if (!streamingData) {
-//     throw new Error("No streaming data available");
-//   }
+const extractVideoStreams = async (pageContent: string) => {
+  const playerResponseMatch = pageContent.match(
+    /ytInitialPlayerResponse\s*=\s*(\{.+?\});/
+  );
+  if (!playerResponseMatch) {
+    throw new Error("Cannot extract video info");
+  }
+  const playerResponse = JSON.parse(playerResponseMatch[1]);
+  console.log(playerResponse);
+  const streamingData = playerResponse.streamingData as TResponseYt;
 
-//   const audioStreams = streamingData.adaptiveFormats.filter((f) =>
-//     f.mimeType.startsWith("audio/")
-//   );
+  if (!streamingData) {
+    throw new Error("No streaming data available");
+  }
 
-//   const videoStreams = streamingData.formats.filter((f) =>
-//     f.mimeType.startsWith("video/")
-//   );
+  const audioStreams = streamingData.adaptiveFormats.filter((f) =>
+    f.mimeType.startsWith("audio/")
+  );
 
-//   return {
-//     audio: audioStreams,
-//     video: videoStreams,
-//   };
-// };
+  const videoStreams = streamingData.formats.filter((f) =>
+    f.mimeType.startsWith("video/")
+  );
 
-// const decodeVideoUrl = (signatureCipher: string) => {
-//   const [cipher, signature] = signatureCipher.split("&");
-//   const url = new URLSearchParams(cipher).get("url");
-//   return `${url}&sig=${signature}`;
-// };
+  return { audioStreams, videoStreams };
+};
 
-// export { extractVideoId, extractVideoStreams, decodeVideoUrl };
+const decodeVideoUrl = (signatureCipher: string) => {
+  const [cipher, signature] = signatureCipher.split("&");
+  const url = new URLSearchParams(cipher).get("url");
+  return `${url}&sig=${signature}`;
+};
+
+export { extractVideoId, extractVideoStreams, decodeVideoUrl };
