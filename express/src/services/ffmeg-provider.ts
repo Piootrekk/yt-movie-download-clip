@@ -12,17 +12,18 @@ const mergeAudioAndVideo = async (
     ffmpeg()
       .input(videoPath)
       .input(audioPath)
-      .outputOptions(["-c:v copy", "-c:a aac", "-map 1:a:0", "-map 0:v:0"])
+      .videoCodec("copy")
+      .audioCodec("aac")
       .output(outputPath)
-      .on("end", () => {
-        console.log("Merging audio and video is done");
-        resolve(true);
-      })
       .on("error", (err) => {
-        console.error("Error while merging audio and video", err);
+        console.error("Detailed FFmpeg Error:", err);
         reject(err);
       })
-      .save(outputPath);
+      .on("end", () => {
+        console.log("ffmpeg processing finished");
+        resolve(null);
+      })
+      .run();
   });
 };
 

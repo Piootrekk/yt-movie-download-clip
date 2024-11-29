@@ -1,17 +1,19 @@
 import { Request, Response, Router } from "express";
-import {
-  downloadVidoeFromInfo,
-  extractVideoId,
-  selectFormat,
-} from "../services/ytdl-provider";
+import { extractVideoId, selectFormat } from "../services/ytdl-provider";
 import { transformError } from "../utlis/error-transform";
 import { getVideoInfo } from "../services/ytdl-provider";
-import fs from "fs";
-const router = Router();
 import { zodValidator } from "../utlis/zod-validate";
 import { queryVideoSchema } from "../sechemas/query-schemat";
-import path from "path";
 import { mergeAudioAndVideo } from "../services/ffmeg-provider";
+import {
+  cleanupTempFiles,
+  createReadStream,
+  createTempFolderTree,
+  streamToFilePromise,
+} from "../services/file-manipulations";
+
+const router = Router();
+
 router.get("/validate-link", async (req: Request, res: Response) => {
   try {
     const videoUrl = zodValidator(queryVideoSchema, req.query.videoUrl);
@@ -59,55 +61,44 @@ router.get("/download-full-video", async (req: Request, res: Response) => {
 
     const videoOutputName = `video.${videoFormat.container}`;
     const audioOutputName = `audio.${audioFormat.container}`;
-    const finalOutputName = `output.mp4`;
+    const outputName = `output.${
+      videoFormat.container || audioFormat.container
+    }`;
 
-    const tempDir = path.resolve(__dirname, "./temp");
-    const tempVideoPath = path.join(tempDir, videoOutputName);
-    const tempAudioPath = path.join(tempDir, audioOutputName);
-    const tempFinalPath = path.join(tempDir, finalOutputName);
-
+    const [tempVideoPath, tempAudioPath, outputPath] = createTempFolderTree(
+      "./temp",
+      videoOutputName,
+      audioOutputName,
+      outputName
+    );
     await Promise.all([
-      new Promise((resolve, reject) => {
-        const videoDownload = downloadVidoeFromInfo(info, videoFormat);
-        const videoStream = fs.createWriteStream(tempVideoPath);
-        videoDownload.pipe(videoStream);
-        videoDownload.on("end", resolve);
-        videoDownload.on("error", reject);
-      }),
-      new Promise((resolve, reject) => {
-        const audioDownload = downloadVidoeFromInfo(info, audioFormat);
-        const audioStream = fs.createWriteStream(tempAudioPath);
-        audioDownload.pipe(audioStream);
-        audioDownload.on("end", resolve);
-        audioDownload.on("error", reject);
-      }),
+      streamToFilePromise(info, videoFormat, tempVideoPath),
+      streamToFilePromise(info, audioFormat, tempAudioPath),
     ]);
 
-    await mergeAudioAndVideo(tempAudioPath, tempVideoPath, tempFinalPath);
-
-    res.header(
-      "Content-Disposition",
-      `attachment; filename="${info.videoDetails.title}.mp4"`
+    await mergeAudioAndVideo(tempAudioPath, tempVideoPath, outputPath);
+    const outputStream = createReadStream(outputPath);
+    res.setHeader("Content-Disposition", `attachment; filename=${outputName}`);
+    res.setHeader(
+      `Content-Type`,
+      `${videoFormat.mimeType || audioFormat.mimeType}`
     );
-    res.header("Content-Type", "video/mp4");
-    const finalStream = fs.createWriteStream(tempFinalPath);
-    finalStream.pipe(res);
-    finalStream.on("end", () => {
-      console.log("Donwload complete");
-      fs.unlinkSync(tempFinalPath);
-      fs.unlinkSync(tempAudioPath);
-      fs.unlinkSync(tempVideoPath);
-      finalStream.end();
-    });
-
-    finalStream.on("close", () => {
-      console.log("Download stream closed");
-      finalStream.close();
-    });
+    outputStream
+      .pipe(res)
+      .on("error", (err) => {
+        outputStream.destroy();
+        cleanupTempFiles(tempAudioPath, tempVideoPath, outputPath);
+        throw err;
+      })
+      .on("finish", () => {
+        cleanupTempFiles(tempAudioPath, tempVideoPath, outputPath);
+      });
   } catch (error) {
     const errorMessage = transformError(error);
-    return res.status(400).json({ message: errorMessage });
+    if (!res.headersSent) {
+      return res.status(400).json({ message: errorMessage });
+    }
+    console.error("Unhandled error:", error);
   }
 });
-
 export default router;

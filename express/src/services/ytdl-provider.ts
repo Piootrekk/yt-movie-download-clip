@@ -19,14 +19,14 @@ const selectFormat = (formats: videoFormat[], quality: string) => {
   return ytdl.chooseFormat(formats, { quality });
 };
 
-const downloadVidoeFromInfo = (info: videoInfo, format: videoFormat) => {
+const downloadFromInfo = (info: videoInfo, format: videoFormat) => {
   const download = ytdl.downloadFromInfo(info, { format });
   return download;
 };
 
 export {
   extractVideoId,
-  downloadVidoeFromInfo,
+  downloadFromInfo,
   validateURL,
   selectFormat,
   getVideoInfo,
