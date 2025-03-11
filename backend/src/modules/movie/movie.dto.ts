@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNumber, IsString } from 'class-validator';
+import { IsInt, IsString } from 'class-validator';
 
 class MovieQueryDto {
   @ApiProperty({
@@ -9,9 +9,12 @@ class MovieQueryDto {
   url: string;
 }
 
-// class MovieDownloadQueryDto extends MovieQueryDto {
-//   @IsNumber()
+class MovieDownloadQueryDto extends MovieQueryDto {
+  @ApiProperty({
+    type: Number,
+  })
+  @IsInt()
+  itag: number;
+}
 
-// }
-
-export { MovieQueryDto };
+export { MovieQueryDto, MovieDownloadQueryDto };

@@ -6,7 +6,7 @@ import {
   Query,
 } from '@nestjs/common';
 import { YtdlService } from './services/ytdl.service';
-import { MovieQueryDto } from './movie.dto';
+import { MovieDownloadQueryDto, MovieQueryDto } from './movie.dto';
 
 @Controller('yt')
 class MovieController {
@@ -46,13 +46,19 @@ class MovieController {
   @Get('basic-download')
   async downloadMovie(@Query() query: MovieQueryDto) {
     try {
-      await this.ytdlService.download(query.url);
+      await this.ytdlService.downloadBasic(query.url);
 
       return { success: true };
     } catch (err) {
       console.error(err);
       throw new HttpException('errorno', HttpStatus.BAD_REQUEST);
     }
+  }
+
+  @Get('download')
+  async downloadMovieByItag(@Query() query: MovieDownloadQueryDto) {
+    await this.ytdlService.downloadFromItag(query.url, query.itag);
+    return { success: true };
   }
 }
 

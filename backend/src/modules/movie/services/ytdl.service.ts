@@ -33,7 +33,7 @@ class YtdlService {
     return chooseFormat(formats, { quality });
   }
 
-  async download(ytUrl: string): Promise<void> {
+  async downloadBasic(ytUrl: string): Promise<void> {
     return new Promise<void>((resolve, reject) => {
       const videoDownload = ytdl(ytUrl);
       const stream = fs.createWriteStream('video.mp4');
@@ -48,9 +48,22 @@ class YtdlService {
     });
   }
 
-  downloadFromInfo(info: videoInfo, format: videoFormat) {
-    const download = downloadFromInfo(info, { format });
-    return download;
+  async downloadFromItag(ytUrl: string, itag: number): Promise<void> {
+    const info = await this.getVideoInfo(ytUrl);
+    const currentFormat = info.formats.find((format) => format.itag === itag);
+    if (currentFormat === undefined) throw new Error('No Itag found');
+    new Promise<void>((resolve, reject) => {
+      const videoDownload = ytdl(ytUrl, { format: currentFormat });
+      const stream = fs.createWriteStream('video.mp4');
+      videoDownload.pipe(stream);
+      videoDownload.on('end', () => {
+        resolve();
+      });
+      videoDownload.on('error', (error) => {
+        stream.destroy();
+        reject(error);
+      });
+    });
   }
 }
 

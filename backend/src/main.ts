@@ -13,7 +13,15 @@ const bootstrap = async () => {
     new FastifyAdapter(),
   );
   setupSwagger(app);
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+      transformOptions: {
+        enableImplicitConversion: true,
+      },
+      whitelist: true,
+    }),
+  );
   await app.listen(process.env.PORT ?? 3000, '0.0.0.0');
 };
 bootstrap();
