@@ -5,7 +5,6 @@ import ytdl, {
   getInfo,
   validateURL,
   chooseFormat,
-  downloadFromInfo,
 } from '@distube/ytdl-core';
 import fs from 'fs';
 
@@ -28,11 +27,6 @@ class YtdlService {
     return { audio, video, both };
   }
 
-  selectFormat(formats: videoFormat[], quality: string) {
-    //  @TODO validate quality if exist in itag
-    return chooseFormat(formats, { quality });
-  }
-
   async downloadBasic(ytUrl: string): Promise<void> {
     return new Promise<void>((resolve, reject) => {
       const videoDownload = ytdl(ytUrl);
@@ -52,13 +46,31 @@ class YtdlService {
     const info = await this.getVideoInfo(ytUrl);
     const currentFormat = info.formats.find((format) => format.itag === itag);
     if (currentFormat === undefined) throw new Error('No Itag found');
-    new Promise<void>((resolve, reject) => {
+
+    return new Promise<void>((resolve, reject) => {
       const videoDownload = ytdl(ytUrl, { format: currentFormat });
       const stream = fs.createWriteStream('video.mp4');
       videoDownload.pipe(stream);
+
+      let downloadedBytes = 0;
+      const totalBytes = parseInt(currentFormat.contentLength, 10);
+
+      videoDownload.on('data', (chunk: Buffer) => {
+        downloadedBytes += chunk.length;
+
+        if (totalBytes) {
+          const percentage = ((downloadedBytes / totalBytes) * 100).toFixed(2);
+          console.log(`Downloaded ${downloadedBytes} bytes (${percentage}%)`);
+        } else {
+          console.log(`Downloaded ${downloadedBytes} bytes`);
+        }
+      });
+
       videoDownload.on('end', () => {
+        console.log('-- Download complete!');
         resolve();
       });
+
       videoDownload.on('error', (error) => {
         stream.destroy();
         reject(error);
