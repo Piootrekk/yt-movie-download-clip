@@ -1,12 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import ytdl, {
-  type videoFormat,
-  type videoInfo,
-  getInfo,
-  validateURL,
-  chooseFormat,
-} from '@distube/ytdl-core';
+import ytdl, { type videoInfo, getInfo, validateURL } from '@distube/ytdl-core';
 import fs from 'fs';
+import { FastifyReply } from 'fastify';
 
 @Injectable()
 class YtdlService {
@@ -42,7 +37,45 @@ class YtdlService {
     });
   }
 
-  async downloadFromItag(ytUrl: string, itag: number): Promise<void> {
+  async downloadFromItag(
+    ytUrl: string,
+    itag: number,
+    reply: FastifyReply,
+  ): Promise<void> {
+    const info = await this.getVideoInfo(ytUrl);
+    const currentFormat = info.formats.find((format) => format.itag === itag);
+    if (currentFormat === undefined) throw new Error('No Itag found');
+
+    return new Promise<void>((resolve, reject) => {
+      const videoDownload = ytdl(ytUrl, { format: currentFormat });
+      let downloadedBytes = 0;
+      const totalBytes = parseInt(currentFormat.contentLength, 10);
+
+      videoDownload.pipe(reply.raw);
+      videoDownload.on('data', (chunk: Buffer) => {
+        downloadedBytes += chunk.length;
+
+        if (totalBytes) {
+          const percentage = ((downloadedBytes / totalBytes) * 100).toFixed(2);
+          console.log(`Downloaded ${downloadedBytes} bytes (${percentage}%)`);
+        } else {
+          console.log(`Downloaded ${downloadedBytes} bytes`);
+        }
+      });
+
+      videoDownload.on('end', () => {
+        console.log('-- Download complete!');
+        resolve();
+      });
+
+      videoDownload.on('error', (error) => {
+        reply.raw.destroy();
+        reject(error);
+      });
+    });
+  }
+
+  async downloadFromItagToFile(ytUrl: string, itag: number): Promise<void> {
     const info = await this.getVideoInfo(ytUrl);
     const currentFormat = info.formats.find((format) => format.itag === itag);
     if (currentFormat === undefined) throw new Error('No Itag found');
