@@ -25,4 +25,8 @@ const HealthSwagger = () => {
   );
 };
 
-export { HealthApiTags, HealthSwagger };
+const UnHealthSwagger = () => {
+  return applyDecorators(ApiOperation({ summary: 'Global error catcher checker' }));
+};
+
+export { HealthApiTags, HealthSwagger, UnHealthSwagger };

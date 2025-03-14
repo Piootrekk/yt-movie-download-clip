@@ -1,11 +1,4 @@
-import {
-  Controller,
-  Get,
-  HttpException,
-  HttpStatus,
-  Query,
-  Res,
-} from '@nestjs/common';
+import { Controller, Get, Query, Res } from '@nestjs/common';
 import { YtdlService } from './services/ytdl.service';
 import { MovieDownloadQueryDto, MovieQueryDto } from './movie.dto';
 import { FastifyReply } from 'fastify';
@@ -20,41 +13,23 @@ class MovieController {
 
   @Get('info')
   async getInfo(@Query() query: MovieQueryDto) {
-    try {
-      return await this.ytdlService.getVideoInfo(query.url);
-    } catch (err) {
-      throw new HttpException('errorno', HttpStatus.BAD_REQUEST);
-    }
+    return await this.ytdlService.getVideoInfo(query.url);
   }
 
   @Get('validate')
   isValidate(@Query() query: MovieQueryDto) {
-    try {
-      return this.ytdlService.validateURL(query.url);
-    } catch (err) {
-      throw new HttpException('errorno', HttpStatus.BAD_REQUEST);
-    }
+    return this.ytdlService.validateURL(query.url);
   }
 
   @Get('filters')
   getFilters(@Query() query: MovieQueryDto) {
-    try {
-      return this.ytdlService.getFormats(query.url);
-    } catch (err) {
-      throw new HttpException('errorno', HttpStatus.BAD_REQUEST);
-    }
+    return this.ytdlService.getFormats(query.url);
   }
 
   @Get('basic-download')
   async downloadMovie(@Query() query: MovieQueryDto) {
-    try {
-      await this.ytdlService.downloadBasic(query.url);
-
-      return { success: true };
-    } catch (err) {
-      console.error(err);
-      throw new HttpException('errorno', HttpStatus.BAD_REQUEST);
-    }
+    await this.ytdlService.downloadBasic(query.url);
+    return { success: true };
   }
 
   @Get('download')
