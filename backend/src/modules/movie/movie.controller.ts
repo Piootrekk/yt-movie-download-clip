@@ -1,8 +1,22 @@
 import { Controller, Get, Query, Res } from '@nestjs/common';
 import { YtdlService } from './services/ytdl.service';
-import { MovieDownloadQueryDto, MovieQueryDto } from './movie.dto';
+import {
+  MovieDownloadQueryCustomClientDto,
+  MovieDownloadQueryDto,
+  MovieQueryCustomClientsDto,
+  MovieQueryDto,
+} from './movie.dto';
 import { FastifyReply } from 'fastify';
+import { MeasureExecutionTime } from './../../common/measure-decorator/measure-execution-time';
+import {
+  YtApiTag,
+  YtDownloadSwagger,
+  YtFiltersSwagger,
+  YtInfoCustomClientsSwagger,
+  YtInfoSwagger,
+} from './movie.swagger';
 
+@YtApiTag
 @Controller('yt')
 class MovieController {
   private readonly ytdlService: YtdlService;
@@ -12,27 +26,39 @@ class MovieController {
   }
 
   @Get('info')
+  @YtInfoSwagger
+  // @MeasureExecutionTime()
   async getInfo(@Query() query: MovieQueryDto) {
-    return await this.ytdlService.getVideoInfo(query.url);
+    const response = await this.ytdlService.getVideoInfo(query.url);
+    return response;
   }
 
-  @Get('validate')
-  isValidate(@Query() query: MovieQueryDto) {
-    return this.ytdlService.validateURL(query.url);
+  @Get('info/custom-client')
+  @YtInfoCustomClientsSwagger
+  async getInfoCustomClients(@Query() query: MovieQueryCustomClientsDto) {
+    return await this.ytdlService.getVideoInfo(query.url, query.clients);
   }
 
+  // @Get('validate')
+  // isValidate(@Query() query: MovieQueryDto) {
+  //   return this.ytdlService.validateURL(query.url);
+  // }
+
+  @YtFiltersSwagger
   @Get('filters')
   getFilters(@Query() query: MovieQueryDto) {
     return this.ytdlService.getFormats(query.url);
   }
 
-  @Get('basic-download')
-  async downloadMovie(@Query() query: MovieQueryDto) {
-    await this.ytdlService.downloadBasic(query.url);
-    return { success: true };
+  @Get('custom-client')
+  @YtFiltersSwagger
+  getFiltersCustomClients(@Query() query: MovieQueryCustomClientsDto) {
+    return this.ytdlService.getFormats(query.url, query.clients);
   }
 
   @Get('download')
+  @YtDownloadSwagger
+  // @MeasureExecutionTime()
   async downloadMovieByItag(
     @Query() query: MovieDownloadQueryDto,
     @Res() reply: FastifyReply,

@@ -6,7 +6,6 @@ const setupSwagger = (app: INestApplication): void => {
     .setTitle('API Documentation')
     .setDescription('NestJS API with Swagger')
     .setVersion('1.0')
-    .addTag('health')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

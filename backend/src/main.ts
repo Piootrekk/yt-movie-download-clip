@@ -12,7 +12,7 @@ import { CoreModule } from './core.module';
 const bootstrap = async () => {
   const app = await NestFactory.create<NestFastifyApplication>(
     CoreModule,
-    new FastifyAdapter(),
+    new FastifyAdapter({}),
   );
 
   const httpConverterService = app.get(HttpConverterService);
@@ -21,13 +21,9 @@ const bootstrap = async () => {
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
-      transformOptions: {
-        enableImplicitConversion: true,
-      },
-      whitelist: true,
     }),
   );
-  app.useGlobalFilters(new GlobalExceptionFilter(httpConverterService));
+  // app.useGlobalFilters(new GlobalExceptionFilter(httpConverterService));
   await app.listen(process.env.PORT ?? 3000, '0.0.0.0');
 };
 bootstrap();
