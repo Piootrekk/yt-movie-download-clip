@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Transform } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import {
   ArrayUnique,
   IsArray,
@@ -17,7 +17,11 @@ enum ClientEnum {
   WEB = 'WEB',
 }
 
-const transformToArray = (value: unknown): unknown[] => {
+const transformToArray = ({
+  value,
+}: {
+  value: string | string[] | undefined;
+}): string[] => {
   if (Array.isArray(value)) {
     return value;
   }
@@ -47,6 +51,7 @@ class MovieDownloadQueryDto extends MovieQueryDto {
     type: Number,
   })
   @IsInt()
+  @Type(() => Number)
   itag: number;
 }
 
@@ -55,6 +60,7 @@ class MovieDownloadQueryCustomClientDto extends MovieQueryCustomClientsDto {
     type: Number,
   })
   @IsInt()
+  @Type(() => Number)
   itag: number;
 }
 

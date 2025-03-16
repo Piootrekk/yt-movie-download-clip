@@ -27,7 +27,7 @@ class MovieController {
 
   @Get('info')
   @YtInfoSwagger
-  // @MeasureExecutionTime()
+  @MeasureExecutionTime()
   async getInfo(@Query() query: MovieQueryDto) {
     const response = await this.ytdlService.getVideoInfo(query.url);
     return response;
@@ -35,30 +35,33 @@ class MovieController {
 
   @Get('info/custom-client')
   @YtInfoCustomClientsSwagger
+  @MeasureExecutionTime()
   async getInfoCustomClients(@Query() query: MovieQueryCustomClientsDto) {
     return await this.ytdlService.getVideoInfo(query.url, query.clients);
   }
 
-  // @Get('validate')
-  // isValidate(@Query() query: MovieQueryDto) {
-  //   return this.ytdlService.validateURL(query.url);
-  // }
+  @Get('validate')
+  isValidate(@Query() query: MovieQueryDto) {
+    return this.ytdlService.validateURL(query.url);
+  }
 
-  @YtFiltersSwagger
   @Get('filters')
+  @YtFiltersSwagger
+  @MeasureExecutionTime()
   getFilters(@Query() query: MovieQueryDto) {
     return this.ytdlService.getFormats(query.url);
   }
 
-  @Get('custom-client')
+  @Get('filters/custom-client')
   @YtFiltersSwagger
+  @MeasureExecutionTime()
   getFiltersCustomClients(@Query() query: MovieQueryCustomClientsDto) {
     return this.ytdlService.getFormats(query.url, query.clients);
   }
 
   @Get('download')
   @YtDownloadSwagger
-  // @MeasureExecutionTime()
+  @MeasureExecutionTime()
   async downloadMovieByItag(
     @Query() query: MovieDownloadQueryDto,
     @Res() reply: FastifyReply,
@@ -71,6 +74,28 @@ class MovieController {
     );
     reply.raw.setHeader('Content-Type', 'video/mp4');
     await this.ytdlService.downloadFromItag(query.url, query.itag, reply);
+  }
+
+  @Get('download/custom-client')
+  @YtDownloadSwagger
+  @MeasureExecutionTime()
+  async downloadMovieByItagCustomClient(
+    @Query() query: MovieDownloadQueryCustomClientDto,
+    @Res() reply: FastifyReply,
+  ) {
+    const fileName = 'video.mp4';
+
+    reply.raw.setHeader(
+      'Content-Disposition',
+      `attachment; filename="${fileName}"`,
+    );
+    reply.raw.setHeader('Content-Type', 'video/mp4');
+    await this.ytdlService.downloadFromItag(
+      query.url,
+      query.itag,
+      reply,
+      query.clients,
+    );
   }
 
   @Get('download-file')
