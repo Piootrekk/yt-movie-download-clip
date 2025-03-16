@@ -1,11 +1,5 @@
 import { applyDecorators } from '@nestjs/common';
-import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
-import {
-  MovieDownloadQueryCustomClientDto,
-  MovieDownloadQueryDto,
-  MovieQueryCustomClientsDto,
-  MovieQueryDto,
-} from './movie.dto';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
 const YtApiTag = ApiTags('YT download');
 
@@ -13,14 +7,8 @@ const YtInfoSwagger = applyDecorators(
   ApiOperation({ summary: 'Get info about youtube video' }),
 );
 
-const YtDownloadCustomClientsSwagger = applyDecorators(
-  ApiOperation({
-    summary: 'Download youtube video with custom clients',
-  }),
-);
-
-const YtInfoCustomClientsSwagger = applyDecorators(
-  ApiOperation({ summary: 'Get info about yt video with custom clients' }),
+const YtValidateUrlSwagger = applyDecorators(
+  ApiOperation({ summary: 'Validate if Url is correct' }),
 );
 
 const YtDownloadSwagger = applyDecorators(
@@ -31,16 +19,10 @@ const YtFiltersSwagger = applyDecorators(
   ApiOperation({ summary: 'Get fillters about video' }),
 );
 
-const YtFiltersCustomClientsSwagger = applyDecorators(
-  ApiOperation({ summary: 'Get fillters about video with custom clients' }),
-);
-
 export {
   YtApiTag,
+  YtValidateUrlSwagger,
   YtInfoSwagger,
   YtDownloadSwagger,
-  YtDownloadCustomClientsSwagger,
-  YtInfoCustomClientsSwagger,
   YtFiltersSwagger,
-  YtFiltersCustomClientsSwagger,
 };

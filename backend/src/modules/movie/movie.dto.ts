@@ -46,7 +46,7 @@ class MovieQueryCustomClientsDto extends MovieQueryDto {
   clients?: ClientEnum[];
 }
 
-class MovieDownloadQueryDto extends MovieQueryDto {
+class MovieDownloadQueryDto extends MovieQueryCustomClientsDto {
   @ApiProperty({
     type: Number,
   })
@@ -55,19 +55,19 @@ class MovieDownloadQueryDto extends MovieQueryDto {
   itag: number;
 }
 
-class MovieDownloadQueryCustomClientDto extends MovieQueryCustomClientsDto {
+class MovieDownloadStampDto extends MovieDownloadQueryDto {
   @ApiProperty({
     type: Number,
   })
   @IsInt()
   @Type(() => Number)
-  itag: number;
+  begin: number;
 }
 
 export {
   MovieQueryDto,
-  MovieDownloadQueryDto,
   MovieQueryCustomClientsDto,
-  MovieDownloadQueryCustomClientDto,
+  MovieDownloadQueryDto,
   ClientEnum,
+  MovieDownloadStampDto,
 };

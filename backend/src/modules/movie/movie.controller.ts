@@ -1,8 +1,8 @@
-import { Controller, Get, Query, Res } from '@nestjs/common';
+import { Controller, Get, Query, Res, StreamableFile } from '@nestjs/common';
 import { YtdlService } from './services/ytdl.service';
 import {
-  MovieDownloadQueryCustomClientDto,
   MovieDownloadQueryDto,
+  MovieDownloadStampDto,
   MovieQueryCustomClientsDto,
   MovieQueryDto,
 } from './movie.dto';
@@ -12,8 +12,8 @@ import {
   YtApiTag,
   YtDownloadSwagger,
   YtFiltersSwagger,
-  YtInfoCustomClientsSwagger,
   YtInfoSwagger,
+  YtValidateUrlSwagger,
 } from './movie.swagger';
 
 @YtApiTag
@@ -28,80 +28,64 @@ class MovieController {
   @Get('info')
   @YtInfoSwagger
   @MeasureExecutionTime()
-  async getInfo(@Query() query: MovieQueryDto) {
-    const response = await this.ytdlService.getVideoInfo(query.url);
-    return response;
-  }
-
-  @Get('info/custom-client')
-  @YtInfoCustomClientsSwagger
-  @MeasureExecutionTime()
   async getInfoCustomClients(@Query() query: MovieQueryCustomClientsDto) {
     return await this.ytdlService.getVideoInfo(query.url, query.clients);
   }
 
   @Get('validate')
-  isValidate(@Query() query: MovieQueryDto) {
+  @YtValidateUrlSwagger
+  isValidate(@Query() query: MovieQueryDto): boolean {
     return this.ytdlService.validateURL(query.url);
   }
 
   @Get('filters')
   @YtFiltersSwagger
   @MeasureExecutionTime()
-  getFilters(@Query() query: MovieQueryDto) {
-    return this.ytdlService.getFormats(query.url);
-  }
-
-  @Get('filters/custom-client')
-  @YtFiltersSwagger
-  @MeasureExecutionTime()
   getFiltersCustomClients(@Query() query: MovieQueryCustomClientsDto) {
     return this.ytdlService.getFormats(query.url, query.clients);
   }
 
-  @Get('download')
+  @Get('download/all')
   @YtDownloadSwagger
   @MeasureExecutionTime()
-  async downloadMovieByItag(
+  async downlaodVideo(
     @Query() query: MovieDownloadQueryDto,
-    @Res() reply: FastifyReply,
-  ) {
-    const fileName = 'video.mp4';
+    @Res({ passthrough: true }) response: FastifyReply,
+  ): Promise<StreamableFile> {
+    const fileName = `video-${Date.now()}.mp4`;
 
-    reply.raw.setHeader(
+    response.raw.setHeader(
       'Content-Disposition',
       `attachment; filename="${fileName}"`,
     );
-    reply.raw.setHeader('Content-Type', 'video/mp4');
-    await this.ytdlService.downloadFromItag(query.url, query.itag, reply);
-  }
-
-  @Get('download/custom-client')
-  @YtDownloadSwagger
-  @MeasureExecutionTime()
-  async downloadMovieByItagCustomClient(
-    @Query() query: MovieDownloadQueryCustomClientDto,
-    @Res() reply: FastifyReply,
-  ) {
-    const fileName = 'video.mp4';
-
-    reply.raw.setHeader(
-      'Content-Disposition',
-      `attachment; filename="${fileName}"`,
-    );
-    reply.raw.setHeader('Content-Type', 'video/mp4');
-    await this.ytdlService.downloadFromItag(
+    response.raw.setHeader('Content-Type', 'video/mp4');
+    const stream = await this.ytdlService.createDownloadReadable(
       query.url,
       query.itag,
-      reply,
       query.clients,
     );
+    return new StreamableFile(stream);
   }
 
-  @Get('download-file')
-  async downloadMovieToFileByItag(@Query() query: MovieDownloadQueryDto) {
-    await this.ytdlService.downloadFromItagToFile(query.url, query.itag);
-    return { success: true };
+  @Get('download/stamp')
+  @YtDownloadSwagger
+  @MeasureExecutionTime()
+  async downloadVideoStamp(
+    @Query() query: MovieDownloadStampDto,
+    @Res({ passthrough: true }) response: FastifyReply,
+  ): Promise<StreamableFile> {
+    const fileName = `video-${Date.now()}.mp4`;
+    response.raw.setHeader(
+      'Content-Disposition',
+      `attachment; filename="${fileName}"`,
+    );
+    const stream = await this.ytdlService.createDownloadStampReadable(
+      query.url,
+      query.itag,
+      query.begin,
+      query.clients,
+    );
+    return new StreamableFile(stream);
   }
 }
 

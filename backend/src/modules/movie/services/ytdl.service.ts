@@ -1,8 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import ytdl, { type videoInfo, getInfo, validateURL } from '@distube/ytdl-core';
-import fs from 'fs';
-import { FastifyReply } from 'fastify';
 import { ClientEnum } from '../movie.dto';
+import { Readable } from 'stream';
 
 @Injectable()
 class YtdlService {
@@ -23,105 +22,78 @@ class YtdlService {
     return { audio, video, both };
   }
 
-  async downloadBasic(ytUrl: string): Promise<void> {
-    return new Promise<void>((resolve, reject) => {
-      const videoDownload = ytdl(ytUrl);
-      const stream = fs.createWriteStream('video.mp4');
-      videoDownload.pipe(stream);
-      videoDownload.on('end', () => {
-        resolve();
-      });
-      videoDownload.on('error', (error) => {
-        stream.destroy();
-        reject(error);
-      });
+  async createDownloadReadable(
+    url: string,
+    itag: number,
+    clients?: ClientEnum[],
+    begin?: number,
+  ): Promise<Readable> {
+    const videoInfo = await this.getVideoInfo(url, clients);
+    const currentFormat = videoInfo.formats.find(
+      (format) => format.itag === itag,
+    );
+    if (!currentFormat) throw new Error('Invalid itag');
+    return this.createStreamWithProgressTracking(url, currentFormat, begin);
+  }
+
+  async createDownloadStampReadable(
+    url: string,
+    itag: number,
+    begin: number,
+    clients?: ClientEnum[],
+  ): Promise<Readable> {
+    const videoInfo = await this.getVideoInfo(url, clients);
+    const currentFormat = videoInfo.formats.find(
+      (format) => format.itag === itag,
+    );
+    if (!currentFormat) throw new Error('Invalid itag');
+    return ytdl(url, {
+      format: currentFormat,
+      highWaterMark: 1024 * 64,
+      begin: `${begin}s`,
     });
   }
 
-  async downloadFromItag(
-    ytUrl: string,
-    itag: number,
-    reply: FastifyReply,
-    clients?: ClientEnum[],
-  ): Promise<void> {
-    const info = await this.getVideoInfo(ytUrl, clients);
-    const currentFormat = info.formats.find((format) => format.itag === itag);
-    if (currentFormat === undefined) throw new Error('No Itag found');
-
-    return new Promise<void>((resolve, reject) => {
-      const videoDownload = ytdl(ytUrl, {
-        format: currentFormat,
-        highWaterMark: 1024 * 64,
-      });
-      let downloadedBytes = 0;
-      const totalBytes = parseInt(currentFormat.contentLength, 10);
-
-      // videoDownload.pipe(reply.raw);
-      videoDownload.on('data', (chunk: Buffer) => {
-        reply.raw.write(chunk);
-        downloadedBytes += chunk.length;
-        if (totalBytes) {
-          const percentage = ((downloadedBytes / totalBytes) * 100).toFixed(2);
-          console.log(`Downloaded ${downloadedBytes} bytes (${percentage}%)`);
-        } else {
-          console.log(`Downloaded ${downloadedBytes} bytes`);
-        }
-      });
-
-      videoDownload.on('end', () => {
-        console.log('-- Download complete!');
-        reply.raw.end();
-        resolve();
-      });
-
-      videoDownload.on('error', (error) => {
-        reply.raw.destroy();
-        reject(error);
-      });
-    });
+  private logDownloadProgress(
+    downloadedBytes: number,
+    totalBytes: number,
+  ): void {
+    if (totalBytes) {
+      const percentage = ((downloadedBytes / totalBytes) * 100).toFixed(2);
+      console.log(`Downloaded ${downloadedBytes} bytes (${percentage}%)`);
+    } else {
+      console.log(`Downloaded ${downloadedBytes} bytes`);
+    }
   }
 
-  async downloadFromItagToFile(
-    ytUrl: string,
-    itag: number,
-    clients?: ClientEnum[],
-  ): Promise<void> {
-    const info = await this.getVideoInfo(ytUrl, clients);
-    const currentFormat = info.formats.find((format) => format.itag === itag);
-    if (currentFormat === undefined) throw new Error('No Itag found');
-
-    return new Promise<void>((resolve, reject) => {
-      const videoDownload = ytdl(ytUrl, {
-        format: currentFormat,
-        highWaterMark: 1024 * 64,
-      });
-      const stream = fs.createWriteStream('video.mp4');
-      videoDownload.pipe(stream);
-
-      let downloadedBytes = 0;
-      const totalBytes = parseInt(currentFormat.contentLength, 10);
-
-      videoDownload.on('data', (chunk: Buffer) => {
-        downloadedBytes += chunk.length;
-
-        if (totalBytes) {
-          const percentage = ((downloadedBytes / totalBytes) * 100).toFixed(2);
-          console.log(`Downloaded ${downloadedBytes} bytes (${percentage}%)`);
-        } else {
-          console.log(`Downloaded ${downloadedBytes} bytes`);
-        }
-      });
-
-      videoDownload.on('end', () => {
-        console.log('-- Download complete!');
-        resolve();
-      });
-
-      videoDownload.on('error', (error) => {
-        stream.destroy();
-        reject(error);
-      });
+  private createStreamWithProgressTracking(
+    url: string,
+    currentFormat: ytdl.videoFormat,
+    begin?: number,
+  ): Readable {
+    const downloadStream = ytdl(url, {
+      format: currentFormat,
+      highWaterMark: 1024 * 64,
+      begin: begin,
     });
+
+    let downloadedBytes = 0;
+    const totalBytes = parseInt(currentFormat.contentLength, 10);
+
+    downloadStream.on('data', (chunk: Buffer) => {
+      downloadedBytes += chunk.length;
+      this.logDownloadProgress(downloadedBytes, totalBytes);
+    });
+
+    downloadStream.on('end', () => {
+      console.log('Download complete!');
+    });
+
+    downloadStream.on('error', (error) => {
+      console.error(`Download error: ${error.message}`);
+    });
+
+    return downloadStream;
   }
 }
 
