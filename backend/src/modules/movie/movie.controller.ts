@@ -2,9 +2,10 @@ import { Controller, Get, Query, Res, StreamableFile } from '@nestjs/common';
 import { YtdlService } from './services/ytdl.service';
 import {
   MovieDownloadQueryDto,
-  MovieDownloadStampDto,
+  MovieDownloadBeginDto,
   MovieQueryCustomClientsDto,
   MovieQueryDto,
+  MovieDownloadStampDto,
 } from './movie.dto';
 import { FastifyReply } from 'fastify';
 import { MeasureExecutionTime } from './../../common/measure-decorator/measure-execution-time';
@@ -15,20 +16,24 @@ import {
   YtInfoSwagger,
   YtValidateUrlSwagger,
 } from './movie.swagger';
+import { FfmpegService } from './services/ffmpeg.service';
 
 @YtApiTag
 @Controller('yt')
 class MovieController {
   private readonly ytdlService: YtdlService;
+  private readonly ffmpegService: FfmpegService;
 
-  constructor(ytdlService: YtdlService) {
+  constructor(ytdlService: YtdlService, ffmpegService: FfmpegService) {
     this.ytdlService = ytdlService;
+    this.ffmpegService = ffmpegService;
   }
 
   @Get('info')
   @YtInfoSwagger
   @MeasureExecutionTime()
-  async getInfoCustomClients(@Query() query: MovieQueryCustomClientsDto) {
+  async getInfo(@Query() query: MovieQueryCustomClientsDto) {
+    this.ffmpegService.getVersion();
     return await this.ytdlService.getVideoInfo(query.url, query.clients);
   }
 
@@ -41,7 +46,7 @@ class MovieController {
   @Get('filters')
   @YtFiltersSwagger
   @MeasureExecutionTime()
-  getFiltersCustomClients(@Query() query: MovieQueryCustomClientsDto) {
+  getFilters(@Query() query: MovieQueryCustomClientsDto) {
     return this.ytdlService.getFormats(query.url, query.clients);
   }
 
@@ -71,7 +76,7 @@ class MovieController {
   @YtDownloadSwagger
   @MeasureExecutionTime()
   async downloadVideoStamp(
-    @Query() query: MovieDownloadStampDto,
+    @Query() query: MovieDownloadBeginDto,
     @Res({ passthrough: true }) response: FastifyReply,
   ): Promise<StreamableFile> {
     const fileName = `video-${Date.now()}.mp4`;
@@ -86,6 +91,21 @@ class MovieController {
       query.clients,
     );
     return new StreamableFile(stream);
+  }
+
+  @Get('local-file/trim')
+  @MeasureExecutionTime()
+  async trimLocalFile(@Query() query: MovieDownloadStampDto) {
+    const stream = await this.ytdlService.createDownloadReadable(
+      query.url,
+      query.itag,
+      query.clients,
+    );
+    await this.ffmpegService.trimVideoStream(
+      stream,
+      query.start,
+      query.duration,
+    );
   }
 }
 
