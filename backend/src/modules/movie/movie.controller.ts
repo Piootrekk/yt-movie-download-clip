@@ -55,15 +55,15 @@ class MovieController {
   @MeasureExecutionTime()
   async downlaodVideo(
     @Query() query: MovieDownloadQueryDto,
-    @Res({ passthrough: true }) response: FastifyReply,
+    @Res({ passthrough: true }) reply: FastifyReply,
   ): Promise<StreamableFile> {
     const fileName = `video-${Date.now()}.mp4`;
-
-    response.raw.setHeader(
+    reply.raw.setHeader(
       'Content-Disposition',
       `attachment; filename="${fileName}"`,
     );
-    response.raw.setHeader('Content-Type', 'video/mp4');
+    reply.raw.setHeader('Content-Type', 'video/mp4');
+
     const stream = await this.ytdlService.createDownloadReadable(
       query.url,
       query.itag,
@@ -72,18 +72,20 @@ class MovieController {
     return new StreamableFile(stream);
   }
 
-  @Get('download/stamp')
+  @Get('download/begin')
   @YtDownloadSwagger
   @MeasureExecutionTime()
   async downloadVideoStamp(
     @Query() query: MovieDownloadBeginDto,
-    @Res({ passthrough: true }) response: FastifyReply,
+    @Res({ passthrough: true }) reply: FastifyReply,
   ): Promise<StreamableFile> {
     const fileName = `video-${Date.now()}.mp4`;
-    response.raw.setHeader(
+    reply.raw.setHeader(
       'Content-Disposition',
       `attachment; filename="${fileName}"`,
     );
+    reply.raw.setHeader('Content-Type', 'video/mp4');
+
     const stream = await this.ytdlService.createDownloadStampReadable(
       query.url,
       query.itag,
@@ -101,7 +103,32 @@ class MovieController {
       query.itag,
       query.clients,
     );
-    await this.ffmpegService.trimVideoStream(
+    await this.ffmpegService.trimVideoToFile(
+      stream,
+      query.start,
+      query.duration,
+    );
+  }
+
+  @Get('download/trim')
+  @MeasureExecutionTime()
+  async downloadVideoTrim(
+    @Query() query: MovieDownloadStampDto,
+    @Res() reply: FastifyReply,
+  ) {
+    const fileName = `video-${Date.now()}.mp4`;
+    reply.raw.setHeader(
+      'Content-Disposition',
+      `attachment; filename="${fileName}"`,
+    );
+    reply.raw.setHeader('Content-Type', 'video/mp4');
+
+    const stream = await this.ytdlService.createDownloadReadable(
+      query.url,
+      query.itag,
+      query.clients,
+    );
+    return await this.ffmpegService.trimVideoToStream(
       stream,
       query.start,
       query.duration,

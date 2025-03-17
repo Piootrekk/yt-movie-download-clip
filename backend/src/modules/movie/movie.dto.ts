@@ -9,6 +9,7 @@ import {
   IsOptional,
   IsString,
   Matches,
+  Min,
 } from 'class-validator';
 
 enum ClientEnum {
@@ -69,7 +70,8 @@ class MovieDownloadBeginDto extends MovieDownloadQueryDto {
 class MovieDownloadStampDto extends MovieDownloadQueryDto {
   @ApiProperty({
     type: String,
-    description: 'Time format must be HH:MM:SS.mmm',
+    description: 'Time format must be HH:MM:SS.mmm (default 0)',
+    default: '00:00:00.000',
   })
   @Matches(/^([0-9]{2}):([0-5][0-9]):([0-5][0-9])\.(\d{3})$/, {
     message: 'Time format must be HH:MM:SS.mmm',
@@ -81,6 +83,7 @@ class MovieDownloadStampDto extends MovieDownloadQueryDto {
     description: 'Duration should be provided in seconds',
   })
   @IsNumber()
+  @Min(0.001)
   @Type(() => Number)
   duration: number;
 }

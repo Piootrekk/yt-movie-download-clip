@@ -1,7 +1,7 @@
 import ffmpegInstaller from '@ffmpeg-installer/ffmpeg';
 import { Injectable } from '@nestjs/common';
 import ffmpeg from 'fluent-ffmpeg';
-import { Readable } from 'stream';
+import { PassThrough, Readable } from 'stream';
 
 @Injectable()
 class FfmpegService {
@@ -19,7 +19,7 @@ class FfmpegService {
     );
   }
 
-  async trimVideoStream(
+  async trimVideoToFile(
     stream: Readable,
     startTimeInSec: string,
     durationTimeInSec: number,
@@ -38,6 +38,27 @@ class FfmpegService {
           reject(err);
         })
         .run();
+    });
+  }
+
+  async trimVideoToStream(
+    stream: Readable,
+    startTimeInSec: string,
+    durationTimeInSec: number,
+  ): Promise<Readable> {
+    return new Promise((resolve, reject) => {
+      const outputStream = new PassThrough();
+      ffmpeg(stream)
+        .setStartTime(startTimeInSec)
+        .setDuration(durationTimeInSec)
+        .format('mp4')
+        .on('error', (err) => {
+          console.error('FFMPEG ERROR:', err);
+          reject(err);
+        })
+        .pipe(outputStream, { end: true });
+
+      resolve(outputStream);
     });
   }
 }
