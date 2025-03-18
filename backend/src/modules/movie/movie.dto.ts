@@ -70,7 +70,7 @@ class MovieDownloadBeginDto extends MovieDownloadQueryDto {
 class MovieDownloadStampDto extends MovieDownloadQueryDto {
   @ApiProperty({
     type: String,
-    description: 'Time format must be HH:MM:SS.mmm (default 0)',
+    description: 'Time format must be HH:MM:SS.mmm',
     default: '00:00:00.000',
   })
   @Matches(/^([0-9]{2}):([0-5][0-9]):([0-5][0-9])\.(\d{3})$/, {

@@ -1,3 +1,5 @@
+// https://singh-sandeep.medium.com/download-youtube-videos-from-node-js-3a0b05d42269 some explains
+
 import { Injectable } from '@nestjs/common';
 import ytdl, { type videoInfo, getInfo, validateURL } from '@distube/ytdl-core';
 import { ClientEnum } from '../movie.dto';
@@ -22,36 +24,27 @@ class YtdlService {
     return { audio, video, both };
   }
 
-  async createDownloadReadable(
+  async getFormatByItag(
     url: string,
     itag: number,
     clients?: ClientEnum[],
-    begin?: number,
-  ): Promise<Readable> {
+  ): Promise<ytdl.videoFormat> {
     const videoInfo = await this.getVideoInfo(url, clients);
     const currentFormat = videoInfo.formats.find(
       (format) => format.itag === itag,
     );
     if (!currentFormat) throw new Error('Invalid itag');
-    return this.createStreamWithProgressTracking(url, currentFormat, begin);
+    return currentFormat;
   }
 
-  async createDownloadStampReadable(
+  createDownloadReadable(
     url: string,
-    itag: number,
-    begin: number,
-    clients?: ClientEnum[],
-  ): Promise<Readable> {
-    const videoInfo = await this.getVideoInfo(url, clients);
-    const currentFormat = videoInfo.formats.find(
-      (format) => format.itag === itag,
-    );
-    if (!currentFormat) throw new Error('Invalid itag');
-    return ytdl(url, {
-      format: currentFormat,
-      highWaterMark: 1024 * 64,
-      begin: `${begin}s`,
-    });
+    currentFormat: ytdl.videoFormat,
+    progressTrack: boolean = false,
+  ): Readable {
+    const stream = this.createStream(url, currentFormat);
+    if (progressTrack) this.attatchProgressTracking(currentFormat, stream);
+    return stream;
   }
 
   private logDownloadProgress(
@@ -66,34 +59,36 @@ class YtdlService {
     }
   }
 
-  private createStreamWithProgressTracking(
+  private createStream(
     url: string,
     currentFormat: ytdl.videoFormat,
-    begin?: number,
+    sizeChunk?: number,
   ): Readable {
-    const downloadStream = ytdl(url, {
+    return ytdl(url, {
       format: currentFormat,
-      highWaterMark: 1024 * 64,
-      begin: begin,
+      highWaterMark: sizeChunk || 1024 * 64,
     });
+  }
 
+  private attatchProgressTracking(
+    currentFormat: ytdl.videoFormat,
+    stream: Readable,
+  ): void {
     let downloadedBytes = 0;
     const totalBytes = parseInt(currentFormat.contentLength, 10);
 
-    downloadStream.on('data', (chunk: Buffer) => {
+    stream.on('data', (chunk: Buffer) => {
       downloadedBytes += chunk.length;
       this.logDownloadProgress(downloadedBytes, totalBytes);
     });
 
-    downloadStream.on('end', () => {
+    stream.on('end', () => {
       console.log('Download complete!');
     });
 
-    downloadStream.on('error', (error) => {
+    stream.on('error', (error) => {
       console.error(`Download error: ${error.message}`);
     });
-
-    return downloadStream;
   }
 }
 

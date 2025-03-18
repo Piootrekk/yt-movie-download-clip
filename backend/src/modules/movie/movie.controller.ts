@@ -29,6 +29,18 @@ class MovieController {
     this.ffmpegService = ffmpegService;
   }
 
+  private handleHeadersToStream(
+    fileName?: string,
+    fileType?: string,
+  ): { type: string; disposition: string } {
+    const sanitizedType = fileType || 'mp4';
+    const sanitizedName = fileName || `video-${Date.now()}.${sanitizedType}`;
+    return {
+      type: `video/${sanitizedType}`,
+      disposition: `attachment; filename="${sanitizedName}"`,
+    };
+  }
+
   @Get('info')
   @YtInfoSwagger
   @MeasureExecutionTime()
@@ -53,56 +65,39 @@ class MovieController {
   @Get('download/all')
   @YtDownloadSwagger
   @MeasureExecutionTime()
-  async downlaodVideo(
+  async downloadVideo(
     @Query() query: MovieDownloadQueryDto,
-    @Res({ passthrough: true }) reply: FastifyReply,
   ): Promise<StreamableFile> {
-    const fileName = `video-${Date.now()}.mp4`;
-    reply.raw.setHeader(
-      'Content-Disposition',
-      `attachment; filename="${fileName}"`,
-    );
-    reply.raw.setHeader('Content-Type', 'video/mp4');
-
-    const stream = await this.ytdlService.createDownloadReadable(
+    const ytSelectedFilter = await this.ytdlService.getFormatByItag(
       query.url,
       query.itag,
       query.clients,
     );
-    return new StreamableFile(stream);
-  }
-
-  @Get('download/begin')
-  @YtDownloadSwagger
-  @MeasureExecutionTime()
-  async downloadVideoStamp(
-    @Query() query: MovieDownloadBeginDto,
-    @Res({ passthrough: true }) reply: FastifyReply,
-  ): Promise<StreamableFile> {
-    const fileName = `video-${Date.now()}.mp4`;
-    reply.raw.setHeader(
-      'Content-Disposition',
-      `attachment; filename="${fileName}"`,
+    const headers = this.handleHeadersToStream(
+      'video',
+      ytSelectedFilter.container,
     );
-    reply.raw.setHeader('Content-Type', 'video/mp4');
-
-    const stream = await this.ytdlService.createDownloadStampReadable(
+    const stream = this.ytdlService.createDownloadReadable(
       query.url,
-      query.itag,
-      query.begin,
-      query.clients,
+      ytSelectedFilter,
+      true,
     );
-    return new StreamableFile(stream);
+    return new StreamableFile(stream, headers);
   }
 
   @Get('local-file/trim')
   @MeasureExecutionTime()
-  async trimLocalFile(@Query() query: MovieDownloadStampDto) {
-    const stream = await this.ytdlService.createDownloadReadable(
+  async trimLocalFile(@Query() query: MovieDownloadStampDto): Promise<void> {
+    const ytSelectedFilter = await this.ytdlService.getFormatByItag(
       query.url,
       query.itag,
       query.clients,
     );
+    const stream = this.ytdlService.createDownloadReadable(
+      query.url,
+      ytSelectedFilter,
+    );
+
     await this.ffmpegService.trimVideoToFile(
       stream,
       query.start,
@@ -114,25 +109,26 @@ class MovieController {
   @MeasureExecutionTime()
   async downloadVideoTrim(
     @Query() query: MovieDownloadStampDto,
-    @Res() reply: FastifyReply,
-  ) {
-    const fileName = `video-${Date.now()}.mp4`;
-    reply.raw.setHeader(
-      'Content-Disposition',
-      `attachment; filename="${fileName}"`,
-    );
-    reply.raw.setHeader('Content-Type', 'video/mp4');
-
-    const stream = await this.ytdlService.createDownloadReadable(
+  ): Promise<StreamableFile> {
+    const ytSelectedFilter = await this.ytdlService.getFormatByItag(
       query.url,
       query.itag,
       query.clients,
     );
-    return await this.ffmpegService.trimVideoToStream(
-      stream,
+    const headers = this.handleHeadersToStream(
+      'video',
+      ytSelectedFilter.container,
+    );
+    const ytStream = this.ytdlService.createDownloadReadable(
+      query.url,
+      ytSelectedFilter,
+    );
+    const trimmedStream = this.ffmpegService.trimVideoToStream(
+      ytStream,
       query.start,
       query.duration,
     );
+    return new StreamableFile(trimmedStream, headers);
   }
 }
 

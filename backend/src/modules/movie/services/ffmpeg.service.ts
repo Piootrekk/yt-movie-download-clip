@@ -1,5 +1,6 @@
 import ffmpegInstaller from '@ffmpeg-installer/ffmpeg';
 import { Injectable } from '@nestjs/common';
+import { FastifyReply } from 'fastify';
 import ffmpeg from 'fluent-ffmpeg';
 import { PassThrough, Readable } from 'stream';
 
@@ -41,25 +42,29 @@ class FfmpegService {
     });
   }
 
-  async trimVideoToStream(
-    stream: Readable,
+  trimVideoToStream(
+    inputStream: Readable,
     startTimeInSec: string,
     durationTimeInSec: number,
-  ): Promise<Readable> {
-    return new Promise((resolve, reject) => {
-      const outputStream = new PassThrough();
-      ffmpeg(stream)
-        .setStartTime(startTimeInSec)
-        .setDuration(durationTimeInSec)
-        .format('mp4')
-        .on('error', (err) => {
-          console.error('FFMPEG ERROR:', err);
-          reject(err);
-        })
-        .pipe(outputStream, { end: true });
-
-      resolve(outputStream);
-    });
+  ) {
+    const passThrough = new PassThrough();
+    const command = ffmpeg(inputStream)
+      .setStartTime(startTimeInSec)
+      .setDuration(durationTimeInSec)
+      .format('mp4')
+      .outputOptions('-movflags frag_keyframe+empty_moov');
+    command.pipe(passThrough);
+    passThrough
+      .on('start', (cmd) => console.log('FFmpeg command:', cmd))
+      .on('error', (err) => {
+        console.error('FFmpeg error:', err.message);
+        inputStream.destroy(err);
+        throw new Error(err.message);
+      })
+      .on('end', () => {
+        console.log('Trimming finished.');
+      });
+    return passThrough;
   }
 }
 
