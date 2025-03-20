@@ -1,13 +1,12 @@
-import { Controller, Get, Query, Res, StreamableFile } from '@nestjs/common';
+import { Controller, Get, Query, StreamableFile } from '@nestjs/common';
 import { YtdlService } from './services/ytdl.service';
 import {
   MovieDownloadQueryDto,
-  MovieDownloadBeginDto,
   MovieQueryCustomClientsDto,
   MovieQueryDto,
   MovieDownloadStampDto,
+  MovieDownloadBothStreamDto,
 } from './movie.dto';
-import { FastifyReply } from 'fastify';
 import { MeasureExecutionTime } from './../../common/measure-decorator/measure-execution-time';
 import {
   YtApiTag,
@@ -41,6 +40,11 @@ class MovieController {
     };
   }
 
+  @Get('ffmpeginfo')
+  getVersion() {
+    return this.ffmpegService.getVersion();
+  }
+
   @Get('info')
   @YtInfoSwagger
   @MeasureExecutionTime()
@@ -60,6 +64,12 @@ class MovieController {
   @MeasureExecutionTime()
   getFilters(@Query() query: MovieQueryCustomClientsDto) {
     return this.ytdlService.getFormats(query.url, query.clients);
+  }
+
+  @Get('itags')
+  @MeasureExecutionTime()
+  getItags(@Query() query: MovieQueryCustomClientsDto) {
+    return this.ytdlService.getItagsGroups(query.url, query.clients);
   }
 
   @Get('download/all')
@@ -123,12 +133,41 @@ class MovieController {
       query.url,
       ytSelectedFilter,
     );
+
     const trimmedStream = this.ffmpegService.trimVideoToStream(
       ytStream,
       query.start,
       query.duration,
     );
     return new StreamableFile(trimmedStream, headers);
+  }
+
+  @Get('download-both/local-file')
+  @MeasureExecutionTime()
+  async downloadAudioAndVidoe(
+    @Query() query: MovieDownloadBothStreamDto,
+  ): Promise<void> {
+    console.log('audio: ' + query.audioItag);
+    console.log('video: ' + query.videoItag);
+    const ytSelectedFilterVideo = await this.ytdlService.getFormatByItag(
+      query.url,
+      query.videoItag,
+      query.clients,
+    );
+    const videoStream = this.ytdlService.createDownloadReadable(
+      query.url,
+      ytSelectedFilterVideo,
+    );
+    const ytSelectedFilterAudio = await this.ytdlService.getFormatByItag(
+      query.url,
+      query.audioItag,
+      query.clients,
+    );
+    const audioStream = this.ytdlService.createDownloadReadable(
+      query.url,
+      ytSelectedFilterAudio,
+    );
+    await this.ffmpegService.margeAudioToVideo(videoStream, audioStream);
   }
 }
 

@@ -58,15 +58,6 @@ class MovieDownloadQueryDto extends MovieQueryCustomClientsDto {
   itag: number;
 }
 
-class MovieDownloadBeginDto extends MovieDownloadQueryDto {
-  @ApiProperty({
-    type: Number,
-  })
-  @IsInt()
-  @Type(() => Number)
-  begin: number;
-}
-
 class MovieDownloadStampDto extends MovieDownloadQueryDto {
   @ApiProperty({
     type: String,
@@ -88,11 +79,27 @@ class MovieDownloadStampDto extends MovieDownloadQueryDto {
   duration: number;
 }
 
+class MovieDownloadBothStreamDto extends MovieQueryCustomClientsDto {
+  @ApiProperty({
+    type: Number,
+  })
+  @IsInt()
+  @Type(() => Number)
+  videoItag: number;
+
+  @ApiProperty({
+    type: Number,
+  })
+  @IsInt()
+  @Type(() => Number)
+  audioItag: number;
+}
+
 export {
   MovieQueryDto,
   MovieQueryCustomClientsDto,
   MovieDownloadQueryDto,
   ClientEnum,
-  MovieDownloadBeginDto,
   MovieDownloadStampDto,
+  MovieDownloadBothStreamDto,
 };

@@ -24,6 +24,33 @@ class YtdlService {
     return { audio, video, both };
   }
 
+  async getItagsGroups(ytUrl: string, clients?: ClientEnum[]) {
+    const info = await this.getVideoInfo(ytUrl, clients);
+    const audioItags = info.formats
+      .filter((f) => f.hasAudio)
+      .map((f) => {
+        return { itag: f.itag, mimtype: f.mimeType };
+      });
+    const videoItags = info.formats
+      .filter((f) => f.hasVideo)
+      .map((f) => {
+        return {
+          itag: f.itag,
+          mimtype: f.mimeType,
+          resolution: f.qualityLabel,
+        };
+      });
+    const bothGroupItags = info.formats
+      .filter((f) => f.hasAudio && f.hasVideo)
+      .map((f) => {
+        return { itag: f.itag, mimtype: f.mimeType };
+      });
+    return {
+      audioItags,
+      videoItags,
+      bothGroupItags,
+    };
+  }
   async getFormatByItag(
     url: string,
     itag: number,
@@ -45,18 +72,6 @@ class YtdlService {
     const stream = this.createStream(url, currentFormat);
     if (progressTrack) this.attatchProgressTracking(currentFormat, stream);
     return stream;
-  }
-
-  private logDownloadProgress(
-    downloadedBytes: number,
-    totalBytes: number,
-  ): void {
-    if (totalBytes) {
-      const percentage = ((downloadedBytes / totalBytes) * 100).toFixed(2);
-      console.log(`Downloaded ${downloadedBytes} bytes (${percentage}%)`);
-    } else {
-      console.log(`Downloaded ${downloadedBytes} bytes`);
-    }
   }
 
   private createStream(
@@ -89,6 +104,18 @@ class YtdlService {
     stream.on('error', (error) => {
       console.error(`Download error: ${error.message}`);
     });
+  }
+
+  private logDownloadProgress(
+    downloadedBytes: number,
+    totalBytes: number,
+  ): void {
+    if (totalBytes) {
+      const percentage = ((downloadedBytes / totalBytes) * 100).toFixed(2);
+      console.log(`Downloaded ${downloadedBytes} bytes (${percentage}%)`);
+    } else {
+      console.log(`Downloaded ${downloadedBytes} bytes`);
+    }
   }
 }
 

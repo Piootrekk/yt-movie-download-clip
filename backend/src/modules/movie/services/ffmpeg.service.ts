@@ -1,6 +1,5 @@
 import ffmpegInstaller from '@ffmpeg-installer/ffmpeg';
 import { Injectable } from '@nestjs/common';
-import { FastifyReply } from 'fastify';
 import ffmpeg from 'fluent-ffmpeg';
 import { PassThrough, Readable } from 'stream';
 
@@ -65,6 +64,25 @@ class FfmpegService {
         console.log('Trimming finished.');
       });
     return passThrough;
+  }
+
+  margeAudioToVideo(
+    videoStream: Readable,
+    audioStream: Readable,
+  ): Promise<void> {
+    return new Promise((resolve, reject) => {
+      ffmpeg()
+        .input(videoStream)
+        .inputFormat('mp4')
+        .input(audioStream)
+        .inputFormat('mp3')
+        .complexFilter(['[0:v][1:a]amerge=inputs=1[out]'])
+        .map('[out]')
+        .output('tasd.mp4')
+        .on('end', () => resolve())
+        .on('error', reject)
+        .run();
+    });
   }
 }
 

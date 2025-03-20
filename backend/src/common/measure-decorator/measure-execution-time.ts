@@ -27,13 +27,16 @@ const MeasureExecutionTime = () => {
             );
           });
 
-          originalStream.on('error', (error) => {
-            const end = performance.now();
-            const executionTime = (end - start) / 1000;
-            console.warn(
-              `[${requestId}] ${propertyKey} - Stream failed after ${executionTime.toFixed(3)}s: ${error.message}`,
-            );
-          });
+          originalStream.on(
+            'error',
+            (error: unknown & { message?: string }) => {
+              const end = performance.now();
+              const executionTime = (end - start) / 1000;
+              console.warn(
+                `[${requestId}] ${propertyKey} - Stream failed after ${executionTime.toFixed(3)}s: ${error.message}`,
+              );
+            },
+          );
         } else {
           const end = performance.now();
           const executionTime = (end - start) / 1000;
