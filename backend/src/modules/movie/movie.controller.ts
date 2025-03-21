@@ -27,12 +27,15 @@ class MovieController {
 
   private handleHeadersToStream(
     fileName?: string,
-    fileType?: string,
+    container?: string,
+    type?: string,
   ): { type: string; disposition: string } {
-    const sanitizedType = fileType || 'mp4';
-    const sanitizedName = fileName || `video-${Date.now()}.${sanitizedType}`;
+    const sanitizedContaier = container || 'mp4';
+    const sanitizedType = type || 'video';
+    const sanitizedName =
+      fileName || `${sanitizedType}-${Date.now()}.${sanitizedContaier}`;
     return {
-      type: `video/${sanitizedType}`,
+      type: `${sanitizedType}/${sanitizedContaier}`,
       disposition: `attachment; filename="${sanitizedName}"`,
     };
   }
@@ -85,7 +88,7 @@ class MovieController {
   @Get('local-file/trim')
   @MeasureExecutionTime()
   async trimLocalFile(@Query() query: MovieDownloadStampDto): Promise<void> {
-    await this.trimLocalFile({ ...query });
+    await this.movieService.trimVideoToFile({ ...query });
   }
 
   @Get('download/trim')
@@ -105,9 +108,11 @@ class MovieController {
 
   @Get('download-both/local-file')
   @MeasureExecutionTime()
-  async downloadAudioAndVidoe(
+  async downloadAudioAndVideo(
     @Query() query: MovieDownloadBothStreamDto,
-  ): Promise<void> {}
+  ): Promise<void> {
+    await this.movieService.margedFullVideoToFile({ ...query });
+  }
 }
 
 export { MovieController };

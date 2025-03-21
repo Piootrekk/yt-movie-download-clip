@@ -64,22 +64,18 @@ class FfmpegService {
     return passThrough;
   }
 
-  margeAudioToVideo(
-    videoStream: Readable,
-    audioStream: Readable,
-  ): Promise<void> {
+  margeAudioVideoToFile(videoPath: string, audioPath: string): Promise<void> {
     return new Promise((resolve, reject) => {
-      ffmpeg()
-        .input(videoStream)
-        .inputFormat('mp4')
-        .input(audioStream)
-        .inputFormat('mp3')
-        .complexFilter(['[0:v][1:a]amerge=inputs=1[out]'])
-        .map('[out]')
-        .output('tasd.mp4')
+      const command = ffmpeg()
+        .input(videoPath)
+        .videoCodec('copy')
+        .input(audioPath)
+        .audioCodec('aac')
+        .output('both.mp4')
         .on('end', () => resolve())
-        .on('error', reject)
-        .run();
+        .on('error', reject);
+
+      command.run();
     });
   }
 }

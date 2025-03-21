@@ -1,6 +1,6 @@
 import fs from 'fs';
 import fsPromise from 'fs/promises';
-import fsStreamPromise from 'stream/promises';
+import { pipeline } from 'stream/promises';
 import { Injectable } from '@nestjs/common';
 import { Readable } from 'stream';
 
@@ -15,25 +15,35 @@ class FsService {
       fs.mkdirSync(this.pathTempDirectory);
   }
 
-  async createFilesFromStreams(
-    container: string,
-    ...streams: Readable[]
-  ): Promise<string[]> {
-    const fileNames: string[] = [];
-    const writePromises = streams.map((stream, index) => {
-      const fileName = `file_${index}.${container}`;
-      const writeStream = fs.createWriteStream(fileName);
-
-      fileNames.push(fileName);
-
-      return fsStreamPromise.pipeline(stream, writeStream);
+  async createFilesFromStreams(container: string, ...streams: Readable[]) {
+    const writePromise = streams.map(async (stream, index) => {
+      const fileName = `${this.pathTempDirectory}/stream-${index}.${container}`;
+      await fsPromise.writeFile(fileName, stream);
+      return fileName;
     });
-    await Promise.all(writePromises);
-    return fileNames;
+    return Promise.all(writePromise);
   }
 
-  async cleanUpFiles(fileNames: string[]): Promise<void> {
-    await Promise.all(fileNames.map((filename) => fsPromise.unlink(filename)));
+  async createFileFromStream(
+    container: string,
+    stream: Readable,
+  ): Promise<string> {
+    return new Promise<string>((resolve, reject) => {
+      const fileName = `${this.pathTempDirectory}/stream-${Date.now()}.${container}`;
+      const fileHandler = fs.createWriteStream(fileName);
+      stream
+        .pipe(fileHandler)
+        .on('close', () => resolve(fileName))
+        .on('error', (err) => reject(err));
+    });
+  }
+
+  async cleanUpFiles(...fileNames: string[]): Promise<void> {
+    await Promise.all(
+      fileNames.map((filename) =>
+        fsPromise.unlink(`${this.pathTempDirectory}/${filename}`),
+      ),
+    );
   }
 }
 

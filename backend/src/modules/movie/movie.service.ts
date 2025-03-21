@@ -17,6 +17,12 @@ type TDownloadTrim = TDownload & {
   duration: number;
 };
 
+type TDownloadBoth = TInfo & {
+  videoItag: number;
+  audioItag: number;
+  progressTrack?: boolean;
+};
+
 @Injectable()
 class MovieService {
   private readonly ffmpegService: FfmpegService;
@@ -114,6 +120,49 @@ class MovieService {
       start,
       duration,
     );
+  }
+
+  async margedFullVideoToFile({
+    url,
+    clients,
+    audioItag,
+    videoItag,
+  }: TDownloadBoth): Promise<void> {
+    const audioFilters = await this.ytdlService.getFormatByItag(
+      url,
+      audioItag,
+      clients,
+    );
+    console.log('fetched audio filters');
+    const videoFilters = await this.ytdlService.getFormatByItag(
+      url,
+      videoItag,
+      clients,
+    );
+    console.log('fetched video filters');
+    const ytAudioStream = this.ytdlService.createDownloadReadable(
+      url,
+      audioFilters,
+    );
+    console.log('fetched audio stream');
+
+    const ytVideoStream = this.ytdlService.createDownloadReadable(
+      url,
+      videoFilters,
+    );
+    console.log('fetched video stream');
+    const audioFile = await this.fsService.createFileFromStream(
+      audioFilters.container,
+      ytAudioStream,
+    );
+    console.log('audio file finished');
+    const videoFile = await this.fsService.createFileFromStream(
+      videoFilters.container,
+      ytVideoStream,
+    );
+    console.log('video file finished');
+    await this.ffmpegService.margeAudioVideoToFile(videoFile, audioFile);
+    await this.fsService.cleanUpFiles(audioFile, videoFile);
   }
 }
 
