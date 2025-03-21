@@ -1,5 +1,4 @@
 import { Controller, Get, Query, StreamableFile } from '@nestjs/common';
-import { YtdlService } from './services/ytdl.service';
 import {
   MovieDownloadQueryDto,
   MovieQueryCustomClientsDto,
@@ -15,17 +14,15 @@ import {
   YtInfoSwagger,
   YtValidateUrlSwagger,
 } from './movie.swagger';
-import { FfmpegService } from './services/ffmpeg.service';
+import { MovieService } from './movie.service';
 
 @YtApiTag
 @Controller('yt')
 class MovieController {
-  private readonly ytdlService: YtdlService;
-  private readonly ffmpegService: FfmpegService;
+  private readonly movieService: MovieService;
 
-  constructor(ytdlService: YtdlService, ffmpegService: FfmpegService) {
-    this.ytdlService = ytdlService;
-    this.ffmpegService = ffmpegService;
+  constructor(movieService: MovieService) {
+    this.movieService = movieService;
   }
 
   private handleHeadersToStream(
@@ -42,34 +39,33 @@ class MovieController {
 
   @Get('ffmpeginfo')
   getVersion() {
-    return this.ffmpegService.getVersion();
+    return this.movieService.getVersion();
   }
 
   @Get('info')
   @YtInfoSwagger
   @MeasureExecutionTime()
   async getInfo(@Query() query: MovieQueryCustomClientsDto) {
-    this.ffmpegService.getVersion();
-    return await this.ytdlService.getVideoInfo(query.url, query.clients);
+    return await this.movieService.getInfo({ ...query });
   }
 
   @Get('validate')
   @YtValidateUrlSwagger
   isValidate(@Query() query: MovieQueryDto): boolean {
-    return this.ytdlService.validateURL(query.url);
+    return this.movieService.isValidate({ url: query.url });
   }
 
-  @Get('filters')
+  @Get('formats')
   @YtFiltersSwagger
   @MeasureExecutionTime()
   getFilters(@Query() query: MovieQueryCustomClientsDto) {
-    return this.ytdlService.getFormats(query.url, query.clients);
+    return this.movieService.getFormats({ ...query });
   }
 
   @Get('itags')
   @MeasureExecutionTime()
   getItags(@Query() query: MovieQueryCustomClientsDto) {
-    return this.ytdlService.getItagsGroups(query.url, query.clients);
+    return this.movieService.getItags({ ...query });
   }
 
   @Get('download/all')
@@ -78,41 +74,18 @@ class MovieController {
   async downloadVideo(
     @Query() query: MovieDownloadQueryDto,
   ): Promise<StreamableFile> {
-    const ytSelectedFilter = await this.ytdlService.getFormatByItag(
-      query.url,
-      query.itag,
-      query.clients,
-    );
-    const headers = this.handleHeadersToStream(
-      'video',
-      ytSelectedFilter.container,
-    );
-    const stream = this.ytdlService.createDownloadReadable(
-      query.url,
-      ytSelectedFilter,
-      true,
-    );
-    return new StreamableFile(stream, headers);
+    const download = await this.movieService.downloadFullVideo({
+      ...query,
+      progressTrack: true,
+    });
+    const headers = this.handleHeadersToStream('video', download.container);
+    return new StreamableFile(download.stream, headers);
   }
 
   @Get('local-file/trim')
   @MeasureExecutionTime()
   async trimLocalFile(@Query() query: MovieDownloadStampDto): Promise<void> {
-    const ytSelectedFilter = await this.ytdlService.getFormatByItag(
-      query.url,
-      query.itag,
-      query.clients,
-    );
-    const stream = this.ytdlService.createDownloadReadable(
-      query.url,
-      ytSelectedFilter,
-    );
-
-    await this.ffmpegService.trimVideoToFile(
-      stream,
-      query.start,
-      query.duration,
-    );
+    await this.trimLocalFile({ ...query });
   }
 
   @Get('download/trim')
@@ -120,55 +93,21 @@ class MovieController {
   async downloadVideoTrim(
     @Query() query: MovieDownloadStampDto,
   ): Promise<StreamableFile> {
-    const ytSelectedFilter = await this.ytdlService.getFormatByItag(
-      query.url,
-      query.itag,
-      query.clients,
-    );
+    const trimmedDownload = await this.movieService.downloadTrimmedVideo({
+      ...query,
+    });
     const headers = this.handleHeadersToStream(
       'video',
-      ytSelectedFilter.container,
+      trimmedDownload.container,
     );
-    const ytStream = this.ytdlService.createDownloadReadable(
-      query.url,
-      ytSelectedFilter,
-    );
-
-    const trimmedStream = this.ffmpegService.trimVideoToStream(
-      ytStream,
-      query.start,
-      query.duration,
-    );
-    return new StreamableFile(trimmedStream, headers);
+    return new StreamableFile(trimmedDownload.stream, headers);
   }
 
   @Get('download-both/local-file')
   @MeasureExecutionTime()
   async downloadAudioAndVidoe(
     @Query() query: MovieDownloadBothStreamDto,
-  ): Promise<void> {
-    console.log('audio: ' + query.audioItag);
-    console.log('video: ' + query.videoItag);
-    const ytSelectedFilterVideo = await this.ytdlService.getFormatByItag(
-      query.url,
-      query.videoItag,
-      query.clients,
-    );
-    const videoStream = this.ytdlService.createDownloadReadable(
-      query.url,
-      ytSelectedFilterVideo,
-    );
-    const ytSelectedFilterAudio = await this.ytdlService.getFormatByItag(
-      query.url,
-      query.audioItag,
-      query.clients,
-    );
-    const audioStream = this.ytdlService.createDownloadReadable(
-      query.url,
-      ytSelectedFilterAudio,
-    );
-    await this.ffmpegService.margeAudioToVideo(videoStream, audioStream);
-  }
+  ): Promise<void> {}
 }
 
 export { MovieController };

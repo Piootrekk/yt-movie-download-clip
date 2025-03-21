@@ -13,10 +13,8 @@ class FfmpegService {
     ffmpeg.setFfmpegPath(ffmpegInstaller.path);
   }
 
-  getVersion(): void {
-    console.log(
-      `Version: ${ffmpegInstaller.version}, Path: ${ffmpegInstaller.path}`,
-    );
+  getVersion(): string {
+    return `Version: ${ffmpegInstaller.version}, Path: ${ffmpegInstaller.path}`;
   }
 
   async trimVideoToFile(
