@@ -12,16 +12,28 @@ type TDownloadResponse = {
   stream: Stream.Readable;
   container: string;
 };
-type TDownloadTrim = TDownload & {
+
+type TStamp = {
   start: string;
   duration: number;
 };
+
+type TDownloadTrim = TDownload & TStamp;
 
 type TDownloadBoth = TInfo & {
   videoItag: number;
   audioItag: number;
   progressTrack?: boolean;
 };
+
+type TBothStreamResponse = {
+  videoFileHanlder: string;
+  audioFileHandler: string;
+  audioContainer: string;
+  videoContainer: string;
+};
+
+type TDownloadBothDuration = TDownloadBoth & TStamp;
 
 @Injectable()
 class MovieService {
@@ -122,47 +134,96 @@ class MovieService {
     );
   }
 
-  async margedFullVideoToFile({
-    url,
-    clients,
-    audioItag,
-    videoItag,
-  }: TDownloadBoth): Promise<void> {
-    const audioFilters = await this.ytdlService.getFormatByItag(
-      url,
-      audioItag,
-      clients,
-    );
-    console.log('fetched audio filters');
-    const videoFilters = await this.ytdlService.getFormatByItag(
-      url,
-      videoItag,
-      clients,
-    );
-    console.log('fetched video filters');
+  private async getBothStreams(
+    url: string,
+    audioItag: number,
+    videoItag: number,
+    clients?: ClientEnum[],
+  ): Promise<TBothStreamResponse> {
+    const [audioFilters, videoFilters] = await Promise.all([
+      this.ytdlService.getFormatByItag(url, audioItag, clients),
+      this.ytdlService.getFormatByItag(url, videoItag, clients),
+    ]);
+
+    console.log('Wrapped fetching fillters finished');
+
     const ytAudioStream = this.ytdlService.createDownloadReadable(
       url,
       audioFilters,
     );
-    console.log('fetched audio stream');
 
     const ytVideoStream = this.ytdlService.createDownloadReadable(
       url,
       videoFilters,
     );
-    console.log('fetched video stream');
-    const audioFile = await this.fsService.createFileFromStream(
-      audioFilters.container,
-      ytAudioStream,
+
+    console.log('Streams ready...');
+
+    const [audioFile, videoFile] = await Promise.all([
+      this.fsService.createFileFromStream(
+        audioFilters.container,
+        ytAudioStream,
+      ),
+      this.fsService.createFileFromStream(
+        videoFilters.container,
+        ytVideoStream,
+      ),
+    ]);
+    return {
+      audioFileHandler: audioFile,
+      audioContainer: audioFilters.container,
+      videoFileHanlder: videoFile,
+      videoContainer: videoFilters.container,
+    };
+  }
+
+  async mergedFullVideoToFile({
+    url,
+    clients,
+    audioItag,
+    videoItag,
+  }: TDownloadBoth): Promise<void> {
+    console.log('Wrapped pipes to temp files');
+    const { audioFileHandler, videoFileHanlder } = await this.getBothStreams(
+      url,
+      audioItag,
+      videoItag,
+      clients,
     );
-    console.log('audio file finished');
-    const videoFile = await this.fsService.createFileFromStream(
-      videoFilters.container,
-      ytVideoStream,
+    await this.ffmpegService.mergeAudioVideoToFile(
+      videoFileHanlder,
+      audioFileHandler,
     );
-    console.log('video file finished');
-    await this.ffmpegService.margeAudioVideoToFile(videoFile, audioFile);
-    await this.fsService.cleanUpFiles(audioFile, videoFile);
+    console.log('ffmpeg merge finished');
+
+    await this.fsService.cleanUpFiles(audioFileHandler, videoFileHanlder);
+    console.log('Cleaning up finished');
+  }
+
+  async mergedFullVideoToStream({
+    url,
+    clients,
+    audioItag,
+    videoItag,
+    start,
+    duration,
+  }: TDownloadBothDuration): Promise<TDownloadResponse> {
+    const {
+      audioFileHandler,
+      videoFileHanlder,
+      videoContainer,
+      audioContainer,
+    } = await this.getBothStreams(url, audioItag, videoItag, clients);
+    const stream = this.ffmpegService.mergedAudioVideoToStream(
+      videoFileHanlder,
+      audioFileHandler,
+      start,
+      duration,
+    );
+    return {
+      stream: stream,
+      container: videoContainer || audioContainer,
+    };
   }
 }
 

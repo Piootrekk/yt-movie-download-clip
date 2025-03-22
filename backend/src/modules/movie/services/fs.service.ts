@@ -40,9 +40,7 @@ class FsService {
 
   async cleanUpFiles(...fileNames: string[]): Promise<void> {
     await Promise.all(
-      fileNames.map((filename) =>
-        fsPromise.unlink(`${this.pathTempDirectory}/${filename}`),
-      ),
+      fileNames.map((filename) => fsPromise.unlink(`${filename}`)),
     );
   }
 }

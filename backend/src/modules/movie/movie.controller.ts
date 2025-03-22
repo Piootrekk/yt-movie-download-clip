@@ -71,10 +71,10 @@ class MovieController {
     return this.movieService.getItags({ ...query });
   }
 
-  @Get('download/all')
+  @Get('stream/all')
   @YtDownloadSwagger
   @MeasureExecutionTime()
-  async downloadVideo(
+  async getAllStream(
     @Query() query: MovieDownloadQueryDto,
   ): Promise<StreamableFile> {
     const download = await this.movieService.downloadFullVideo({
@@ -87,13 +87,13 @@ class MovieController {
 
   @Get('local-file/trim')
   @MeasureExecutionTime()
-  async trimLocalFile(@Query() query: MovieDownloadStampDto): Promise<void> {
+  async trimToFile(@Query() query: MovieDownloadStampDto): Promise<void> {
     await this.movieService.trimVideoToFile({ ...query });
   }
 
-  @Get('download/trim')
+  @Get('stream/trim')
   @MeasureExecutionTime()
-  async downloadVideoTrim(
+  async getTrimmedStream(
     @Query() query: MovieDownloadStampDto,
   ): Promise<StreamableFile> {
     const trimmedDownload = await this.movieService.downloadTrimmedVideo({
@@ -106,12 +106,20 @@ class MovieController {
     return new StreamableFile(trimmedDownload.stream, headers);
   }
 
-  @Get('download-both/local-file')
+  @Get('local-file/all/merge')
   @MeasureExecutionTime()
-  async downloadAudioAndVideo(
+  async trimMergedToFile(
     @Query() query: MovieDownloadBothStreamDto,
   ): Promise<void> {
-    await this.movieService.margedFullVideoToFile({ ...query });
+    await this.movieService.mergedFullVideoToFile({ ...query });
+  }
+
+  @Get('stream/trim/merge')
+  @MeasureExecutionTime()
+  async getTrimMergedStream(
+    @Query() query: MovieDownloadBothStreamDto,
+  ): Promise<StreamableFile> {
+    
   }
 }
 

@@ -43,7 +43,7 @@ class FfmpegService {
     inputStream: Readable,
     startTimeInSec: string,
     durationTimeInSec: number,
-  ) {
+  ): Readable {
     const passThrough = new PassThrough();
     const command = ffmpeg(inputStream)
       .setStartTime(startTimeInSec)
@@ -64,7 +64,7 @@ class FfmpegService {
     return passThrough;
   }
 
-  margeAudioVideoToFile(videoPath: string, audioPath: string): Promise<void> {
+  mergeAudioVideoToFile(videoPath: string, audioPath: string): Promise<void> {
     return new Promise((resolve, reject) => {
       const command = ffmpeg()
         .input(videoPath)
@@ -77,6 +77,33 @@ class FfmpegService {
 
       command.run();
     });
+  }
+
+  mergedAudioVideoToStream(
+    videoPath: string,
+    audioPath: string,
+    startTimeInSec: string,
+    durationTimeInSec: number,
+  ): Readable {
+    const passThrough = new PassThrough();
+    const command = ffmpeg()
+      .input(videoPath)
+      .videoCodec('copy')
+      .input(audioPath)
+      .audioCodec('aac')
+      .setStartTime(startTimeInSec)
+      .setDuration(durationTimeInSec);
+    command.pipe(passThrough);
+    passThrough
+      .on('start', (cmd) => console.log('FFmpeg command:', cmd))
+      .on('error', (err) => {
+        console.error('FFmpeg error:', err.message);
+        throw new Error(err.message);
+      })
+      .on('end', () => {
+        console.log('Trimming finished.');
+      });
+    return passThrough;
   }
 }
 
