@@ -4,14 +4,20 @@ import {
   MovieQueryCustomClientsDto,
   MovieQueryDto,
   MovieDownloadStampDto,
-  MovieDownloadBothStreamDto,
+  MovieDownloadMergeStreamsDto,
+  MovieDownloadStampMergeStreamsDto,
 } from './movie.dto';
 import { MeasureExecutionTime } from './../../common/measure-decorator/measure-execution-time';
 import {
   YtApiTag,
-  YtDownloadSwagger,
   YtFiltersSwagger,
   YtInfoSwagger,
+  YtItagsSwagger,
+  YtMergeLocalSwagger,
+  YtMergeStreamSwagger,
+  YTrimLocalSwagger,
+  YtStreamSwagger,
+  YtTrimStreamSwagger,
   YtValidateUrlSwagger,
 } from './movie.swagger';
 import { MovieService } from './movie.service';
@@ -66,13 +72,14 @@ class MovieController {
   }
 
   @Get('itags')
+  @YtItagsSwagger
   @MeasureExecutionTime()
   getItags(@Query() query: MovieQueryCustomClientsDto) {
     return this.movieService.getItags({ ...query });
   }
 
   @Get('stream/all')
-  @YtDownloadSwagger
+  @YtStreamSwagger
   @MeasureExecutionTime()
   async getAllStream(
     @Query() query: MovieDownloadQueryDto,
@@ -86,12 +93,14 @@ class MovieController {
   }
 
   @Get('local-file/trim')
+  @YTrimLocalSwagger
   @MeasureExecutionTime()
   async trimToFile(@Query() query: MovieDownloadStampDto): Promise<void> {
     await this.movieService.trimVideoToFile({ ...query });
   }
 
   @Get('stream/trim')
+  @YtTrimStreamSwagger
   @MeasureExecutionTime()
   async getTrimmedStream(
     @Query() query: MovieDownloadStampDto,
@@ -107,19 +116,28 @@ class MovieController {
   }
 
   @Get('local-file/all/merge')
+  @YtMergeLocalSwagger
   @MeasureExecutionTime()
   async trimMergedToFile(
-    @Query() query: MovieDownloadBothStreamDto,
+    @Query() query: MovieDownloadMergeStreamsDto,
   ): Promise<void> {
     await this.movieService.mergedFullVideoToFile({ ...query });
   }
 
   @Get('stream/trim/merge')
+  @YtMergeStreamSwagger
   @MeasureExecutionTime()
   async getTrimMergedStream(
-    @Query() query: MovieDownloadBothStreamDto,
+    @Query() query: MovieDownloadStampMergeStreamsDto,
   ): Promise<StreamableFile> {
-    
+    const trimmedStream = await this.movieService.mergedFullVideoToStream({
+      ...query,
+    });
+    const headers = this.handleHeadersToStream(
+      'video',
+      trimmedStream.container,
+    );
+    return new StreamableFile(trimmedStream.stream, headers);
   }
 }
 

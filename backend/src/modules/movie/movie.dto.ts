@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, IntersectionType } from '@nestjs/swagger';
 import { Transform, Type } from 'class-transformer';
 import {
   ArrayUnique,
@@ -39,26 +39,7 @@ class MovieQueryDto {
   url: string;
 }
 
-class MovieQueryCustomClientsDto extends MovieQueryDto {
-  @ApiProperty({ enum: ClientEnum, isArray: true, required: false })
-  @IsArray()
-  @ArrayUnique()
-  @IsEnum(ClientEnum, { each: true })
-  @IsOptional()
-  @Transform(transformToArray)
-  clients?: ClientEnum[];
-}
-
-class MovieDownloadQueryDto extends MovieQueryCustomClientsDto {
-  @ApiProperty({
-    type: Number,
-  })
-  @IsInt()
-  @Type(() => Number)
-  itag: number;
-}
-
-class MovieDownloadStampDto extends MovieDownloadQueryDto {
+class MovieStampDto {
   @ApiProperty({
     type: String,
     description: 'Time format must be HH:MM:SS.mmm',
@@ -79,7 +60,31 @@ class MovieDownloadStampDto extends MovieDownloadQueryDto {
   duration: number;
 }
 
-class MovieDownloadBothStreamDto extends MovieQueryCustomClientsDto {
+class MovieQueryCustomClientsDto extends MovieQueryDto {
+  @ApiProperty({ enum: ClientEnum, isArray: true, required: false })
+  @IsArray()
+  @ArrayUnique()
+  @IsEnum(ClientEnum, { each: true })
+  @IsOptional()
+  @Transform(transformToArray)
+  clients?: ClientEnum[];
+}
+
+class MovieDownloadQueryDto extends MovieQueryCustomClientsDto {
+  @ApiProperty({
+    type: Number,
+  })
+  @IsInt()
+  @Type(() => Number)
+  itag: number;
+}
+
+class MovieDownloadStampDto extends IntersectionType(
+  MovieDownloadQueryDto,
+  MovieStampDto,
+) {}
+
+class MovieDownloadMergeStreamsDto extends MovieQueryCustomClientsDto {
   @ApiProperty({
     type: Number,
   })
@@ -95,11 +100,17 @@ class MovieDownloadBothStreamDto extends MovieQueryCustomClientsDto {
   audioItag: number;
 }
 
+class MovieDownloadStampMergeStreamsDto extends IntersectionType(
+  MovieDownloadMergeStreamsDto,
+  MovieStampDto,
+) {}
+
 export {
   MovieQueryDto,
   MovieQueryCustomClientsDto,
   MovieDownloadQueryDto,
   ClientEnum,
   MovieDownloadStampDto,
-  MovieDownloadBothStreamDto,
+  MovieDownloadMergeStreamsDto,
+  MovieDownloadStampMergeStreamsDto,
 };

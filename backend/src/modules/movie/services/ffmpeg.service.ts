@@ -46,7 +46,7 @@ class FfmpegService {
   ): Readable {
     const passThrough = new PassThrough();
     const command = ffmpeg(inputStream)
-      .setStartTime(startTimeInSec)
+      .seekInput(startTimeInSec)
       .setDuration(durationTimeInSec)
       .format('mp4')
       .outputOptions('-movflags frag_keyframe+empty_moov');
@@ -74,7 +74,6 @@ class FfmpegService {
         .output('both.mp4')
         .on('end', () => resolve())
         .on('error', reject);
-
       command.run();
     });
   }
@@ -88,18 +87,17 @@ class FfmpegService {
     const passThrough = new PassThrough();
     const command = ffmpeg()
       .input(videoPath)
+      .seekInput(startTimeInSec)
       .videoCodec('copy')
       .input(audioPath)
+      .seekInput(startTimeInSec)
       .audioCodec('aac')
-      .setStartTime(startTimeInSec)
-      .setDuration(durationTimeInSec);
-    command.pipe(passThrough);
+      .format('mp4')
+      .duration(durationTimeInSec)
+      .outputOptions('-movflags frag_keyframe+empty_moov');
+    command.pipe(passThrough, { end: true });
     passThrough
       .on('start', (cmd) => console.log('FFmpeg command:', cmd))
-      .on('error', (err) => {
-        console.error('FFmpeg error:', err.message);
-        throw new Error(err.message);
-      })
       .on('end', () => {
         console.log('Trimming finished.');
       });
