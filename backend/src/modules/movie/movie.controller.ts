@@ -84,19 +84,21 @@ class MovieController {
   async getAllStream(
     @Query() query: MovieDownloadQueryDto,
   ): Promise<StreamableFile> {
-    const download = await this.movieService.downloadFullVideo({
+    const filter = await this.movieService.getCurrentFilter({ ...query });
+    const stream = this.movieService.downloadFullVideo({
       ...query,
-      progressTrack: true,
+      filter,
     });
-    const headers = this.handleHeadersToStream('video', download.container);
-    return new StreamableFile(download.stream, headers);
+    const headers = this.handleHeadersToStream('video', filter.container);
+    return new StreamableFile(stream, headers);
   }
 
   @Get('local-file/trim')
   @YTrimLocalSwagger
   @MeasureExecutionTime()
   async trimToFile(@Query() query: MovieDownloadStampDto): Promise<void> {
-    await this.movieService.trimVideoToFile({ ...query });
+    const filter = await this.movieService.getCurrentFilter({ ...query });
+    await this.movieService.trimVideoToFile({ ...query, filter });
   }
 
   @Get('stream/trim')
@@ -105,14 +107,13 @@ class MovieController {
   async getTrimmedStream(
     @Query() query: MovieDownloadStampDto,
   ): Promise<StreamableFile> {
-    const trimmedDownload = await this.movieService.downloadTrimmedVideo({
+    const filter = await this.movieService.getCurrentFilter({ ...query });
+    const trimmedStream = this.movieService.downloadTrimmedVideo({
       ...query,
+      filter,
     });
-    const headers = this.handleHeadersToStream(
-      'video',
-      trimmedDownload.container,
-    );
-    return new StreamableFile(trimmedDownload.stream, headers);
+    const headers = this.handleHeadersToStream('video', filter.container);
+    return new StreamableFile(trimmedStream, headers);
   }
 
   @Get('local-file/all/merge')
@@ -121,7 +122,8 @@ class MovieController {
   async trimMergedToFile(
     @Query() query: MovieDownloadMergeStreamsDto,
   ): Promise<void> {
-    await this.movieService.mergedFullVideoToFile({ ...query });
+    const bothFilters = await this.movieService.getBothFilters({ ...query });
+    await this.movieService.mergedFullVideoToFile({ ...query, ...bothFilters });
   }
 
   @Get('stream/trim/merge')
@@ -130,14 +132,17 @@ class MovieController {
   async getTrimMergedStream(
     @Query() query: MovieDownloadStampMergeStreamsDto,
   ): Promise<StreamableFile> {
+    const bothFilters = await this.movieService.getBothFilters({ ...query });
     const trimmedStream = await this.movieService.mergedFullVideoToStream({
       ...query,
+      ...bothFilters,
     });
+
     const headers = this.handleHeadersToStream(
       'video',
-      trimmedStream.container,
+      bothFilters.videoFilter.container,
     );
-    return new StreamableFile(trimmedStream.stream, headers);
+    return new StreamableFile(trimmedStream, headers);
   }
 }
 
