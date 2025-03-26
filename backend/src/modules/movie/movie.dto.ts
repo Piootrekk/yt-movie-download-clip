@@ -1,11 +1,13 @@
-import { ApiProperty, IntersectionType } from '@nestjs/swagger';
+import { ApiProperty, IntersectionType, OmitType } from '@nestjs/swagger';
 import { Transform, Type } from 'class-transformer';
 import {
   ArrayUnique,
   IsArray,
+  IsBoolean,
   IsEnum,
   IsInt,
   IsNumber,
+  IsObject,
   IsOptional,
   IsString,
   Matches,
@@ -105,6 +107,279 @@ class MovieDownloadStampMergeStreamsDto extends IntersectionType(
   MovieStampDto,
 ) {}
 
+class MovieErrorDto {
+  @ApiProperty({
+    type: String,
+  })
+  @IsString()
+  message: string;
+}
+
+class FfmpegInfoResposeDto {
+  @ApiProperty({
+    type: String,
+  })
+  @IsString()
+  version: string;
+  @ApiProperty({
+    type: String,
+  })
+  @IsString()
+  path: string;
+}
+
+class ValidationResponseDto {
+  @ApiProperty({
+    type: Boolean,
+  })
+  @IsBoolean()
+  isValid: boolean;
+}
+class FilterVideoRangeDto {
+  @ApiProperty({
+    type: String,
+  })
+  @IsString()
+  start: string;
+  @ApiProperty({
+    type: String,
+  })
+  @IsString()
+  end: string;
+}
+
+class FilterContainerDto {
+  @ApiProperty({
+    type: String,
+  })
+  @IsString()
+  mimeType: string;
+
+  @ApiProperty({
+    type: String,
+  })
+  @IsString()
+  qualityLabel: string;
+
+  @ApiProperty({
+    type: Number,
+  })
+  @IsNumber()
+  bitrate: number;
+
+  @ApiProperty({
+    type: Number,
+  })
+  @IsNumber()
+  audioBitrate: number;
+
+  @ApiProperty({
+    type: Number,
+  })
+  @IsNumber()
+  itag: number;
+
+  @ApiProperty({
+    type: String,
+  })
+  @IsString()
+  url: string;
+
+  @ApiProperty({
+    type: Number,
+  })
+  @IsNumber()
+  width: number;
+
+  @ApiProperty({
+    type: Number,
+  })
+  @IsNumber()
+  height: number;
+
+  @ApiProperty({
+    type: String,
+  })
+  @IsString()
+  lastModified: string;
+
+  @ApiProperty({
+    type: String,
+  })
+  @IsString()
+  contentLength: string;
+
+  @ApiProperty({
+    type: String,
+  })
+  @IsString()
+  quality: string;
+
+  @ApiProperty({
+    type: Number,
+  })
+  @IsNumber()
+  fps: number;
+
+  @ApiProperty({
+    type: String,
+  })
+  @IsString()
+  projectionType: string;
+
+  @ApiProperty({
+    type: Number,
+  })
+  @IsNumber()
+  averageBitrate: number;
+
+  @ApiProperty({
+    type: String,
+  })
+  @IsString()
+  audioQuality: string;
+
+  @ApiProperty({
+    type: String,
+  })
+  @IsString()
+  approxDurationMs: string;
+
+  @ApiProperty({
+    type: String,
+  })
+  @IsString()
+  audioSampleRate: string;
+
+  @ApiProperty({
+    type: Number,
+  })
+  @IsNumber()
+  audioChannels: number;
+
+  @ApiProperty({
+    type: Boolean,
+  })
+  @IsBoolean()
+  hasVideo: boolean;
+
+  @ApiProperty({
+    type: Boolean,
+  })
+  @IsBoolean()
+  hasAudio: boolean;
+
+  @ApiProperty({
+    type: String,
+  })
+  @IsString()
+  container: string;
+
+  @ApiProperty({
+    type: String,
+  })
+  @IsString()
+  codecs: string;
+
+  @ApiProperty({
+    type: String,
+  })
+  @IsString()
+  videoCodec: string;
+
+  @ApiProperty({
+    type: String,
+  })
+  @IsString()
+  audioCodec: string;
+
+  @ApiProperty({
+    type: Boolean,
+  })
+  @IsBoolean()
+  isLive: boolean;
+
+  @ApiProperty({
+    type: Boolean,
+  })
+  @IsBoolean()
+  isHLS: boolean;
+
+  @ApiProperty({
+    type: Boolean,
+  })
+  @IsBoolean()
+  isDashMPD: boolean;
+}
+
+class FiltersVideoDto extends OmitType(FilterContainerDto, [
+  'audioChannels',
+  'audioQuality',
+]) {
+  @ApiProperty({
+    type: FilterVideoRangeDto,
+  })
+  @IsObject()
+  @Type(() => FilterVideoRangeDto)
+  initRange: FilterVideoRangeDto;
+  @ApiProperty({
+    type: FilterVideoRangeDto,
+  })
+  @IsObject()
+  @Type(() => FilterVideoRangeDto)
+  indexRange: FilterContainerDto;
+}
+
+class FiltersResponseDto {
+  @ApiProperty({
+    type: FilterContainerDto,
+    isArray: true,
+  })
+  @IsArray()
+  @Type(() => FilterContainerDto)
+  audio: FilterContainerDto[];
+
+  @ApiProperty({
+    type: FiltersVideoDto,
+    isArray: true,
+  })
+  @IsArray()
+  @Type(() => FiltersVideoDto)
+  video: FiltersVideoDto[];
+
+  @ApiProperty({
+    type: FilterContainerDto,
+    isArray: true,
+  })
+  @IsArray()
+  @Type(() => FilterContainerDto)
+  both: FilterContainerDto[];
+}
+
+class ItagsResponseDto {
+  @ApiProperty({
+    isArray: true,
+    type: Number,
+  })
+  @IsArray()
+  @IsNumber({}, { each: true })
+  audioItags: number[];
+  @ApiProperty({
+    isArray: true,
+    type: Number,
+  })
+  @IsArray()
+  @IsNumber({}, { each: true })
+  videoItags: number[];
+  @ApiProperty({
+    isArray: true,
+    type: Number,
+  })
+  @IsArray()
+  @IsNumber({}, { each: true })
+  bothGroupItags: number[];
+}
+
 export {
   MovieQueryDto,
   MovieQueryCustomClientsDto,
@@ -113,4 +388,9 @@ export {
   MovieDownloadStampDto,
   MovieDownloadMergeStreamsDto,
   MovieDownloadStampMergeStreamsDto,
+  MovieErrorDto,
+  FfmpegInfoResposeDto,
+  ValidationResponseDto,
+  FiltersResponseDto,
+  ItagsResponseDto,
 };

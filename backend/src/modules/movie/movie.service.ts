@@ -33,7 +33,9 @@ type TBothStreamResponse = {
   videoFileHanlder: string;
   audioFileHandler: string;
 };
-
+type TIsValid = {
+  isValid: boolean;
+};
 type TDownloadBothDuration = TDownloadBoth & TStamp;
 
 @Injectable()
@@ -52,15 +54,21 @@ class MovieService {
   }
 
   getVersion() {
-    return this.ffmpegService.getVersion();
+    const version = this.ffmpegService
+      .getVersion()
+      .replace('Path:', '')
+      .replace('Version:', '')
+      .trim()
+      .split(',');
+    return { version: version[0], path: version[1] };
   }
 
   async getInfo({ url, clients }: TInfo) {
     return await this.ytdlService.getVideoInfo(url, clients);
   }
 
-  isValidate({ url }: TIsValidate): boolean {
-    return this.ytdlService.validateURL(url);
+  isValidate({ url }: TIsValidate): TIsValid {
+    return { isValid: this.ytdlService.validateURL(url) };
   }
 
   getFormats({ url, clients }: TInfo) {

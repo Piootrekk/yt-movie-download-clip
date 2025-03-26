@@ -28,23 +28,13 @@ class YtdlService {
     const info = await this.getVideoInfo(ytUrl, clients);
     const audioItags = info.formats
       .filter((f) => f.hasAudio)
-      .map((f) => {
-        return { itag: f.itag, mimtype: f.mimeType };
-      });
+      .map((f) => f.itag);
     const videoItags = info.formats
       .filter((f) => f.hasVideo)
-      .map((f) => {
-        return {
-          itag: f.itag,
-          mimtype: f.mimeType,
-          resolution: f.qualityLabel,
-        };
-      });
+      .map((f) => f.itag);
     const bothGroupItags = info.formats
       .filter((f) => f.hasAudio && f.hasVideo)
-      .map((f) => {
-        return { itag: f.itag, mimtype: f.mimeType };
-      });
+      .map((f) => f.itag);
     return {
       audioItags,
       videoItags,

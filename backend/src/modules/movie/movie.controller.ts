@@ -1,4 +1,5 @@
 import { Controller, Get, Query, StreamableFile } from '@nestjs/common';
+import { MeasureExecutionTime } from './../../common/measure-decorator/measure-execution-time';
 import {
   MovieDownloadQueryDto,
   MovieQueryCustomClientsDto,
@@ -6,8 +7,9 @@ import {
   MovieDownloadStampDto,
   MovieDownloadMergeStreamsDto,
   MovieDownloadStampMergeStreamsDto,
+  ValidationResponseDto,
+  FfmpegInfoResposeDto,
 } from './movie.dto';
-import { MeasureExecutionTime } from './../../common/measure-decorator/measure-execution-time';
 import {
   YtApiTag,
   YtFiltersSwagger,
@@ -47,7 +49,7 @@ class MovieController {
   }
 
   @Get('ffmpeginfo')
-  getVersion() {
+  getVersion(): FfmpegInfoResposeDto {
     return this.movieService.getVersion();
   }
 
@@ -60,7 +62,7 @@ class MovieController {
 
   @Get('validate')
   @YtValidateUrlSwagger
-  isValidate(@Query() query: MovieQueryDto): boolean {
+  isValidate(@Query() query: MovieQueryDto): ValidationResponseDto {
     return this.movieService.isValidate({ url: query.url });
   }
 
