@@ -3,12 +3,16 @@ import { FfmpegService } from './services/ffmpeg.service';
 import { YtdlService } from './services/ytdl.service';
 import { FsService } from './services/fs.service';
 import { ClientEnum } from './movie.dto';
-import Stream from 'stream';
+import { Readable } from 'stream';
 import { videoFormat } from '@distube/ytdl-core';
+import { YtDlpService } from './services/ytdlp.service';
 
 type TInfo = { url: string; clients?: ClientEnum[] };
 type TIsValidate = Pick<TInfo, 'url'>;
 type TCurrentFormat = TInfo & { itag: number };
+type TDownloadYtdpl = TInfo & {
+  itag: string;
+};
 type TStream = { progressTrack?: boolean; filter: videoFormat; url: string };
 type TStamp = {
   start: string;
@@ -43,14 +47,17 @@ class MovieService {
   private readonly ffmpegService: FfmpegService;
   private readonly ytdlService: YtdlService;
   private readonly fsService: FsService;
+  private readonly ytdlpService: YtDlpService;
   constructor(
     ffmpegServie: FfmpegService,
     ytdlService: YtdlService,
     fsService: FsService,
+    ytdlpService: YtDlpService,
   ) {
     this.ffmpegService = ffmpegServie;
     this.ytdlService = ytdlService;
     this.fsService = fsService;
+    this.ytdlpService = ytdlpService;
   }
 
   getVersion() {
@@ -92,7 +99,7 @@ class MovieService {
     return ytSelectedFilter;
   }
 
-  downloadFullVideo({ url, filter, progressTrack }: TStream): Stream.Readable {
+  downloadFullVideo({ url, filter, progressTrack }: TStream): Readable {
     const stream = this.ytdlService.createDownloadReadable(
       url,
       filter,
@@ -107,7 +114,7 @@ class MovieService {
     start,
     duration,
     progressTrack,
-  }: TDownloadTrim): Stream.Readable {
+  }: TDownloadTrim): Readable {
     const fullStream = this.downloadFullVideo({
       url,
       filter,
@@ -208,7 +215,7 @@ class MovieService {
     audioFilter,
     start,
     duration,
-  }: TDownloadBothDuration): Promise<Stream.Readable> {
+  }: TDownloadBothDuration): Promise<Readable> {
     const { audioFileHandler, videoFileHanlder } = await this.getBothStreams(
       url,
       audioFilter,
@@ -221,6 +228,7 @@ class MovieService {
       start,
       duration,
     );
+
     stream.on('close', async () => {
       await this.fsService.cleanUpFiles(audioFileHandler, videoFileHanlder);
     });
@@ -228,6 +236,16 @@ class MovieService {
       await this.fsService.cleanUpFiles(audioFileHandler, videoFileHanlder);
       throw err;
     });
+    return stream;
+  }
+
+  downloadFullVideoUsingYtDLP({
+    url,
+    itag,
+    clients,
+  }: TDownloadYtdpl): Readable {
+    const stream = this.ytdlpService.getVideoByItag(url, itag, clients);
+
     return stream;
   }
 }

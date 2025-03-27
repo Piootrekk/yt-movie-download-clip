@@ -148,6 +148,14 @@ class FilterVideoRangeDto {
   end: string;
 }
 
+class DownloadVideoYtDlpDto extends MovieQueryCustomClientsDto {
+  @ApiProperty({
+    type: String,
+  })
+  @IsString()
+  itag: string;
+}
+
 class FilterContainerDto {
   @ApiProperty({
     type: String,
@@ -392,5 +400,6 @@ export {
   FfmpegInfoResposeDto,
   ValidationResponseDto,
   FiltersResponseDto,
+  DownloadVideoYtDlpDto,
   ItagsResponseDto,
 };

@@ -9,6 +9,7 @@ import {
   MovieDownloadStampMergeStreamsDto,
   ValidationResponseDto,
   FfmpegInfoResposeDto,
+  DownloadVideoYtDlpDto,
 } from './movie.dto';
 import {
   YtApiTag,
@@ -145,6 +146,14 @@ class MovieController {
       bothFilters.videoFilter.container,
     );
     return new StreamableFile(trimmedStream, headers);
+  }
+
+  @Get('v2/stream/all')
+  @MeasureExecutionTime()
+  getStream(@Query() query: DownloadVideoYtDlpDto) {
+    const stream = this.movieService.downloadFullVideoUsingYtDLP({ ...query });
+    const headers = this.handleHeadersToStream('video', 'mp4');
+    return new StreamableFile(stream, headers);
   }
 }
 
