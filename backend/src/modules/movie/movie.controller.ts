@@ -10,6 +10,7 @@ import {
   ValidationResponseDto,
   FfmpegInfoResposeDto,
   DownloadVideoYtDlpDto,
+  FiltersResponseV2Dto,
 } from './movie.dto';
 import {
   YtApiTag,
@@ -150,10 +151,17 @@ class MovieController {
 
   @Get('v2/stream/all')
   @MeasureExecutionTime()
-  getStream(@Query() query: DownloadVideoYtDlpDto) {
+  getStream(@Query() query: DownloadVideoYtDlpDto): StreamableFile {
     const stream = this.movieService.downloadFullVideoUsingYtDLP({ ...query });
     const headers = this.handleHeadersToStream('video', 'mp4');
     return new StreamableFile(stream, headers);
+  }
+
+  @Get('v2/filters')
+  @MeasureExecutionTime()
+  getFiltersV2(@Query() query: MovieQueryDto) {
+    const filters = this.movieService.getfiltersYtDLP({ url: query.url });
+    return filters;
   }
 }
 

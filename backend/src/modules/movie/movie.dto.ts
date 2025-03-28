@@ -388,6 +388,19 @@ class ItagsResponseDto {
   bothGroupItags: number[];
 }
 
+class FiltersResponseV2Dto {
+  @ApiProperty({
+    type: String,
+  })
+  @IsString()
+  format_id: string;
+  @ApiProperty({
+    type: String,
+  })
+  @IsString()
+  ext: string;
+}
+
 export {
   MovieQueryDto,
   MovieQueryCustomClientsDto,
@@ -402,4 +415,5 @@ export {
   FiltersResponseDto,
   DownloadVideoYtDlpDto,
   ItagsResponseDto,
+  FiltersResponseV2Dto,
 };

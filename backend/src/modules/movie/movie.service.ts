@@ -248,6 +248,11 @@ class MovieService {
 
     return stream;
   }
+
+  async getfiltersYtDLP({ url, clients }: TInfo) {
+    const filters = await this.ytdlpService.getFilters(url, clients);
+    return filters;
+  }
 }
 
 export { MovieService };
