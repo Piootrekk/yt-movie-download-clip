@@ -41,7 +41,7 @@ type TIsValid = {
   isValid: boolean;
 };
 type TDownloadBothDuration = TDownloadBoth & TStamp;
-
+type TDownloadBothDurationV2 = TGetBothFilters & TStamp;
 @Injectable()
 class MovieService {
   private readonly ffmpegService: FfmpegService;
@@ -159,26 +159,16 @@ class MovieService {
     };
   }
 
-  private async getBothStreams(
-    url: string,
-    audioFilter: videoFormat,
-    videoFilter: videoFormat,
+  private async SaveBothStreamsToFiles(
+    ytAudioStream: Readable,
+    ytVideoStream: Readable,
+    container: string,
   ): Promise<TBothStreamResponse> {
-    const ytAudioStream = this.ytdlService.createDownloadReadable(
-      url,
-      audioFilter,
-    );
-
-    const ytVideoStream = this.ytdlService.createDownloadReadable(
-      url,
-      videoFilter,
-    );
-
     console.log('Streams ready...');
 
     const [audioFile, videoFile] = await Promise.all([
-      this.fsService.createFileFromStream(audioFilter.container, ytAudioStream),
-      this.fsService.createFileFromStream(videoFilter.container, ytVideoStream),
+      this.fsService.createFileFromStream(container, ytAudioStream),
+      this.fsService.createFileFromStream(container, ytVideoStream),
     ]);
     return {
       audioFileHandler: audioFile,
@@ -192,11 +182,23 @@ class MovieService {
     videoFilter,
   }: TDownloadBoth): Promise<void> {
     console.log('Wrapped pipes to temp files');
-    const { audioFileHandler, videoFileHanlder } = await this.getBothStreams(
+
+    const ytAudioStream = this.ytdlService.createDownloadReadable(
       url,
       audioFilter,
+    );
+
+    const ytVideoStream = this.ytdlService.createDownloadReadable(
+      url,
       videoFilter,
     );
+
+    const { audioFileHandler, videoFileHanlder } =
+      await this.SaveBothStreamsToFiles(
+        ytAudioStream,
+        ytVideoStream,
+        videoFilter.container,
+      );
     try {
       await this.ffmpegService.mergeAudioVideoToFile(
         videoFileHanlder,
@@ -216,11 +218,22 @@ class MovieService {
     start,
     duration,
   }: TDownloadBothDuration): Promise<Readable> {
-    const { audioFileHandler, videoFileHanlder } = await this.getBothStreams(
+    const ytAudioStream = this.ytdlService.createDownloadReadable(
       url,
       audioFilter,
+    );
+
+    const ytVideoStream = this.ytdlService.createDownloadReadable(
+      url,
       videoFilter,
     );
+
+    const { audioFileHandler, videoFileHanlder } =
+      await this.SaveBothStreamsToFiles(
+        ytAudioStream,
+        ytVideoStream,
+        videoFilter.container,
+      );
 
     const stream = this.ffmpegService.mergedAudioVideoToStream(
       videoFileHanlder,
@@ -244,7 +257,7 @@ class MovieService {
     itag,
     clients,
   }: TDownloadYtdpl): Readable {
-    const stream = this.ytdlpService.getVideoByItag(url, itag, clients);
+    const stream = this.ytdlpService.getVideoById(url, itag, clients);
 
     return stream;
   }
@@ -252,6 +265,35 @@ class MovieService {
   async getfiltersYtDLP({ url, clients }: TInfo) {
     const filters = await this.ytdlpService.getFilters(url, clients);
     return filters;
+  }
+
+  async downloadMergedStreamUsingYtDLP({
+    url,
+    videoItag,
+    audioItag,
+    clients,
+    start,
+    duration,
+  }: TDownloadBothDurationV2) {
+    const audioStream = this.ytdlpService.getVideoById(
+      url,
+      audioItag.toString(),
+      clients,
+    );
+    const videoStream = this.ytdlpService.getVideoById(
+      url,
+      videoItag.toString(),
+      clients,
+    );
+    const { videoFileHanlder, audioFileHandler } =
+      await this.SaveBothStreamsToFiles(audioStream, videoStream, 'mp4');
+    const stream = this.ffmpegService.mergedAudioVideoToStream(
+      videoFileHanlder,
+      audioFileHandler,
+      start,
+      duration,
+    );
+    return stream;
   }
 }
 

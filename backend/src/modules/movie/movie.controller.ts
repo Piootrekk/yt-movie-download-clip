@@ -163,6 +163,19 @@ class MovieController {
     const filters = this.movieService.getfiltersYtDLP({ url: query.url });
     return filters;
   }
+
+  @Get('v2/stream/trim/merge')
+  @MeasureExecutionTime()
+  async getTrimStreamV2(
+    @Query() query: MovieDownloadStampMergeStreamsDto,
+  ): Promise<StreamableFile> {
+    const responseStream =
+      await this.movieService.downloadMergedStreamUsingYtDLP({
+        ...query,
+      });
+    const headers = this.handleHeadersToStream('video', 'mp4');
+    return new StreamableFile(responseStream, headers);
+  }
 }
 
 export { MovieController };
