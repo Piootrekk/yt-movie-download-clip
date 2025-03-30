@@ -66,8 +66,8 @@ class YtDlpService {
           reject(new Error(`yt-dlp exited with code ${code}`));
         } else {
           const jsonDump: TJsonDump = JSON.parse(rawText);
-          const onlyAudio = this.getVideoTypeFromJson(jsonDump, true, false);
-          const onlyVideo = this.getVideoTypeFromJson(jsonDump, false, true);
+          const onlyAudio = this.getVideoTypeFromJson(jsonDump, false, true);
+          const onlyVideo = this.getVideoTypeFromJson(jsonDump, true, false);
           const both = this.getVideoTypeFromJson(jsonDump, false, false);
           resolve({ audio: onlyAudio, video: onlyVideo, both: both });
         }

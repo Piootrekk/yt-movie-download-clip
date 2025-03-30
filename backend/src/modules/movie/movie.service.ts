@@ -287,12 +287,21 @@ class MovieService {
     );
     const { videoFileHanlder, audioFileHandler } =
       await this.SaveBothStreamsToFiles(audioStream, videoStream, 'mp4');
+
     const stream = this.ffmpegService.mergedAudioVideoToStream(
       videoFileHanlder,
       audioFileHandler,
       start,
       duration,
     );
+    stream.on('close', async () => {
+      await this.fsService.cleanUpFiles(audioFileHandler, videoFileHanlder);
+    });
+    stream.on('error', async (err) => {
+      await this.fsService.cleanUpFiles(audioFileHandler, videoFileHanlder);
+      throw err;
+    });
+
     return stream;
   }
 }
