@@ -7,9 +7,11 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "generate:types": "openapi-typescript http://localhost:3000/api/json --output src/common/api/api.types.ts"
   },
   "dependencies": {
+    "arktype": "^2.1.16",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
@@ -22,6 +24,7 @@
     "eslint-plugin-react-hooks": "^5.1.0",
     "eslint-plugin-react-refresh": "^0.4.19",
     "globals": "^16.0.0",
+    "openapi-typescript": "^7.6.1",
     "types": "^0.1.1",
     "typescript": "~5.7.2",
     "typescript-eslint": "^8.24.1",
