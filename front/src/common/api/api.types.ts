@@ -4,772 +4,772 @@
  */
 
 export interface paths {
-    "/health": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Health Check */
-        get: operations["HealthController_gethealth"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+  "/health": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/health/unhealth": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Global error catcher checker */
-        get: operations["HealthController_getUnhealth"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /** Health Check */
+    get: operations["HealthController_gethealth"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/health/unhealth": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/yt/ffmpeginfo": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["MovieController_getVersion"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /** Global error catcher checker */
+    get: operations["HealthController_getUnhealth"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/yt/ffmpeginfo": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/yt/info": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get info about youtube video */
-        get: operations["MovieController_getInfo"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    get: operations["MovieController_getVersion"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/yt/info": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/yt/validate": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Validate if url is correct */
-        get: operations["MovieController_isValidate"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /** Get info about youtube video */
+    get: operations["MovieController_getInfo"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/yt/validate": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/yt/formats": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get fillters about video */
-        get: operations["MovieController_getFilters"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /** Validate if url is correct */
+    get: operations["MovieController_isValidate"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/yt/formats": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/yt/itags": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get available  */
-        get: operations["MovieController_getItags"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /** Get fillters about video */
+    get: operations["MovieController_getFilters"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/yt/itags": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/yt/stream/all": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Pipe video stream */
-        get: operations["MovieController_getAllStream"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /** Get available  */
+    get: operations["MovieController_getItags"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/yt/stream/all": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/yt/local-file/trim": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Create trimmed local video file */
-        get: operations["MovieController_trimToFile"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /** Pipe video stream */
+    get: operations["MovieController_getAllStream"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/yt/local-file/trim": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/yt/stream/trim": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Pipe trimmed stream  */
-        get: operations["MovieController_getTrimmedStream"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /** Create trimmed local video file */
+    get: operations["MovieController_trimToFile"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/yt/stream/trim": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/yt/local-file/all/merge": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Create merged (audio, video) stream to file */
-        get: operations["MovieController_trimMergedToFile"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /** Pipe trimmed stream  */
+    get: operations["MovieController_getTrimmedStream"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/yt/local-file/all/merge": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/yt/stream/trim/merge": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Pipe merged (audio, video) stream */
-        get: operations["MovieController_getTrimMergedStream"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /** Create merged (audio, video) stream to file */
+    get: operations["MovieController_trimMergedToFile"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/yt/stream/trim/merge": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/yt/v2/stream/all": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["MovieController_getStream"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /** Pipe merged (audio, video) stream */
+    get: operations["MovieController_getTrimMergedStream"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/yt/v2/stream/all": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/yt/v2/filters": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["MovieController_getFiltersV2"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    get: operations["MovieController_getStream"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/yt/v2/filters": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/yt/v2/stream/trim/merge": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["MovieController_getTrimStreamV2"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    get: operations["MovieController_getFiltersV2"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/yt/v2/stream/trim/merge": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
+    get: operations["MovieController_getTrimStreamV2"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
 }
 export type webhooks = Record<string, never>;
 export interface components {
-    schemas: {
-        HealthResponseDto: {
-            /** @description This is a required property */
-            health: string;
-        };
-        MovieErrorDto: {
-            message: string;
-        };
-        ValidationResponseDto: {
-            isValid: boolean;
-        };
-        FilterContainerDto: {
-            mimeType: string;
-            qualityLabel: string;
-            bitrate: number;
-            audioBitrate: number;
-            itag: number;
-            url: string;
-            width: number;
-            height: number;
-            lastModified: string;
-            contentLength: string;
-            quality: string;
-            fps: number;
-            projectionType: string;
-            averageBitrate: number;
-            audioQuality: string;
-            approxDurationMs: string;
-            audioSampleRate: string;
-            audioChannels: number;
-            hasVideo: boolean;
-            hasAudio: boolean;
-            container: string;
-            codecs: string;
-            videoCodec: string;
-            audioCodec: string;
-            isLive: boolean;
-            isHLS: boolean;
-            isDashMPD: boolean;
-        };
-        FilterVideoRangeDto: {
-            start: string;
-            end: string;
-        };
-        FiltersVideoDto: {
-            mimeType: string;
-            qualityLabel: string;
-            bitrate: number;
-            audioBitrate: number;
-            itag: number;
-            url: string;
-            width: number;
-            height: number;
-            lastModified: string;
-            contentLength: string;
-            quality: string;
-            fps: number;
-            projectionType: string;
-            averageBitrate: number;
-            approxDurationMs: string;
-            audioSampleRate: string;
-            hasVideo: boolean;
-            hasAudio: boolean;
-            container: string;
-            codecs: string;
-            videoCodec: string;
-            audioCodec: string;
-            isLive: boolean;
-            isHLS: boolean;
-            isDashMPD: boolean;
-            initRange: components["schemas"]["FilterVideoRangeDto"];
-            indexRange: components["schemas"]["FilterVideoRangeDto"];
-        };
-        FiltersResponseDto: {
-            audio: components["schemas"]["FilterContainerDto"][];
-            video: components["schemas"]["FiltersVideoDto"][];
-            both: components["schemas"]["FilterContainerDto"][];
-        };
-        ItagsResponseDto: {
-            audioItags: number[];
-            videoItags: number[];
-            bothGroupItags: number[];
-        };
+  schemas: {
+    HealthResponseDto: {
+      /** @description This is a required property */
+      health: string;
     };
-    responses: never;
-    parameters: never;
-    requestBodies: never;
-    headers: never;
-    pathItems: never;
+    MovieErrorDto: {
+      message: string;
+    };
+    ValidationResponseDto: {
+      isValid: boolean;
+    };
+    FilterContainerDto: {
+      mimeType: string;
+      qualityLabel: string;
+      bitrate: number;
+      audioBitrate: number;
+      itag: number;
+      url: string;
+      width: number;
+      height: number;
+      lastModified: string;
+      contentLength: string;
+      quality: string;
+      fps: number;
+      projectionType: string;
+      averageBitrate: number;
+      audioQuality: string;
+      approxDurationMs: string;
+      audioSampleRate: string;
+      audioChannels: number;
+      hasVideo: boolean;
+      hasAudio: boolean;
+      container: string;
+      codecs: string;
+      videoCodec: string;
+      audioCodec: string;
+      isLive: boolean;
+      isHLS: boolean;
+      isDashMPD: boolean;
+    };
+    FilterVideoRangeDto: {
+      start: string;
+      end: string;
+    };
+    FiltersVideoDto: {
+      mimeType: string;
+      qualityLabel: string;
+      bitrate: number;
+      audioBitrate: number;
+      itag: number;
+      url: string;
+      width: number;
+      height: number;
+      lastModified: string;
+      contentLength: string;
+      quality: string;
+      fps: number;
+      projectionType: string;
+      averageBitrate: number;
+      approxDurationMs: string;
+      audioSampleRate: string;
+      hasVideo: boolean;
+      hasAudio: boolean;
+      container: string;
+      codecs: string;
+      videoCodec: string;
+      audioCodec: string;
+      isLive: boolean;
+      isHLS: boolean;
+      isDashMPD: boolean;
+      initRange: components["schemas"]["FilterVideoRangeDto"];
+      indexRange: components["schemas"]["FilterVideoRangeDto"];
+    };
+    FiltersResponseDto: {
+      audio: components["schemas"]["FilterContainerDto"][];
+      video: components["schemas"]["FiltersVideoDto"][];
+      both: components["schemas"]["FilterContainerDto"][];
+    };
+    ItagsResponseDto: {
+      audioItags: number[];
+      videoItags: number[];
+      bothGroupItags: number[];
+    };
+  };
+  responses: never;
+  parameters: never;
+  requestBodies: never;
+  headers: never;
+  pathItems: never;
 }
 export type $defs = Record<string, never>;
 export interface operations {
-    HealthController_gethealth: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Returns application health status. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HealthResponseDto"];
-                };
-            };
-            /** @description Health status failed */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HealthResponseDto"];
-                };
-            };
-        };
+  HealthController_gethealth: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    HealthController_getUnhealth: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
+    requestBody?: never;
+    responses: {
+      /** @description Returns application health status. */
+      200: {
+        headers: {
+          [name: string]: unknown;
         };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
+        content: {
+          "application/json": components["schemas"]["HealthResponseDto"];
         };
+      };
+      /** @description Health status failed */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HealthResponseDto"];
+        };
+      };
     };
-    MovieController_getVersion: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
+  };
+  HealthController_getUnhealth: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    MovieController_getInfo: {
-        parameters: {
-            query: {
-                url: string;
-                clients?: ("WEB_EMBEDDED" | "TV" | "IOS" | "ANDROID" | "WEB")[];
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
         };
-        requestBody?: never;
-        responses: {
-            /** @description Info error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["MovieErrorDto"];
-                };
-            };
-        };
+        content?: never;
+      };
     };
-    MovieController_isValidate: {
-        parameters: {
-            query: {
-                url: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Validation successfull */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ValidationResponseDto"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["MovieErrorDto"];
-                };
-            };
-        };
+  };
+  MovieController_getVersion: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    MovieController_getFilters: {
-        parameters: {
-            query: {
-                url: string;
-                clients?: ("WEB_EMBEDDED" | "TV" | "IOS" | "ANDROID" | "WEB")[];
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
         };
-        requestBody?: never;
-        responses: {
-            /** @description Filters response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["FiltersResponseDto"];
-                };
-            };
-            /** @description Fetching filters failed */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["MovieErrorDto"];
-                };
-            };
-        };
+        content?: never;
+      };
     };
-    MovieController_getItags: {
-        parameters: {
-            query: {
-                url: string;
-                clients?: ("WEB_EMBEDDED" | "TV" | "IOS" | "ANDROID" | "WEB")[];
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Itags response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ItagsResponseDto"];
-                };
-            };
-            /** @description Fetching itags failed */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["MovieErrorDto"];
-                };
-            };
-        };
+  };
+  MovieController_getInfo: {
+    parameters: {
+      query: {
+        url: string;
+        clients?: ("WEB_EMBEDDED" | "TV" | "IOS" | "ANDROID" | "WEB")[];
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    MovieController_getAllStream: {
-        parameters: {
-            query: {
-                url: string;
-                clients?: ("WEB_EMBEDDED" | "TV" | "IOS" | "ANDROID" | "WEB")[];
-                itag: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
+    requestBody?: never;
+    responses: {
+      /** @description Info error */
+      400: {
+        headers: {
+          [name: string]: unknown;
         };
-        requestBody?: never;
-        responses: {
-            /** @description Stream full file */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/octet-stream": string;
-                };
-            };
-            /** @description Streaming video went wrong */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["MovieErrorDto"];
-                };
-            };
+        content: {
+          "application/json": components["schemas"]["MovieErrorDto"];
         };
+      };
     };
-    MovieController_trimToFile: {
-        parameters: {
-            query: {
-                url: string;
-                clients?: ("WEB_EMBEDDED" | "TV" | "IOS" | "ANDROID" | "WEB")[];
-                itag: number;
-                /** @description Time format must be HH:MM:SS.mmm */
-                start: string;
-                /** @description Duration should be provided in seconds */
-                duration: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description File created successfully */
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Creating local file failed */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["MovieErrorDto"];
-                };
-            };
-        };
+  };
+  MovieController_isValidate: {
+    parameters: {
+      query: {
+        url: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    MovieController_getTrimmedStream: {
-        parameters: {
-            query: {
-                url: string;
-                clients?: ("WEB_EMBEDDED" | "TV" | "IOS" | "ANDROID" | "WEB")[];
-                itag: number;
-                /** @description Time format must be HH:MM:SS.mmm */
-                start: string;
-                /** @description Duration should be provided in seconds */
-                duration: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
+    requestBody?: never;
+    responses: {
+      /** @description Validation successfull */
+      200: {
+        headers: {
+          [name: string]: unknown;
         };
-        requestBody?: never;
-        responses: {
-            /** @description Streamed trimmed file */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/octet-stream": string;
-                };
-            };
-            /** @description Streaming video went wrong */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["MovieErrorDto"];
-                };
-            };
+        content: {
+          "application/json": components["schemas"]["ValidationResponseDto"];
         };
+      };
+      /** @description Validation error */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["MovieErrorDto"];
+        };
+      };
     };
-    MovieController_trimMergedToFile: {
-        parameters: {
-            query: {
-                url: string;
-                clients?: ("WEB_EMBEDDED" | "TV" | "IOS" | "ANDROID" | "WEB")[];
-                videoItag: number;
-                audioItag: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description File created successfully */
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Streaming video went wrong */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["MovieErrorDto"];
-                };
-            };
-        };
+  };
+  MovieController_getFilters: {
+    parameters: {
+      query: {
+        url: string;
+        clients?: ("WEB_EMBEDDED" | "TV" | "IOS" | "ANDROID" | "WEB")[];
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    MovieController_getTrimMergedStream: {
-        parameters: {
-            query: {
-                url: string;
-                clients?: ("WEB_EMBEDDED" | "TV" | "IOS" | "ANDROID" | "WEB")[];
-                videoItag: number;
-                audioItag: number;
-                /** @description Time format must be HH:MM:SS.mmm */
-                start: string;
-                /** @description Duration should be provided in seconds */
-                duration: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
+    requestBody?: never;
+    responses: {
+      /** @description Filters response */
+      200: {
+        headers: {
+          [name: string]: unknown;
         };
-        requestBody?: never;
-        responses: {
-            /** @description Streamed audio & video file */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/octet-stream": string;
-                };
-            };
-            /** @description Streaming video went wrong */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["MovieErrorDto"];
-                };
-            };
+        content: {
+          "application/json": components["schemas"]["FiltersResponseDto"];
         };
+      };
+      /** @description Fetching filters failed */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["MovieErrorDto"];
+        };
+      };
     };
-    MovieController_getStream: {
-        parameters: {
-            query: {
-                url: string;
-                clients?: ("WEB_EMBEDDED" | "TV" | "IOS" | "ANDROID" | "WEB")[];
-                itag: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
+  };
+  MovieController_getItags: {
+    parameters: {
+      query: {
+        url: string;
+        clients?: ("WEB_EMBEDDED" | "TV" | "IOS" | "ANDROID" | "WEB")[];
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    MovieController_getFiltersV2: {
-        parameters: {
-            query: {
-                url: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
+    requestBody?: never;
+    responses: {
+      /** @description Itags response */
+      200: {
+        headers: {
+          [name: string]: unknown;
         };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
+        content: {
+          "application/json": components["schemas"]["ItagsResponseDto"];
         };
+      };
+      /** @description Fetching itags failed */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["MovieErrorDto"];
+        };
+      };
     };
-    MovieController_getTrimStreamV2: {
-        parameters: {
-            query: {
-                url: string;
-                clients?: ("WEB_EMBEDDED" | "TV" | "IOS" | "ANDROID" | "WEB")[];
-                videoItag: number;
-                audioItag: number;
-                /** @description Time format must be HH:MM:SS.mmm */
-                start: string;
-                /** @description Duration should be provided in seconds */
-                duration: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
+  };
+  MovieController_getAllStream: {
+    parameters: {
+      query: {
+        url: string;
+        clients?: ("WEB_EMBEDDED" | "TV" | "IOS" | "ANDROID" | "WEB")[];
+        itag: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
+    requestBody?: never;
+    responses: {
+      /** @description Stream full file */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/octet-stream": string;
+        };
+      };
+      /** @description Streaming video went wrong */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["MovieErrorDto"];
+        };
+      };
+    };
+  };
+  MovieController_trimToFile: {
+    parameters: {
+      query: {
+        url: string;
+        clients?: ("WEB_EMBEDDED" | "TV" | "IOS" | "ANDROID" | "WEB")[];
+        itag: number;
+        /** @description Time format must be HH:MM:SS.mmm */
+        start: string;
+        /** @description Duration should be provided in seconds */
+        duration: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description File created successfully */
+      204: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Creating local file failed */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["MovieErrorDto"];
+        };
+      };
+    };
+  };
+  MovieController_getTrimmedStream: {
+    parameters: {
+      query: {
+        url: string;
+        clients?: ("WEB_EMBEDDED" | "TV" | "IOS" | "ANDROID" | "WEB")[];
+        itag: number;
+        /** @description Time format must be HH:MM:SS.mmm */
+        start: string;
+        /** @description Duration should be provided in seconds */
+        duration: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Streamed trimmed file */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/octet-stream": string;
+        };
+      };
+      /** @description Streaming video went wrong */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["MovieErrorDto"];
+        };
+      };
+    };
+  };
+  MovieController_trimMergedToFile: {
+    parameters: {
+      query: {
+        url: string;
+        clients?: ("WEB_EMBEDDED" | "TV" | "IOS" | "ANDROID" | "WEB")[];
+        videoItag: number;
+        audioItag: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description File created successfully */
+      204: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Streaming video went wrong */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["MovieErrorDto"];
+        };
+      };
+    };
+  };
+  MovieController_getTrimMergedStream: {
+    parameters: {
+      query: {
+        url: string;
+        clients?: ("WEB_EMBEDDED" | "TV" | "IOS" | "ANDROID" | "WEB")[];
+        videoItag: number;
+        audioItag: number;
+        /** @description Time format must be HH:MM:SS.mmm */
+        start: string;
+        /** @description Duration should be provided in seconds */
+        duration: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Streamed audio & video file */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/octet-stream": string;
+        };
+      };
+      /** @description Streaming video went wrong */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["MovieErrorDto"];
+        };
+      };
+    };
+  };
+  MovieController_getStream: {
+    parameters: {
+      query: {
+        url: string;
+        clients?: ("WEB_EMBEDDED" | "TV" | "IOS" | "ANDROID" | "WEB")[];
+        itag: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+    };
+  };
+  MovieController_getFiltersV2: {
+    parameters: {
+      query: {
+        url: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+    };
+  };
+  MovieController_getTrimStreamV2: {
+    parameters: {
+      query: {
+        url: string;
+        clients?: ("WEB_EMBEDDED" | "TV" | "IOS" | "ANDROID" | "WEB")[];
+        videoItag: number;
+        audioItag: number;
+        /** @description Time format must be HH:MM:SS.mmm */
+        start: string;
+        /** @description Duration should be provided in seconds */
+        duration: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+    };
+  };
 }

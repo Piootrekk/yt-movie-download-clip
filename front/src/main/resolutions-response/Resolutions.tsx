@@ -1,6 +1,10 @@
-type ResolutionsProps = {};
+import { TFilters } from "../Filters.type";
 
-const Resolutions = ({}: ResolutionsProps) => {
+type ResolutionsProps = {
+  formFilters: Partial<TFilters>;
+};
+
+const Resolutions = ({ formFilters }: ResolutionsProps) => {
   return <p>Resolutions</p>;
 };
 

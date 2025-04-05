@@ -1,11 +1,11 @@
 import styles from "./MainContent.module.css";
-import YtLinkForm from "./yt-link-form/YtLinkForm";
+import YtFiltersForm from "./yt-link-form/YtFiltersForm";
 
 const MainContent = () => {
   return (
     <main className={styles.container}>
       <h1 className={styles.title}>Fetch info about youtube video</h1>
-      <YtLinkForm />
+      <YtFiltersForm />
     </main>
   );
 };
