@@ -3,22 +3,18 @@ import styles from "./YtLinkForm.module.css";
 import GenericErrorCard from "../../common/components/error/GenericErrorCard";
 import Resolutions from "../resolutions-response/Resolutions";
 import { FormEvent, Suspense, useState } from "react";
-import { fetchData } from "../../common/utils/suspenseFetch";
-import { TYtInfoApiResponse } from "./videoInfo.api";
+import { TFormDataFormats } from "../Formats.type";
 
 const YtFiltersForm = () => {
-  const [resource, setResource] = useState<ReturnType<
-    typeof fetchData<TYtInfoApiResponse>
-  > | null>(null);
+  const [formats, setFormats] = useState<TFormDataFormats | null>(null);
 
   const handleFiltersForm = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const filtersData = {
-      link: formData.get("ytLink")?.toString(),
+      url: formData.get("ytLink")?.toString(),
     };
-    const newResource = fetchData<TYtInfoApiResponse>(`getBackendUrl`, options);
-    setResource(newResource);
+    setFormats(filtersData);
   };
 
   return (
@@ -34,10 +30,10 @@ const YtFiltersForm = () => {
           {"Fetch"}
         </button>
       </form>
-      {filtersData === undefined && (
+      {formats !== null && (
         <ErrorBoundary fallback={(err) => <GenericErrorCard error={err} />}>
           <Suspense fallback={<p>loading</p>}>
-            <Resolutions />
+            <Resolutions formFormats={formats} key={formats.url} />
           </Suspense>
         </ErrorBoundary>
       )}

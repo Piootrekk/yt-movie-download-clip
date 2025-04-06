@@ -24,6 +24,11 @@ const bootstrap = async () => {
       whitelist: true,
     }),
   );
+  app.enableCors({
+    origin: '*',
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    allowedHeaders: ['Content-Type'],
+  });
   // app.useGlobalFilters(new GlobalExceptionFilter(httpConverterService));
   await app.listen(process.env.PORT ?? 3000, '0.0.0.0');
 };

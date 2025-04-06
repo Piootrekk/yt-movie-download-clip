@@ -1,5 +1,5 @@
 import { type } from "arktype";
-import { paths } from "../../common/api/api.types";
+import { paths } from "../common/api/api.types";
 
 type TYtInfoApiQuery = paths["/yt/formats"]["get"]["parameters"]["query"];
 type TYtInfoApiResponse =
