@@ -1,27 +1,24 @@
 import { use } from "react";
-import { getBackendUrl } from "../../common/utils/env";
-import { TYtInfoApiResponse } from "../videoInfo.api";
-import { TFormDataFormats } from "../Formats.type";
 import {
-  fetchDataAsync,
-  getCachedPromise,
-} from "../../common/utils/fetchCache";
+  fetchFormats,
+  filtersValidator,
+  TYtInfoApiResponse,
+} from "../videoInfo.api";
 
 type ResolutionsProps = {
-  formFormats: TFormDataFormats;
+  formValues: unknown;
 };
 
-const handleEndpoint = (formFormats: TFormDataFormats) => {
-  const backendUrl = getBackendUrl();
-  const queryParams = new URLSearchParams(formFormats).toString();
-  const endpoint = `${backendUrl}/yt/formats?${queryParams}`;
-  return getCachedPromise(endpoint, () =>
-    fetchDataAsync<TYtInfoApiResponse>(endpoint)
-  );
+const useHandleFetch = async (
+  formFormats: unknown
+): Promise<TYtInfoApiResponse> => {
+  const validatedFormValues = filtersValidator(formFormats);
+  const response = fetchFormats(validatedFormValues);
+  return response;
 };
 
-const Resolutions = ({ formFormats }: ResolutionsProps) => {
-  const response = use(handleEndpoint(formFormats));
+const Resolutions = ({ formValues }: ResolutionsProps) => {
+  const response = use(useHandleFetch(formValues));
 
   return <pre>{JSON.stringify(response, null, 2)}</pre>;
 };

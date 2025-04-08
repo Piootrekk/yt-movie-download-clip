@@ -22,7 +22,7 @@ const fetchDataAsync = async <T>(
   if (!response.ok) {
     throw new Error(`Request failed with status ${response.status}`);
   }
-  return response.json() as T;
+  return response.json();
 };
 
 export { fetchDataAsync, getCachedPromise };

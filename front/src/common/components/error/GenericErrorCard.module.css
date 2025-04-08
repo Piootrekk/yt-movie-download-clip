@@ -1,4 +1,14 @@
 .error {
-  color: #d32f2f;
-  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2px;
+  padding: 16px;
+  border-radius: 8px;
+  color: #c00;
+  font-weight: 500;
+}
+
+.icon {
+  flex-shrink: 0;
 }

@@ -1,4 +1,5 @@
-import styles from "./GenericErrorCard.module.css";
+import ErrorIcon from "../../icon/ErrorIcon";
+import errorStyles from "./GenericErrorCard.module.css";
 
 type GenericErrorCardProps = {
   error?: Error;
@@ -6,7 +7,13 @@ type GenericErrorCardProps = {
 
 const GenericErrorCard = ({ error }: GenericErrorCardProps) => {
   return (
-    <p className={styles.error}>{error ? error.message : "Unknown error"}</p>
+    <div className={errorStyles.error}>
+      <ErrorIcon size={36} className={errorStyles.icon} />
+      <p className={errorStyles.error}>
+        {error ? error.message : "Unknown error"}
+      </p>
+      <ErrorIcon size={36} className={errorStyles.icon} />
+    </div>
   );
 };
 

@@ -13,12 +13,7 @@
   font-size: 1rem;
   border: 2px solid #ddd;
   border-radius: 4px;
-  outline: none;
   min-width: 200px;
-}
-
-.input:focus {
-  border-color: #666;
 }
 
 .button {
