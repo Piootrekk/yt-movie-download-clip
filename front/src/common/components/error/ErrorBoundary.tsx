@@ -14,6 +14,8 @@ type ErrorBoundaryState = {
 };
 
 class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
+  static prevResetKey: unknown = undefined;
+
   constructor(props: ErrorBoundaryProps) {
     super(props);
     this.state = { hasError: false, error: null };
@@ -33,8 +35,6 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
     }
     return null;
   }
-
-  static prevResetKey: unknown = undefined;
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
     if (this.props.onError) {

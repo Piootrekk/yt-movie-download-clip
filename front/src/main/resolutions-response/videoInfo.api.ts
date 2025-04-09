@@ -1,7 +1,10 @@
 import { type } from "arktype";
-import { paths } from "../common/api/api.types";
-import { getBackendUrl } from "../common/utils/env";
-import { fetchDataAsync, getCachedPromise } from "../common/utils/fetchCache";
+import { paths } from "../../common/api/api.types";
+import { getBackendUrl } from "../../common/utils/env";
+import {
+  fetchDataAsync,
+  getCachedPromise,
+} from "../../common/utils/fetchCache";
 
 type TYtInfoApiQuery = paths["/yt/formats"]["get"]["parameters"]["query"];
 type TYtInfoApiResponse =
@@ -14,7 +17,6 @@ const filtersSchema = type({
 
 const filtersValidator = (inputValues: unknown): TYtInfoApiQuery => {
   const output = filtersSchema(inputValues);
-
   if (output instanceof type.errors) {
     throw new Error(output.summary);
   }
@@ -40,5 +42,10 @@ const fetchFormats = (
   );
 };
 
-export { fetchFormats, filtersValidator };
-export type { TYtInfoApiQuery, TYtInfoApiResponse };
+const getResolutions = (formFormats: unknown): Promise<TYtInfoApiResponse> => {
+  const validatedFormValues = filtersValidator(formFormats);
+  const response = fetchFormats(validatedFormValues);
+  return response;
+};
+
+export { getResolutions };
