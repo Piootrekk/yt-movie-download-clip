@@ -21,8 +21,7 @@ const MainContent = () => {
         {formValues !== null && (
           <ErrorBoundary fallback={(err) => <GenericErrorCard error={err} />}>
             <Suspense fallback={<ResolutionLoading />}>
-              {/* <Resolutions formValues={formValues} /> */}
-              <ResolutionLoading />
+              <Resolutions formValues={formValues} />
             </Suspense>
           </ErrorBoundary>
         )}

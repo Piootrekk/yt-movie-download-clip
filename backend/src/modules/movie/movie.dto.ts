@@ -148,6 +148,24 @@ class FilterVideoRangeDto {
   end: string;
 }
 
+class FiltersAudioTrackDto {
+  @ApiProperty({
+    type: String,
+  })
+  @IsString()
+  displayName: string;
+  @ApiProperty({
+    type: String,
+  })
+  @IsString()
+  id: string;
+  @ApiProperty({
+    type: Boolean,
+  })
+  @IsBoolean()
+  audioIsDefault: boolean;
+}
+
 class DownloadVideoYtDlpDto extends MovieQueryCustomClientsDto {
   @ApiProperty({
     type: String,
@@ -156,7 +174,7 @@ class DownloadVideoYtDlpDto extends MovieQueryCustomClientsDto {
   itag: string;
 }
 
-class FilterContainerDto {
+class BaseFilterContainerDto {
   @ApiProperty({
     type: String,
   })
@@ -318,11 +336,28 @@ class FilterContainerDto {
   })
   @IsBoolean()
   isDashMPD: boolean;
+  @ApiProperty({
+    type: String,
+    required: false,
+  })
+  @IsString()
+  @IsOptional()
+  xtags?: string;
+  @ApiProperty({
+    type: FiltersAudioTrackDto,
+    required: false,
+  })
+  @IsObject()
+  @IsOptional()
+  @Type(() => FiltersAudioTrackDto)
+  audioTrack?: FiltersAudioTrackDto;
 }
 
-class FiltersVideoDto extends OmitType(FilterContainerDto, [
+class FiltersVideoDto extends OmitType(BaseFilterContainerDto, [
   'audioChannels',
   'audioQuality',
+  'xtags',
+  'audioTrack',
 ]) {
   @ApiProperty({
     type: FilterVideoRangeDto,
@@ -335,17 +370,17 @@ class FiltersVideoDto extends OmitType(FilterContainerDto, [
   })
   @IsObject()
   @Type(() => FilterVideoRangeDto)
-  indexRange: FilterContainerDto;
+  indexRange: BaseFilterContainerDto;
 }
 
 class FiltersResponseDto {
   @ApiProperty({
-    type: FilterContainerDto,
+    type: BaseFilterContainerDto,
     isArray: true,
   })
   @IsArray()
-  @Type(() => FilterContainerDto)
-  audio: FilterContainerDto[];
+  @Type(() => BaseFilterContainerDto)
+  audio: BaseFilterContainerDto[];
 
   @ApiProperty({
     type: FiltersVideoDto,
@@ -356,12 +391,12 @@ class FiltersResponseDto {
   video: FiltersVideoDto[];
 
   @ApiProperty({
-    type: FilterContainerDto,
+    type: BaseFilterContainerDto,
     isArray: true,
   })
   @IsArray()
-  @Type(() => FilterContainerDto)
-  both: FilterContainerDto[];
+  @Type(() => BaseFilterContainerDto)
+  both: BaseFilterContainerDto[];
 }
 
 class ItagsResponseDto {

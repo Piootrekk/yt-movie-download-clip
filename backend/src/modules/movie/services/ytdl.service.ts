@@ -1,7 +1,12 @@
 // https://singh-sandeep.medium.com/download-youtube-videos-from-node-js-3a0b05d42269 some explains
 
 import { Injectable } from '@nestjs/common';
-import ytdl, { type videoInfo, getInfo, validateURL } from '@distube/ytdl-core';
+import ytdl, {
+  type videoInfo,
+  getInfo,
+  validateURL,
+  videoFormat,
+} from '@distube/ytdl-core';
 import { ClientEnum } from '../movie.dto';
 import { Readable } from 'stream';
 
@@ -18,9 +23,24 @@ class YtdlService {
 
   async getFormats(ytUrl: string, clients?: ClientEnum[]) {
     const info = await this.getVideoInfo(ytUrl, clients);
-    const audio = info.formats.filter((f) => f.hasAudio);
-    const video = info.formats.filter((f) => f.hasVideo);
-    const both = info.formats.filter((f) => f.hasAudio && f.hasVideo);
+
+    const seenFormats = new Map<string, boolean>();
+    const audio: videoFormat[] = [];
+    const video: videoFormat[] = [];
+    const both: videoFormat[] = [];
+
+    for (const format of info.formats) {
+      const key = format.audioTrack
+        ? `${format.itag}-${format.audioTrack.displayName}`
+        : `${format.itag}`;
+
+      if (!seenFormats.has(key)) {
+        seenFormats.set(key, true);
+        if (format.hasAudio && format.hasVideo) both.push(format);
+        else if (format.hasAudio) audio.push(format);
+        else if (format.hasVideo) video.push(format);
+      }
+    }
     return { audio, video, both };
   }
 

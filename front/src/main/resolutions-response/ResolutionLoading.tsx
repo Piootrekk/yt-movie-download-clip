@@ -1,5 +1,5 @@
 import Skeleton from "../../common/components/skeleton/Skeleton";
-import loadingStyles from "./ResolutionLoading.module.css";
+import loadingStyles from "./Resolution.module.css";
 
 const sectionAmount = 3;
 const skeletonAmount = 5;
