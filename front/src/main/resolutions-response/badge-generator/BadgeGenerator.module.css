@@ -1,0 +1,32 @@
+.defaultSpan {
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.formatTag {
+  background-color: #4b5563;
+  color: #ffffff;
+}
+
+.qualityTag {
+  background-color: #1d4ed8;
+  color: #ffffff;
+}
+
+.codecTag {
+  background-color: #7e22ce;
+  color: #ffffff;
+}
+
+.containerTag {
+  background-color: #15803d;
+  color: #ffffff;
+}
+
+.languageTag,
+.fpsTag {
+  background-color: #be123c;
+  color: #ffffff;
+}

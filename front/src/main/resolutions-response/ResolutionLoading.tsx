@@ -8,7 +8,7 @@ const ResolutionLoading = () => {
   return (
     <div className={loadingStyles.container}>
       {Array.from({ length: sectionAmount }).map((_, sectionIndex) => (
-        <div key={sectionIndex} className={loadingStyles.section}>
+        <div key={sectionIndex} className={loadingStyles.filterColumn}>
           {Array.from({ length: skeletonAmount }).map((_, skeletonIndex) => (
             <Skeleton key={skeletonIndex} className={loadingStyles.skeleton} />
           ))}
