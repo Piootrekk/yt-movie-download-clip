@@ -1,4 +1,4 @@
-import { ErrorIconProps } from "./generic-error.type";
+import { ErrorIconProps } from "./generic-error.types";
 
 const ErrorIcon = ({ size, width, height, className }: ErrorIconProps) => {
   return (

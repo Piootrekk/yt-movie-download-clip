@@ -1,9 +1,10 @@
 import { ReactNode } from "react";
 import badgeStyles from "./BadgeGenerator.module.css";
 
-type BadgeGeneratorProps = {
+type BadgeTagProps = {
   itag?: number;
   qualityLabel?: string;
+  audioQuality?: string;
   fps?: number;
   audioCodec?: string;
   videoCodec?: string;
@@ -16,18 +17,20 @@ type TBadge = {
   style: string;
 };
 
-const BadgeGenerator = ({
+const BadgeTag = ({
   itag,
   qualityLabel,
+  audioQuality,
   fps,
   audioCodec,
   videoCodec,
   container,
   audioTrackName,
-}: BadgeGeneratorProps) => {
+}: BadgeTagProps) => {
   const badges: TBadge[] = [
     { content: itag, style: badgeStyles.formatTag },
     { content: qualityLabel, style: badgeStyles.qualityTag },
+    { content: audioQuality, style: badgeStyles.qualityTag },
     { content: fps, style: badgeStyles.fpsTag },
     { content: audioCodec, style: badgeStyles.codecTag },
     { content: videoCodec, style: badgeStyles.codecTag },
@@ -52,4 +55,4 @@ const BadgeGenerator = ({
   );
 };
 
-export default BadgeGenerator;
+export default BadgeTag;

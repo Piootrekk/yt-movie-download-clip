@@ -4,7 +4,7 @@ import YtFiltersForm from "./yt-link-form/YtFiltersForm";
 import ErrorBoundary from "../common/components/error/ErrorBoundary";
 import GenericErrorCard from "../common/components/error/GenericErrorCard";
 import Resolutions from "./resolutions-response/Resolutions";
-import ResolutionLoading from "./resolutions-response/ResolutionLoading";
+import ResolutionLoading from "./resolutions-response/resolution-loading/ResolutionLoading";
 
 const MainContent = () => {
   const [formValues, setFormValues] = useState<unknown | null>(null);

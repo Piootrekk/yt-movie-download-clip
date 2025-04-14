@@ -1,3 +1,4 @@
+import { clsx } from "clsx";
 import skeletonStyles from "./Skeleton.module.css";
 
 type SkeletonProps = {
@@ -5,9 +6,7 @@ type SkeletonProps = {
 };
 
 const Skeleton = ({ className }: SkeletonProps) => {
-  return (
-    <div className={`${skeletonStyles.skeleton} ${className ?? className}`} />
-  );
+  return <div className={clsx(skeletonStyles.skeleton, className)} />;
 };
 
 export default Skeleton;

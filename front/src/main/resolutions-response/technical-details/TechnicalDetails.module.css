@@ -1,0 +1,42 @@
+.infoPanel {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.9);
+  padding: 20px;
+  border-radius: 8px;
+  margin-top: 20px;
+  backdrop-filter: blur(8px);
+}
+
+.infoPanel h3 {
+  color: #1a1a1a;
+  margin: 0 0 15px 0;
+  font-size: 1.1em;
+  text-align: left;
+}
+
+.infoPanel ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.infoPanel li {
+  color: #4a5568;
+  font-size: 14px;
+  padding: 8px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 4px;
+  flex: 1;
+  min-width: 250px;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  text-align: left;
+}
+
+.infoPanel strong {
+  color: #1a1a1a;
+  margin-right: 6px;
+}
