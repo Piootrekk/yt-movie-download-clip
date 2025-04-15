@@ -1,5 +1,5 @@
 import { type } from "arktype";
-import { paths } from "../../common/api/api.types";
+import { components, paths } from "../../common/api/api.types";
 import { getBackendUrl } from "../../common/utils/env";
 import {
   fetchDataAsync,
@@ -9,6 +9,10 @@ import {
 type TYtInfoApiQuery = paths["/yt/formats"]["get"]["parameters"]["query"];
 type TYtInfoApiResponse =
   paths["/yt/formats"]["get"]["responses"]["200"]["content"]["application/json"];
+
+type TAudioResolution = components["schemas"]["BaseFilterContainerDto"];
+type TVideoResolution = components["schemas"]["FiltersVideoDto"];
+type TBothResolution = components["schemas"]["BaseFilterContainerDto"];
 
 const filtersSchema = type({
   url: "string.url",
@@ -48,4 +52,5 @@ const getResolutions = (formFormats: unknown): Promise<TYtInfoApiResponse> => {
   return response;
 };
 
+export type { TAudioResolution, TVideoResolution, TBothResolution };
 export { getResolutions };

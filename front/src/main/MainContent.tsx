@@ -3,7 +3,7 @@ import styles from "./MainContent.module.css";
 import YtFiltersForm from "./yt-link-form/YtFiltersForm";
 import ErrorBoundary from "../common/components/error/ErrorBoundary";
 import GenericErrorCard from "../common/components/error/GenericErrorCard";
-import Resolutions from "./resolutions-response/Resolutions";
+import ResolutionsMain from "./resolutions-response/ResolutionsMain";
 import ResolutionLoading from "./resolutions-response/resolution-loading/ResolutionLoading";
 
 const MainContent = () => {
@@ -21,7 +21,7 @@ const MainContent = () => {
         {formValues !== null && (
           <ErrorBoundary fallback={(err) => <GenericErrorCard error={err} />}>
             <Suspense fallback={<ResolutionLoading />}>
-              <Resolutions formValues={formValues} />
+              <ResolutionsMain formValues={formValues} />
             </Suspense>
           </ErrorBoundary>
         )}

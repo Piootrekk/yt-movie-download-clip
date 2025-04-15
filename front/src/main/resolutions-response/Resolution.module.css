@@ -1,10 +1,11 @@
 .container {
   display: flex;
   flex-direction: column;
-  margin-bottom: 30px;
+  gap: 15px 0;
   justify-content: space-between;
   margin: auto;
   width: 80%;
+  margin-bottom: 30px;
 }
 
 .filterContainer {
@@ -12,7 +13,7 @@
   flex-direction: row;
   gap: 20px;
   align-items: stretch;
-  margin-bottom: 2rem;
+  margin-bottom: 0.5rem;
 }
 
 .filterColumn {
@@ -42,7 +43,7 @@
 .radioOption {
   display: flex;
   align-items: center;
-  padding: 1px;
+  padding: 2px;
   border-radius: 4px;
   background: rgba(255, 255, 255, 0.8);
   transition: all 0.2s ease-in-out;
@@ -55,6 +56,7 @@
 }
 
 .radioOption input[type="radio"] {
+  margin-left: 4px;
   appearance: none;
   width: 16px;
   height: 16px;

@@ -15,6 +15,7 @@ type BadgeTagProps = {
 type TBadge = {
   content?: ReactNode;
   style: string;
+  tooltip?: string;
 };
 
 const BadgeTag = ({
@@ -28,14 +29,30 @@ const BadgeTag = ({
   audioTrackName,
 }: BadgeTagProps) => {
   const badges: TBadge[] = [
-    { content: itag, style: badgeStyles.formatTag },
-    { content: qualityLabel, style: badgeStyles.qualityTag },
-    { content: audioQuality, style: badgeStyles.qualityTag },
-    { content: fps, style: badgeStyles.fpsTag },
-    { content: audioCodec, style: badgeStyles.codecTag },
-    { content: videoCodec, style: badgeStyles.codecTag },
-    { content: container, style: badgeStyles.containerTag },
-    { content: audioTrackName, style: badgeStyles.languageTag },
+    { content: itag, style: badgeStyles.formatTag, tooltip: "Itag" },
+    {
+      content: qualityLabel,
+      style: badgeStyles.qualityTag,
+      tooltip: "Quality",
+    },
+    {
+      content: audioQuality,
+      style: badgeStyles.qualityTag,
+      tooltip: "Quality",
+    },
+    { content: fps, style: badgeStyles.fpsTag, tooltip: "FPS" },
+    { content: audioCodec, style: badgeStyles.codecTag, tooltip: "Codec" },
+    { content: videoCodec, style: badgeStyles.codecTag, tooltip: "Codec" },
+    {
+      content: container,
+      style: badgeStyles.containerTag,
+      tooltip: "Container",
+    },
+    {
+      content: audioTrackName,
+      style: badgeStyles.languageTag,
+      tooltip: "Language",
+    },
   ] as const;
 
   return (
@@ -46,6 +63,7 @@ const BadgeTag = ({
             <span
               key={index}
               className={`${badge.style} ${badgeStyles.defaultSpan}`}
+              title={badge.tooltip}
             >
               {badge.content}
             </span>
