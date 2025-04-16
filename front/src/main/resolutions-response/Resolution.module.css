@@ -13,7 +13,6 @@
   flex-direction: row;
   gap: 20px;
   align-items: stretch;
-  margin-bottom: 0.5rem;
 }
 
 .filterColumn {
@@ -55,7 +54,7 @@
   box-shadow: none;
 }
 
-.radioOption input[type="radio"] {
+.radioOption input[type="checkbox"] {
   margin-left: 4px;
   appearance: none;
   width: 16px;
@@ -69,17 +68,17 @@
   transition: all 0.2s ease;
 }
 
-.radioOption input[type="radio"]:hover {
+.radioOption input[type="checkbox"]:hover {
   border-color: #3b82f6;
 }
 
-.radioOption input[type="radio"]:checked {
+.radioOption input[type="checkbox"]:checked {
   border-color: #3b82f6;
   background-color: #3b82f6;
   box-shadow: 0 0 5px rgba(59, 130, 246, 0.5);
 }
 
-.radioOption input[type="radio"]:checked::after {
+.radioOption input[type="checkbox"]:checked::after {
   content: "";
   position: absolute;
   top: 50%;
@@ -89,6 +88,10 @@
   height: 6px;
   background-color: white;
   border-radius: 50%;
+}
+
+.radioOption input[type="checkbox"]:disabled {
+  cursor: not-allowed;
 }
 
 .radioOption label {
@@ -101,6 +104,15 @@
   color: #1a1a1a;
   width: 100%;
   padding: 2px 0;
+}
+
+.radioOption input[type="checkbox"]:disabled:has(+ label span) + label span {
+  background-color: #474343;
+  cursor: not-allowed;
+}
+
+.radioOption input[type="checkbox"]:disabled:has(+ label) + label {
+  cursor: not-allowed;
 }
 
 @media (max-width: 1224px) {

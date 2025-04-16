@@ -13,6 +13,8 @@ const MainContent = () => {
     setFormValues(newValue);
   };
 
+  const resolutionsKey = formValues ? JSON.stringify(formValues) : "initial";
+
   return (
     <>
       <main className={styles.container}>
@@ -21,7 +23,7 @@ const MainContent = () => {
         {formValues !== null && (
           <ErrorBoundary fallback={(err) => <GenericErrorCard error={err} />}>
             <Suspense fallback={<ResolutionLoading />}>
-              <ResolutionsMain formValues={formValues} />
+              <ResolutionsMain formValues={formValues} key={resolutionsKey} />
             </Suspense>
           </ErrorBoundary>
         )}

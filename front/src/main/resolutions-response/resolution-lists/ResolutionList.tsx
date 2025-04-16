@@ -1,4 +1,3 @@
-import { useState } from "react";
 import BadgeTag from "../badge-generator/BadgeGenerator";
 import resolutionsStyle from "../Resolution.module.css";
 import {
@@ -7,7 +6,7 @@ import {
   TVideoResolution,
 } from "../videoInfo.api";
 import SelectedDetails from "../resolution-details/SelectedDetails";
-import { isEqual } from "../../../common/utils/equal";
+import { useResolutionSelector } from "./ResolutionList.hook";
 
 type ResolutionListProps = {
   audio: TAudioResolution[];
@@ -16,41 +15,21 @@ type ResolutionListProps = {
 };
 
 const ResolutionList = ({ audio, video, both }: ResolutionListProps) => {
-  const [selectedAudio, setSelectedAudio] = useState<
-    TAudioResolution | undefined
-  >(undefined);
-  const [selectedVideo, setSelectedVideo] = useState<
-    TVideoResolution | undefined
-  >(undefined);
-  const [selectedBoth, setSelectedBoth] = useState<TBothResolution | undefined>(
-    undefined
-  );
+  const {
+    selectedAudio,
+    selectedVideo,
+    selectedBoth,
+    handleSelectedAudio,
+    handleSelectedVideo,
+    handleSelectedBoth,
+  } = useResolutionSelector(audio, video, both);
 
-  const handleSelectedAudio = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ): void => {
-    const newSelectedAudio: TAudioResolution = JSON.parse(e.target.value);
-    setSelectedAudio((prev) => {
-      if (isEqual(prev, newSelectedAudio)) return undefined;
-      return newSelectedAudio;
-    });
-  };
-  const handleSelectedVideo = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ): void => {
-    const newSelectedVideo: TVideoResolution = JSON.parse(e.target.value);
-
-    setSelectedVideo((prev) => {
-      if (isEqual(prev, newSelectedVideo)) return undefined;
-      return newSelectedVideo;
-    });
-  };
-  const handleSelectedBoth = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    const newSelectedBoth: TBothResolution = JSON.parse(e.target.value);
-    setSelectedBoth((prev) => {
-      if (isEqual(prev, newSelectedBoth)) return undefined;
-      return newSelectedBoth;
-    });
+  const disableInputs = (
+    currentContainer: string,
+    selectedContainer?: string
+  ) => {
+    if (selectedContainer === undefined) return false;
+    return selectedContainer !== currentContainer;
   };
 
   return (
@@ -69,11 +48,16 @@ const ResolutionList = ({ audio, video, both }: ResolutionListProps) => {
                 className={resolutionsStyle.radioOption}
               >
                 <input
-                  type="radio"
+                  type="checkbox"
                   id={audio.mimeType + audio.bitrate}
                   name="audio"
-                  value={JSON.stringify(selectedAudio)}
+                  value={audio.url}
+                  checked={selectedAudio?.url === audio.url}
                   onChange={handleSelectedAudio}
+                  disabled={disableInputs(
+                    audio.container,
+                    selectedVideo?.container
+                  )}
                 />
                 <label htmlFor={audio.mimeType + audio.bitrate}>
                   <BadgeTag
@@ -94,11 +78,16 @@ const ResolutionList = ({ audio, video, both }: ResolutionListProps) => {
                 className={resolutionsStyle.radioOption}
               >
                 <input
-                  type="radio"
+                  type="checkbox"
                   id={video.mimeType + video.bitrate}
                   name="video"
-                  value={JSON.stringify(selectedVideo)}
+                  value={video.url}
+                  checked={selectedVideo?.url === video.url}
                   onChange={handleSelectedVideo}
+                  disabled={disableInputs(
+                    video.container,
+                    selectedAudio?.container
+                  )}
                 />
                 <label htmlFor={video.mimeType + video.bitrate}>
                   <BadgeTag {...video} />
@@ -116,10 +105,11 @@ const ResolutionList = ({ audio, video, both }: ResolutionListProps) => {
                 className={resolutionsStyle.radioOption}
               >
                 <input
-                  type="radio"
+                  type="checkbox"
                   id={both.mimeType + both.bitrate}
                   name="both"
-                  value={JSON.stringify(selectedBoth)}
+                  value={both.url}
+                  checked={selectedBoth?.url === both.url}
                   onChange={handleSelectedBoth}
                 />
                 <label htmlFor={both.mimeType + both.bitrate}>

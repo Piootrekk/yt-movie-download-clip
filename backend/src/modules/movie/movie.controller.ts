@@ -10,7 +10,6 @@ import {
   ValidationResponseDto,
   FfmpegInfoResposeDto,
   DownloadVideoYtDlpDto,
-  FiltersResponseV2Dto,
 } from './movie.dto';
 import {
   YtApiTag,

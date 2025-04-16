@@ -1,7 +1,6 @@
 import Card from "../../../common/components/panel-card/Card";
 
 type SelectedDetailsProps = {
-  itag?: number;
   width?: number;
   height?: number;
   fps?: number;
@@ -11,7 +10,6 @@ type SelectedDetailsProps = {
 };
 
 const SelectedDetails = ({
-  itag,
   width,
   height,
   fps,
@@ -21,12 +19,13 @@ const SelectedDetails = ({
 }: SelectedDetailsProps) => {
   return (
     <Card>
-      <p>Itag: {itag ? itag : "NOT SPECIFIED"}</p>
-      <p>Itag: {width & height ? `${width}X${height}` : "NOT SPECIFIED"}</p>
-      <p>Itag: {fps ? fps : "NOT SPECIFIED"}</p>
-      <p>Itag: {approxDurationMs ? approxDurationMs : "NOT SPECIFIED"}</p>
-      <p>Itag: {container ? container : "NOT SPECIFIED"}</p>
-      <p>Itag: {language ? language : "NOT SPECIFIED"}</p>
+      <p>
+        Resolution: {width && height ? `${width}X${height}` : "NOT SPECIFIED"}
+      </p>
+      <p>Fps: {fps ? fps : "NOT SPECIFIED"}</p>
+      <p>Duration: {approxDurationMs ? approxDurationMs : "NOT SPECIFIED"}</p>
+      <p>Container: {container ? container : "NOT SPECIFIED"}</p>
+      <p>Language: {language ? language : "NOT SPECIFIED"}</p>
     </Card>
   );
 };
