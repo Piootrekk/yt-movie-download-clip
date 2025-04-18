@@ -50,7 +50,7 @@ class MovieController {
   }
 
   @Get('ffmpeginfo')
-  getVersion(): FfmpegInfoResposeDto {
+  async getVersion(): Promise<FfmpegInfoResposeDto> {
     return this.movieService.getVersion();
   }
 
@@ -63,21 +63,23 @@ class MovieController {
 
   @Get('validate')
   @YtValidateUrlSwagger
-  isValidate(@Query() query: MovieQueryDto): ValidationResponseDto {
+  async isValidate(
+    @Query() query: MovieQueryDto,
+  ): Promise<ValidationResponseDto> {
     return this.movieService.isValidate({ url: query.url });
   }
 
   @Get('formats')
   @YtFiltersSwagger
   @MeasureExecutionTime()
-  getFilters(@Query() query: MovieQueryCustomClientsDto) {
+  async getFilters(@Query() query: MovieQueryCustomClientsDto) {
     return this.movieService.getFormats({ ...query });
   }
 
   @Get('itags')
   @YtItagsSwagger
   @MeasureExecutionTime()
-  getItags(@Query() query: MovieQueryCustomClientsDto) {
+  async getItags(@Query() query: MovieQueryCustomClientsDto) {
     return this.movieService.getItags({ ...query });
   }
 
@@ -150,7 +152,9 @@ class MovieController {
 
   @Get('v2/stream/all')
   @MeasureExecutionTime()
-  getStream(@Query() query: DownloadVideoYtDlpDto): StreamableFile {
+  async getStream(
+    @Query() query: DownloadVideoYtDlpDto,
+  ): Promise<StreamableFile> {
     const stream = this.movieService.downloadFullVideoUsingYtDLP({ ...query });
     const headers = this.handleHeadersToStream('video', 'mp4');
     return new StreamableFile(stream, headers);
@@ -158,7 +162,7 @@ class MovieController {
 
   @Get('v2/filters')
   @MeasureExecutionTime()
-  getFiltersV2(@Query() query: MovieQueryDto) {
+  async getFiltersV2(@Query() query: MovieQueryDto) {
     const filters = this.movieService.getfiltersYtDLP({ url: query.url });
     return filters;
   }
