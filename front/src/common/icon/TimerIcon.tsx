@@ -1,6 +1,8 @@
-import { ErrorIconProps } from "./generic-error.types";
+import clsx from "clsx";
+import type { ErrorIconProps } from "./generic-error.types";
+import iconStyles from "./Icon.module.css";
 
-const Timer = ({ size, width, height, className }: ErrorIconProps) => {
+const TimerIcon = ({ size, width, height, className }: ErrorIconProps) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -12,7 +14,7 @@ const Timer = ({ size, width, height, className }: ErrorIconProps) => {
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className={className}
+      className={clsx(iconStyles, className)}
     >
       <line x1="10" x2="14" y1="2" y2="2" />
       <line x1="12" x2="15" y1="14" y2="11" />
@@ -21,4 +23,4 @@ const Timer = ({ size, width, height, className }: ErrorIconProps) => {
   );
 };
 
-export default Timer;
+export default TimerIcon;

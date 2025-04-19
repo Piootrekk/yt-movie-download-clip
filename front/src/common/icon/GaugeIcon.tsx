@@ -1,6 +1,8 @@
-import { ErrorIconProps } from "./generic-error.types";
+import clsx from "clsx";
+import iconStyles from "./Icon.module.css";
+import type { ErrorIconProps } from "./generic-error.types";
 
-const Gauge = ({ size, width, height, className }: ErrorIconProps) => {
+const GaugeIcon = ({ size, width, height, className }: ErrorIconProps) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -12,7 +14,7 @@ const Gauge = ({ size, width, height, className }: ErrorIconProps) => {
       stroke-width="2"
       stroke-linecap="round"
       stroke-linejoin="round"
-      className={className}
+      className={clsx(iconStyles, className)}
     >
       <path d="m12 14 4-4" />
       <path d="M3.34 19a10 10 0 1 1 17.32 0" />
@@ -20,4 +22,4 @@ const Gauge = ({ size, width, height, className }: ErrorIconProps) => {
   );
 };
 
-export default Gauge;
+export default GaugeIcon;

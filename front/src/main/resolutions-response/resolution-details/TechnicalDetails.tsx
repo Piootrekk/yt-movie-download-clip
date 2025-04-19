@@ -26,6 +26,12 @@ const technicalDetails: TListItems[] = [
   },
 ];
 
+const basicManual = {
+  title: "YouTube Video Downloader",
+  instruction:
+    "Choose from available video and audio formats to download your preferred version. Select separetly audio/video or merged both.",
+};
+
 const title = "Technical Details:";
 
 const TechnicalDetails = () => {

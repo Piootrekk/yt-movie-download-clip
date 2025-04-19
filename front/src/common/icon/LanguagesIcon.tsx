@@ -1,6 +1,8 @@
-import { ErrorIconProps } from "./generic-error.types";
+import clsx from "clsx";
+import type { ErrorIconProps } from "./generic-error.types";
+import iconStyles from "./Icon.module.css";
 
-const Box = ({ size, width, height, className }: ErrorIconProps) => {
+const LanguagesIcon = ({ size, width, height, className }: ErrorIconProps) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -12,7 +14,7 @@ const Box = ({ size, width, height, className }: ErrorIconProps) => {
       stroke-width="2"
       stroke-linecap="round"
       stroke-linejoin="round"
-      className={className}
+      className={clsx(iconStyles, className)}
     >
       <path d="m5 8 6 6" />
       <path d="m4 14 6-6 2-3" />
@@ -24,4 +26,4 @@ const Box = ({ size, width, height, className }: ErrorIconProps) => {
   );
 };
 
-export default Box;
+export default LanguagesIcon;

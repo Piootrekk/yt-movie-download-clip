@@ -1,6 +1,13 @@
-import { ErrorIconProps } from "./generic-error.types";
+import clsx from "clsx";
+import type { ErrorIconProps } from "./generic-error.types";
+import iconStyles from "./Icon.module.css";
 
-const MonitorPlay = ({ size, width, height, className }: ErrorIconProps) => {
+const MonitorPlayIcon = ({
+  size,
+  width,
+  height,
+  className,
+}: ErrorIconProps) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -12,7 +19,7 @@ const MonitorPlay = ({ size, width, height, className }: ErrorIconProps) => {
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className={className}
+      className={clsx(iconStyles, className)}
     >
       <path d="M10 7.75a.75.75 0 0 1 1.142-.638l3.664 2.249a.75.75 0 0 1 0 1.278l-3.664 2.25a.75.75 0 0 1-1.142-.64z" />
       <path d="M12 17v4" />
@@ -22,4 +29,4 @@ const MonitorPlay = ({ size, width, height, className }: ErrorIconProps) => {
   );
 };
 
-export default MonitorPlay;
+export default MonitorPlayIcon;

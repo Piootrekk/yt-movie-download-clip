@@ -2,7 +2,7 @@ import clsx from "clsx";
 import type { ErrorIconProps } from "./generic-error.types";
 import iconStyles from "./Icon.module.css";
 
-const ErrorIcon = ({ size, width, height, className }: ErrorIconProps) => {
+const BoxIcon = ({ size, width, height, className }: ErrorIconProps) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -14,13 +14,13 @@ const ErrorIcon = ({ size, width, height, className }: ErrorIconProps) => {
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className={clsx(iconStyles, className)}
+      className={clsx(iconStyles.icon, className)}
     >
-      <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3" />
-      <path d="M12 9v4" />
-      <path d="M12 17h.01" />
+      <path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z" />
+      <path d="m3.3 7 8.7 5 8.7-5" />
+      <path d="M12 22V12" />
     </svg>
   );
 };
 
-export default ErrorIcon;
+export default BoxIcon;
