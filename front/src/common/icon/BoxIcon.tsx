@@ -1,8 +1,8 @@
 import clsx from "clsx";
-import type { ErrorIconProps } from "./generic-error.types";
+import type { IconProps } from "./generic-icon.types";
 import iconStyles from "./Icon.module.css";
 
-const BoxIcon = ({ size, width, height, className }: ErrorIconProps) => {
+const BoxIcon = ({ size, width, height, className }: IconProps) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"

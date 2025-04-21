@@ -1,8 +1,8 @@
 import clsx from "clsx";
-import type { ErrorIconProps } from "./generic-error.types";
+import type { IconProps } from "./generic-icon.types";
 import iconStyles from "./Icon.module.css";
 
-const FilmIcon = ({ size, width, height, className }: ErrorIconProps) => {
+const FilmIcon = ({ size, width, height, className }: IconProps) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -14,7 +14,7 @@ const FilmIcon = ({ size, width, height, className }: ErrorIconProps) => {
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className={clsx(iconStyles, className)}
+      className={clsx(iconStyles.icon, className)}
     >
       <rect width="18" height="18" x="3" y="3" rx="2" />
       <path d="M7 3v18" />

@@ -10,7 +10,7 @@ const technicalDetails: TListItems[] = [
   },
   {
     name: "Codec",
-    value: "he format used to compress and encode the video or audio stream.",
+    value: "The format used to compress and encode the video or audio stream.",
   },
   {
     name: "Container",
@@ -22,15 +22,20 @@ const technicalDetails: TListItems[] = [
   },
   {
     name: "Language",
-    value: "Audio track language",
+    value:
+      "Audio track language. If no specific language option is available, the default language is typically set to English.",
+  },
+  {
+    name: "Bitrate",
+    value:
+      "The amount of data processed per second in the stream. Higher bitrates generally mean better video or audio quality, but also require more bandwidth for streaming or downloading.",
+  },
+  {
+    name: "Size",
+    value:
+      "Estimated file size based on the selected audio and video streams. Higher-quality formats tend to have larger sizes and may take longer to download or stream, depending on the bitrate and duration.",
   },
 ];
-
-const basicManual = {
-  title: "YouTube Video Downloader",
-  instruction:
-    "Choose from available video and audio formats to download your preferred version. Select separetly audio/video or merged both.",
-};
 
 const title = "Technical Details:";
 

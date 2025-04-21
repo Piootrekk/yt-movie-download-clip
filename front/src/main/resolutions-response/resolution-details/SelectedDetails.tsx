@@ -7,6 +7,8 @@ import LanguagesIcon from "../../../common/icon/LanguagesIcon";
 import GaugeIcon from "../../../common/icon/GaugeIcon";
 
 import detailsStyles from "./SelectedDetails.module.css";
+import { formatBitrate, formatSize, formatTime } from "./SelectedDetails.utils";
+import FileIcon from "../../../common/icon/FileIcon";
 
 type TItemWithIcon = {
   icon: React.ComponentType<any>;
@@ -24,6 +26,15 @@ type SelectedDetailsProps = {
   approxDurationMs?: string;
   container?: string;
   bitrate?: number;
+  bothContentLength?: string;
+  audioContentLenght?: string;
+  videoContentLenght?: string;
+};
+
+const basicManual = {
+  title: "YouTube Video Downloader",
+  instruction:
+    "Choose from available video and audio formats to download your preferred version. Select separetly audio/video or merged both.",
 };
 
 const SelectedDetails = ({
@@ -34,6 +45,9 @@ const SelectedDetails = ({
   approxDurationMs,
   container,
   bitrate,
+  bothContentLength,
+  videoContentLenght,
+  audioContentLenght,
 }: SelectedDetailsProps) => {
   const basicDetails: TItemWithIcon[] = [
     {
@@ -48,7 +62,7 @@ const SelectedDetails = ({
     },
     {
       title: "Duration",
-      value: approxDurationMs ? approxDurationMs : "NOT SPECIFIED",
+      value: approxDurationMs ? formatTime(approxDurationMs) : "NOT SPECIFIED",
       icon: TimerIcon,
     },
     {
@@ -63,18 +77,33 @@ const SelectedDetails = ({
     },
     {
       title: "Bitrate",
-      value: bitrate ? bitrate : "NOT SPECIFIED",
+      value: bitrate ? formatBitrate(bitrate) : "NOT SPECIFIED",
       icon: GaugeIcon,
     },
+    {
+      title: "File size",
+      value:
+        bothContentLength || audioContentLenght || videoContentLenght
+          ? formatSize(
+              bothContentLength,
+              audioContentLenght,
+              videoContentLenght
+            )
+          : "NOT SPECIFED",
+      icon: FileIcon,
+    },
   ];
-
   return (
     <Card>
+      <div className={detailsStyles.baseManual}>
+        <h3>{basicManual.title}</h3>
+        <span>{basicManual.instruction}</span>
+      </div>
       <div className={detailsStyles.infoLayout}>
         {basicDetails.map((detail, index) => (
           <div key={index} className={detailsStyles.infoItem}>
             <detail.icon size={48} className={detailsStyles.infoIcon} />
-            <span className={detailsStyles.infoTitle}>{detail.title}</span>
+            <h3 className={detailsStyles.infoTitle}>{detail.title}</h3>
             <span className={detailsStyles.infoValue}>{detail.value}</span>
           </div>
         ))}

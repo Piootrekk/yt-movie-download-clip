@@ -1,13 +1,15 @@
 .card {
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  background: rgba(255, 255, 255, 0.9);
+  background: white;
   padding: 20px;
   border-radius: 8px;
+  margin-top: 20px;
+  color: #1e293b;
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
   backdrop-filter: blur(8px);
 }
 
 .card h3 {
-  color: #1a1a1a;
+  color: #0f172a;
   margin: 0 0 15px 0;
   font-size: 1.1em;
   text-align: left;
@@ -23,19 +25,18 @@
 }
 
 .card li {
-  color: #4a5568;
+  color: #64748b;
   font-size: 14px;
-  padding: 8px;
-  background: rgba(255, 255, 255, 0.8);
+  padding: 12px;
+  background: #f8fafc;
   border-radius: 4px;
+  border: 1px solid #e2e8f0;
   flex: 1;
   min-width: 250px;
-  transition: all 0.2s ease;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
   text-align: left;
 }
 
 .card strong {
-  color: #1a1a1a;
+  color: #0f172a;
   margin-right: 6px;
 }

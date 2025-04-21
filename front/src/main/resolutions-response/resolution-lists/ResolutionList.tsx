@@ -36,6 +36,9 @@ const ResolutionList = ({ audio, video, both }: ResolutionListProps) => {
     <>
       <SelectedDetails
         {...{ ...selectedAudio, ...selectedVideo, ...selectedBoth }}
+        bothContentLength={selectedBoth?.contentLength}
+        audioContentLenght={selectedAudio?.contentLength}
+        videoContentLenght={selectedVideo?.contentLength}
       />
       <div className={resolutionsStyle.filterContainer}>
         <div className={resolutionsStyle.filterColumn}>

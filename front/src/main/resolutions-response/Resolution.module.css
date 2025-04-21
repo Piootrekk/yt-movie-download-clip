@@ -43,11 +43,12 @@
   display: flex;
   align-items: center;
   border-radius: 4px;
-  padding: 8px;
   background: #f8fafc;
   transition: all 0.2s ease-in-out;
   cursor: pointer;
   border: 1px solid #e2e8f0;
+  padding: 8px;
+
 }
 
 .radioOption:hover {
@@ -63,6 +64,7 @@
   margin-left: 4px;
   appearance: none;
   width: 16px;
+  padding: 8px;
   height: 16px;
   border: 2px solid #cbd5e1;
   border-radius: 50%;

@@ -1,4 +1,4 @@
-type ErrorIconProps =
+type IconProps =
   | {
       size: number;
       width?: never;
@@ -12,4 +12,4 @@ type ErrorIconProps =
       className?: string;
     };
 
-export type { ErrorIconProps };
+export type { IconProps };

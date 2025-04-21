@@ -1,8 +1,8 @@
 import clsx from "clsx";
-import type { IconProps } from "./generic-icon.types";
 import iconStyles from "./Icon.module.css";
+import type { IconProps } from "./generic-icon.types";
 
-const MonitorPlayIcon = ({ size, width, height, className }: IconProps) => {
+const FileIcon = ({ size, width, height, className }: IconProps) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -16,12 +16,10 @@ const MonitorPlayIcon = ({ size, width, height, className }: IconProps) => {
       strokeLinejoin="round"
       className={clsx(iconStyles.icon, className)}
     >
-      <path d="M10 7.75a.75.75 0 0 1 1.142-.638l3.664 2.249a.75.75 0 0 1 0 1.278l-3.664 2.25a.75.75 0 0 1-1.142-.64z" />
-      <path d="M12 17v4" />
-      <path d="M8 21h8" />
-      <rect x="2" y="3" width="20" height="14" rx="2" />
+      <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" />
+      <path d="M14 2v4a2 2 0 0 0 2 2h4" />
     </svg>
   );
 };
 
-export default MonitorPlayIcon;
+export default FileIcon;

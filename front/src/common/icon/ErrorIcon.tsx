@@ -1,8 +1,8 @@
 import clsx from "clsx";
-import type { ErrorIconProps } from "./generic-error.types";
+import type { IconProps } from "./generic-icon.types";
 import iconStyles from "./Icon.module.css";
 
-const ErrorIcon = ({ size, width, height, className }: ErrorIconProps) => {
+const ErrorIcon = ({ size, width, height, className }: IconProps) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -14,7 +14,7 @@ const ErrorIcon = ({ size, width, height, className }: ErrorIconProps) => {
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className={clsx(iconStyles, className)}
+      className={clsx(iconStyles.icon, className)}
     >
       <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3" />
       <path d="M12 9v4" />
