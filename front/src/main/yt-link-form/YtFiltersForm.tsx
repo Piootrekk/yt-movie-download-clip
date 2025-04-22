@@ -1,3 +1,4 @@
+import Button from "../../common/components/button/Button";
 import styles from "./YtLinkForm.module.css";
 import { FormEvent } from "react";
 
@@ -24,9 +25,7 @@ const YtFiltersForm = ({ handleFormValues }: YtFiltersFormProps) => {
         className={styles.input}
         name="ytLink"
       />
-      <button type="submit" className={styles.button}>
-        {"Fetch"}
-      </button>
+      <Button type="submit">{"Fetch"}</Button>
     </form>
   );
 };

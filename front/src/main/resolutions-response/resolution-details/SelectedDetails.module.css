@@ -1,12 +1,3 @@
-.baseInfo {
-  margin-bottom: 20px;
-  padding: 15px;
-  background: white;
-  border-radius: 8px;
-  color: #1e293b;
-  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
-}
-
 .infoLayout {
   display: flex;
   flex-wrap: wrap;

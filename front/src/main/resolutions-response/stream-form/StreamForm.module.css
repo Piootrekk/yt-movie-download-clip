@@ -1,0 +1,17 @@
+.submitContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-top: 15px;
+  align-items: center;
+}
+
+.button {
+  width: 40% !important;
+}
+
+@media (max-width: 1200px) {
+  .button {
+    width: 100% !important;
+  }
+}

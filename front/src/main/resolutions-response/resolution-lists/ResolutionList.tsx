@@ -1,17 +1,28 @@
 import BadgeTag from "../badge-generator/BadgeGenerator";
 import resolutionsStyle from "../Resolution.module.css";
-import {
+import type {
   TAudioResolution,
   TBothResolution,
   TVideoResolution,
 } from "../videoInfo.api";
 import SelectedDetails from "../resolution-details/SelectedDetails";
 import { useResolutionSelector } from "./ResolutionList.hook";
+import Card from "../../../common/components/panel-card/Card";
+import BasicInfo from "../resolution-details/BasicInfo";
+import StreamForm from "../stream-form/StreamForm";
 
 type ResolutionListProps = {
   audio: TAudioResolution[];
   video: TVideoResolution[];
   both: TBothResolution[];
+};
+
+const disableInputs = (
+  currentContainer: string,
+  selectedContainer?: string
+) => {
+  if (selectedContainer === undefined) return false;
+  return selectedContainer !== currentContainer;
 };
 
 const ResolutionList = ({ audio, video, both }: ResolutionListProps) => {
@@ -24,22 +35,22 @@ const ResolutionList = ({ audio, video, both }: ResolutionListProps) => {
     handleSelectedBoth,
   } = useResolutionSelector(audio, video, both);
 
-  const disableInputs = (
-    currentContainer: string,
-    selectedContainer?: string
-  ) => {
-    if (selectedContainer === undefined) return false;
-    return selectedContainer !== currentContainer;
-  };
-
   return (
     <>
-      <SelectedDetails
-        {...{ ...selectedAudio, ...selectedVideo, ...selectedBoth }}
-        bothContentLength={selectedBoth?.contentLength}
-        audioContentLenght={selectedAudio?.contentLength}
-        videoContentLenght={selectedVideo?.contentLength}
-      />
+      <Card className={resolutionsStyle.card}>
+        <BasicInfo />
+        <SelectedDetails
+          video={selectedVideo}
+          audio={selectedAudio}
+          both={selectedBoth}
+        />
+        <StreamForm
+          video={selectedVideo}
+          audio={selectedAudio}
+          both={selectedBoth}
+        />
+      </Card>
+
       <div className={resolutionsStyle.filterContainer}>
         <div className={resolutionsStyle.filterColumn}>
           <h2>Audio</h2>

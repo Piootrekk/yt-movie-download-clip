@@ -12,25 +12,31 @@ const formatTime = (ms: string | number): string => {
   return `${hours}:${minutes}:${seconds}:${milliseconds}`;
 };
 
-const formatBitrate = (bitrate: string | number): string => {
-  const numericBitrate = Number(bitrate);
+const formatBitrate = (
+  ...bitrates: Array<string | number | undefined>
+): string => {
+  const totalBitrates = bitrates.reduce((accumulator: number, currentValue) => {
+    return accumulator + parseInt(currentValue?.toString() || "0", 10);
+  }, 0);
+
   const mbps = 1_000_000;
   const kbps = 1_000;
-  if (numericBitrate >= mbps) {
-    return `${(numericBitrate / mbps).toFixed(2)} Mbps`;
-  } else if (numericBitrate >= kbps) {
-    return `${(numericBitrate / kbps).toFixed(2)} Kbps`;
+
+  if (totalBitrates >= mbps) {
+    return `${(totalBitrates / mbps).toFixed(2)} Mbps`;
+  } else if (totalBitrates >= kbps) {
+    return `${(totalBitrates / kbps).toFixed(2)} Kbps`;
   } else {
-    return `${numericBitrate} Bps`;
+    return `${totalBitrates} Bps`;
   }
 };
 
 const formatSize = (
   ...fileSize: Array<string | number | undefined>
 ): string => {
-  const gbUnit = 1024 ** 3;
-  const mbUnit = 1024 ** 2;
   const kbUnit = 1024;
+  const mbUnit = kbUnit ** 2;
+  const gbUnit = kbUnit ** 3;
 
   const totalBytes = fileSize.reduce((accumulator: number, currentValue) => {
     return accumulator + parseInt(currentValue?.toString() || "0", 10);

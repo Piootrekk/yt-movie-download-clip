@@ -1,4 +1,3 @@
-import Card from "../../../common/components/panel-card/Card";
 import FilmIcon from "../../../common/icon/FilmIcon";
 import MonitorPlayIcon from "../../../common/icon/MonitorPlayIcon";
 import TimerIcon from "../../../common/icon/TimerIcon";
@@ -10,74 +9,65 @@ import detailsStyles from "./SelectedDetails.module.css";
 import { formatBitrate, formatSize, formatTime } from "./SelectedDetails.utils";
 import FileIcon from "../../../common/icon/FileIcon";
 
-type TItemWithIcon = {
-  icon: React.ComponentType<any>;
-  title: string;
-  value: string | number;
-};
+import type {
+  TItemWithIcon,
+  TVideoDetails,
+  TAudioDetails,
+} from "./SelectedDetails.types";
 
 type SelectedDetailsProps = {
-  width?: number;
-  height?: number;
-  fps?: number;
-  audioTrack?: {
-    displayName: string;
-  };
-  approxDurationMs?: string;
-  container?: string;
-  bitrate?: number;
-  bothContentLength?: string;
-  audioContentLenght?: string;
-  videoContentLenght?: string;
+  video?: TVideoDetails;
+  audio?: TAudioDetails;
+  both?: TVideoDetails & TAudioDetails;
 };
 
-const basicManual = {
-  title: "YouTube Video Downloader",
-  instruction:
-    "Choose from available video and audio formats to download your preferred version. Select separetly audio/video or merged both.",
-};
+const NOT_SPECIFIED = "NOT SPECIFIED";
 
-const SelectedDetails = ({
-  width,
-  height,
-  fps,
-  audioTrack,
-  approxDurationMs,
-  container,
-  bitrate,
-  bothContentLength,
-  videoContentLenght,
-  audioContentLenght,
-}: SelectedDetailsProps) => {
+const SelectedDetails = ({ video, audio, both }: SelectedDetailsProps) => {
+  const { width, height, container, fps, approxDurationMs } =
+    video ?? both ?? {};
+  const { audioTrack } = audio ?? both ?? {};
+
+  const bothContentLength = both?.contentLength;
+  const videoContentLenght = video?.contentLength;
+  const audioContentLenght = audio?.contentLength;
+
+  const bothBitrate = both?.bitrate;
+  const videoBitrate = video?.bitrate;
+  const audioBitrate = audio?.bitrate;
+
   const basicDetails: TItemWithIcon[] = [
     {
       title: "Resolution",
-      value: width && height ? `${width}X${height}` : "NOT SPECIFIED",
+      value: width && height ? `${width}X${height}` : NOT_SPECIFIED,
       icon: MonitorPlayIcon,
     },
     {
       title: "Fps",
-      value: fps ? fps : "NOT SPECIFIED",
+      value: fps ? fps : NOT_SPECIFIED,
       icon: FilmIcon,
     },
     {
       title: "Duration",
-      value: approxDurationMs ? formatTime(approxDurationMs) : "NOT SPECIFIED",
+      value: approxDurationMs ? formatTime(approxDurationMs) : NOT_SPECIFIED,
       icon: TimerIcon,
     },
     {
       title: "Container",
-      value: container ? container : "NOT SPECIFIED",
+      value: container ? container : NOT_SPECIFIED,
       icon: BoxIcon,
     },
     {
       title: "Language",
-      value: audioTrack ? audioTrack.displayName : "NOT SPECIFIED",
+      value: audioTrack ? audioTrack.displayName : NOT_SPECIFIED,
       icon: LanguagesIcon,
     },
     {
       title: "Bitrate",
-      value: bitrate ? formatBitrate(bitrate) : "NOT SPECIFIED",
+      value:
+        bothBitrate || audioBitrate || videoBitrate
+          ? formatBitrate(bothBitrate, audioBitrate, videoBitrate)
+          : NOT_SPECIFIED,
       icon: GaugeIcon,
     },
     {
@@ -94,21 +84,15 @@ const SelectedDetails = ({
     },
   ];
   return (
-    <Card>
-      <div className={detailsStyles.baseManual}>
-        <h3>{basicManual.title}</h3>
-        <span>{basicManual.instruction}</span>
-      </div>
-      <div className={detailsStyles.infoLayout}>
-        {basicDetails.map((detail, index) => (
-          <div key={index} className={detailsStyles.infoItem}>
-            <detail.icon size={48} className={detailsStyles.infoIcon} />
-            <h3 className={detailsStyles.infoTitle}>{detail.title}</h3>
-            <span className={detailsStyles.infoValue}>{detail.value}</span>
-          </div>
-        ))}
-      </div>
-    </Card>
+    <div className={detailsStyles.infoLayout}>
+      {basicDetails.map((detail, index) => (
+        <div key={index} className={detailsStyles.infoItem}>
+          <detail.icon size={48} className={detailsStyles.infoIcon} />
+          <h3 className={detailsStyles.infoTitle}>{detail.title}</h3>
+          <span className={detailsStyles.infoValue}>{detail.value}</span>
+        </div>
+      ))}
+    </div>
   );
 };
 

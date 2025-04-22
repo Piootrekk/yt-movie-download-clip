@@ -1,11 +1,18 @@
-.filterContainer {
+.container {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: space-between;
   gap: 20px;
   margin-bottom: 30px;
   align-items: stretch;
   width: 80%;
+}
+
+.filterContainer {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  align-items: stretch;
 }
 
 .filterColumn {
@@ -24,13 +31,14 @@
 }
 
 .skeleton {
-  height: 3rem;
+  height: 3rem !important;
+}
+
+.skeletonBasicInfo {
+  height: 16rem !important;
 }
 
 @media (max-width: 1224px) {
-  .skeleton {
-    height: 1rem;
-  }
   .filterContainer {
     display: flex;
     flex-direction: column;
