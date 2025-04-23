@@ -12,7 +12,7 @@ const GenericErrorCard = ({ error }: GenericErrorCardProps) => {
       <p className={errorStyles.error}>
         {error ? error.message : "Unknown error"}
       </p>
-      <ErrorIcon size={36} className={errorStyles.icon} />
+      <ErrorIcon size={36} />
     </div>
   );
 };

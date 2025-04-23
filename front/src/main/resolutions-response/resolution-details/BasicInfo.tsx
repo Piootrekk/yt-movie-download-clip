@@ -9,8 +9,8 @@ const basicManual = {
 const BasicInfo = () => {
   return (
     <div className={detailsStyles.baseManual}>
-      <h3>{basicManual.title}</h3>
-      <span>{basicManual.instruction}</span>
+      <h2>{basicManual.title}</h2>
+      <p>{basicManual.instruction}</p>
     </div>
   );
 };

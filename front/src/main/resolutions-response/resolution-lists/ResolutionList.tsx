@@ -37,14 +37,16 @@ const ResolutionList = ({ audio, video, both }: ResolutionListProps) => {
 
   return (
     <>
-      <Card className={resolutionsStyle.card}>
+      <Card>
         <BasicInfo />
-        <SelectedDetails
+        <StreamForm
           video={selectedVideo}
           audio={selectedAudio}
           both={selectedBoth}
         />
-        <StreamForm
+      </Card>
+      <Card>
+        <SelectedDetails
           video={selectedVideo}
           audio={selectedAudio}
           both={selectedBoth}
@@ -73,10 +75,7 @@ const ResolutionList = ({ audio, video, both }: ResolutionListProps) => {
                   )}
                 />
                 <label htmlFor={audio.mimeType + audio.bitrate}>
-                  <BadgeTag
-                    {...audio}
-                    audioTrackName={audio.audioTrack?.displayName}
-                  />
+                  <BadgeTag {...audio} />
                 </label>
               </div>
             ))}

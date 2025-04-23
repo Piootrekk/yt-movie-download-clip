@@ -46,17 +46,16 @@
   padding-bottom: 15px;
 }
 
-.baseManual h3 {
-  margin: 0;
+.baseManual h2 {
   color: #0f172a;
-  font-size: 1.1em;
-  text-align: left;
+  font-size: 1.6em;
+  text-align: center;
+  margin-bottom: 10px;
 }
 
-.baseManual span {
+.baseManual p {
   color: #64748b;
-  font-size: 14px;
-  display: flex;
-  text-align: left;
-  justify-self: left;
+  font-size: 1.1em;
+  max-width: 600px;
+  margin: 0 auto;
 }

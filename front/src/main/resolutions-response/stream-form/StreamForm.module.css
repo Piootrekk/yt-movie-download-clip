@@ -2,16 +2,18 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding-top: 15px;
+  gap: 30px;
   align-items: center;
 }
 
-.button {
-  width: 40% !important;
+.disable {
+  color: rgb(222, 14, 14);
 }
 
-@media (max-width: 1200px) {
-  .button {
-    width: 100% !important;
-  }
+.enableCorrect {
+  color: rgb(8, 90, 8);
+}
+
+.enableWarning {
+  color: rgb(228, 228, 8);
 }

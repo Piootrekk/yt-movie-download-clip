@@ -59,3 +59,5 @@ report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 # TEST FILES
 *.mp4
 temp
+
+*-player-script.js

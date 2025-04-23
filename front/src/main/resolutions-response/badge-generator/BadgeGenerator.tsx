@@ -9,7 +9,9 @@ type BadgeTagProps = {
   audioCodec?: string;
   videoCodec?: string;
   container?: string;
-  audioTrackName?: string;
+  audioTrack?: {
+    displayName: string;
+  };
 };
 
 type TBadge = {
@@ -26,7 +28,7 @@ const BadgeTag = ({
   audioCodec,
   videoCodec,
   container,
-  audioTrackName,
+  audioTrack,
 }: BadgeTagProps) => {
   const badges: TBadge[] = [
     { content: itag, style: badgeStyles.formatTag, tooltip: "Itag" },
@@ -49,7 +51,7 @@ const BadgeTag = ({
       tooltip: "Container",
     },
     {
-      content: audioTrackName,
+      content: audioTrack?.displayName,
       style: badgeStyles.languageTag,
       tooltip: "Language",
     },

@@ -25,7 +25,9 @@ const YtFiltersForm = ({ handleFormValues }: YtFiltersFormProps) => {
         className={styles.input}
         name="ytLink"
       />
-      <Button type="submit">{"Fetch"}</Button>
+      <Button type="submit">
+        <span>Fetch</span>
+      </Button>
     </form>
   );
 };

@@ -15,19 +15,9 @@
 
 .title {
   font-size: 2.5rem;
-  margin-bottom: 1rem;
+  margin-bottom: 0.75rem;
   display: flex;
   align-items: center;
-  gap: 1rem;
-  font-weight: 700;
-}
-
-.title {
-  font-size: 2.5rem;
-  margin-bottom: 2rem;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
   font-weight: 700;
 }
 
