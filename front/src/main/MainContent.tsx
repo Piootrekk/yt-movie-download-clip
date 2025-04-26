@@ -14,7 +14,6 @@ const MainContent = () => {
   };
 
   const resolutionsKey = formValues ? JSON.stringify(formValues) : "initial";
-
   return (
     <>
       <main className={styles.container}>

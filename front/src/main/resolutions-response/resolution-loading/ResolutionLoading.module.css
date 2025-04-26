@@ -38,6 +38,11 @@
   height: 16rem !important;
 }
 
+
+.skeletonSelectedInfo {
+  height: 8rem !important;
+}
+
 @media (max-width: 1224px) {
   .filterContainer {
     display: flex;

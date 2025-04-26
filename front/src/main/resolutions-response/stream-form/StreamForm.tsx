@@ -1,5 +1,5 @@
 import Button from "../../../common/components/button/Button";
-import DownloadIcon from "../../../common/icon/Downloadicon";
+import DownloadIcon from "../../../common/icon/DownloadIcon";
 import streamStyle from "./StreamForm.module.css";
 
 type StreamFormProps = {
@@ -27,7 +27,7 @@ const StreamForm = ({ audio, video, both }: StreamFormProps) => {
   const isOnlyVideo = video && !audio ? true : false;
   const isBoth = (video && audio) || both ? true : false;
 
-  const notes: TVariants[] = [
+  const notes = [
     {
       isSelected: isBoth,
       content: "Fetch stream and downlaod video with selected format.",
@@ -50,7 +50,7 @@ const StreamForm = ({ audio, video, both }: StreamFormProps) => {
         "Video selected only, select audio as well or download video only.",
       className: streamStyle.enableWarning,
     },
-  ];
+  ] satisfies TVariants[];
 
   return (
     <div className={streamStyle.submitContainer}>

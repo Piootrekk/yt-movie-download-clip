@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
 import badgeStyles from "./BadgeGenerator.module.css";
+import clsx from "clsx";
 
 type BadgeTagProps = {
   itag?: number;
@@ -64,7 +65,7 @@ const BadgeTag = ({
           badge.content && (
             <span
               key={index}
-              className={`${badge.style} ${badgeStyles.defaultSpan}`}
+              className={clsx(badge.style, badgeStyles.defaultSpan)}
               title={badge.tooltip}
             >
               {badge.content}
