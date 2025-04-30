@@ -3,13 +3,20 @@ import fsPromise from 'fs/promises';
 import { Injectable } from '@nestjs/common';
 import { Readable } from 'stream';
 
+/**
+ * Service that utilizes the fs default node package.
+ *
+ * Provide wrapped method to file operations
+ */
+
 @Injectable()
 class FsService {
   private readonly pathTempDirectory = './tmp';
   constructor() {
-    this.createTempFolderIfNotExist();
+    this.createTempDirIfNotExist();
   }
-  private createTempFolderIfNotExist(): void {
+
+  private createTempDirIfNotExist(): void {
     if (!fs.existsSync(this.pathTempDirectory))
       fs.mkdirSync(this.pathTempDirectory);
   }

@@ -1,5 +1,5 @@
 import { Controller, Get, Query, StreamableFile } from '@nestjs/common';
-import { MeasureExecutionTime } from './../../common/measure-decorator/measure-execution-time';
+import { MeasureExecutionTime } from '../../shared/measure-decorator/measure-execution-time';
 import {
   MovieDownloadQueryDto,
   MovieQueryCustomClientsDto,
