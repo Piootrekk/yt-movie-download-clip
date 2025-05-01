@@ -5,3 +5,5 @@ import { FfmpegService } from './ffmpeg.service';
   providers: [FfmpegService],
 })
 class EditModule {}
+
+export { EditModule };
