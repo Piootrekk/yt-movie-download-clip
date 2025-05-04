@@ -50,9 +50,10 @@ class YtdlCoreService {
     currentFormat: videoFormat,
     sizeChunk?: number,
   ): Readable {
+    const kb64 = 1024 * 64;
     return ytdl(url, {
       format: currentFormat,
-      highWaterMark: sizeChunk || 1024 * 64,
+      highWaterMark: sizeChunk || kb64,
     });
   }
 }

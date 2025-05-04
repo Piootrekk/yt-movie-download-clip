@@ -1,12 +1,19 @@
 import { videoFormat } from '@distube/ytdl-core';
 import { Injectable } from '@nestjs/common';
 import { YtdlCoreService } from 'src/core/download-manager/ytdl-core.service';
+import { FfmpegService } from 'src/core/edit-manager/ffmpeg.service';
+import { TStreamFile } from 'src/core/file-manager/file.types';
+import { FsService } from 'src/core/file-manager/fs.service';
 import { ClientEnum } from 'src/modules/movie/movie.dto';
 import { Readable } from 'stream';
 
 @Injectable()
 class StreamService {
-  constructor(private ytdlCoreService: YtdlCoreService) {}
+  constructor(
+    private ytdlCoreService: YtdlCoreService,
+    private ffmpegService: FfmpegService,
+    private fsService: FsService,
+  ) {}
   async getStreamById(
     url: string,
     itag: number,
@@ -21,12 +28,61 @@ class StreamService {
     const stream = this.ytdlCoreService.createStream(url, format, sizeChunk);
     return stream;
   }
-  async streamVideo(
+  streamVideo(url: string, format: videoFormat, sizeChunk?: number): Readable {
+    return this.ytdlCoreService.createStream(url, format, sizeChunk);
+  }
+
+  trimVideo(
     url: string,
     format: videoFormat,
+    start: string,
+    duration: number,
     sizeChunk?: number,
-  ): Promise<Readable> {
-    return this.ytdlCoreService.createStream(url, format, sizeChunk);
+  ): Readable {
+    const stream = this.ytdlCoreService.createStream(url, format, sizeChunk);
+    const trimmedStream = this.ffmpegService.trimVideoToStream(
+      stream,
+      start,
+      duration,
+    );
+    return trimmedStream;
+  }
+  async mergeVideo(
+    url: string,
+    videoFormat: videoFormat,
+    audioFormat: videoFormat,
+    start: string,
+    duration: number,
+    sizeChunk?: number,
+  ) {
+    const videoStream = this.ytdlCoreService.createStream(
+      url,
+      videoFormat,
+      sizeChunk,
+    );
+    const audioStream = this.ytdlCoreService.createStream(
+      url,
+      audioFormat,
+      sizeChunk,
+    );
+
+    const fileStreams = [
+      {
+        fileName: 'videoTemp',
+        extension: videoFormat.container,
+        stream: videoStream,
+      },
+      {
+        fileName: 'audioTemp',
+        extension: audioFormat.container,
+        stream: audioStream,
+      },
+    ] satisfies TStreamFile[];
+
+    const fileHandlers =
+      await this.fsService.createBulkFilesFromStreams(fileStreams);
+
+    const mergedStream = this.ffmpegService.mergedAudioVideoToStream();
   }
 }
 

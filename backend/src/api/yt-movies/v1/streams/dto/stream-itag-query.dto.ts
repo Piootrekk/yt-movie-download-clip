@@ -8,6 +8,7 @@ class StreamByItagQueryDto extends BaseQueryDto {
   })
   @IsNumber()
   itag: number;
+
   @ApiProperty({
     type: Number,
     required: false,

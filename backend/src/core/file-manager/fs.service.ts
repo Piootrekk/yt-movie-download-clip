@@ -2,6 +2,7 @@ import fs from 'fs';
 import fsPromise from 'fs/promises';
 import { Injectable } from '@nestjs/common';
 import { Readable } from 'stream';
+import type { TStreamFile } from './file.types';
 
 /**
  * Service that utilizes the fs default node package.
@@ -21,27 +22,36 @@ class FsService {
       fs.mkdirSync(this.pathTempDirectory);
   }
 
-  async createFilesFromStreams(container: string, ...streams: Readable[]) {
-    const writePromise = streams.map(async (stream, index) => {
-      const fileName = `${this.pathTempDirectory}/stream-${index}.${container}`;
-      await fsPromise.writeFile(fileName, stream);
-      return fileName;
-    });
-    return Promise.all(writePromise);
-  }
-
   async createFileFromStream(
-    container: string,
     stream: Readable,
+    fileName: string,
+    extension: string,
   ): Promise<string> {
     return new Promise<string>((resolve, reject) => {
-      const fileName = `${this.pathTempDirectory}/stream-${Date.now()}.${container}`;
-      const fileHandler = fs.createWriteStream(fileName);
+      const fileNameHandler = `${this.pathTempDirectory}/${fileName}.${extension}`;
+      const fileStream = fs.createWriteStream(fileNameHandler);
       stream
-        .pipe(fileHandler)
-        .on('close', () => resolve(fileName))
+        .pipe(fileStream)
+        .on('close', () => resolve(fileNameHandler))
         .on('error', (err) => reject(err));
     });
+  }
+
+  async createBulkFilesFromStreams(
+    transforms: TStreamFile[],
+  ): Promise<Record<string, string>> {
+    const entries = await Promise.all(
+      transforms.map(async (transform) => {
+        const result: string = await this.createFileFromStream(
+          transform.stream,
+          transform.fileName,
+          transform.extension,
+        );
+        return [transform.fileName, result] as const;
+      }),
+    );
+
+    return Object.fromEntries(entries);
   }
 
   async cleanUpFiles(...fileNames: string[]): Promise<void> {
