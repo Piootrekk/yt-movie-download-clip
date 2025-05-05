@@ -2,7 +2,7 @@ import { videoFormat } from '@distube/ytdl-core';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNumber, IsOptional, IsUrl } from 'class-validator';
 
-class StreamByFiltersBodyDto {
+class AllByFiltersBodyDto {
   @ApiProperty({
     type: String,
   })
@@ -23,7 +23,7 @@ class StreamByFiltersBodyDto {
   filters: videoFormat;
 }
 
-type TStreamByFiltersBodyDto = InstanceType<typeof StreamByFiltersBodyDto>;
+type TAllByFiltersBodyDto = InstanceType<typeof AllByFiltersBodyDto>;
 
-export { StreamByFiltersBodyDto };
-export type { TStreamByFiltersBodyDto };
+export { AllByFiltersBodyDto };
+export type { TAllByFiltersBodyDto };

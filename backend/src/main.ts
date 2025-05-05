@@ -5,17 +5,15 @@ import {
 } from '@nestjs/platform-fastify';
 import { setupSwagger } from './config/swagger-cfg';
 import { ValidationPipe } from '@nestjs/common';
-import { HttpConverterService } from './config/global-error-handler/http-error/http-converter.service';
-import { GlobalExceptionFilter } from './config/global-error-handler/error.filter';
-import { CoreModule } from './core.module';
+import { env } from './shared/env';
+import { ApiModule } from './modules/api.module';
 
 const bootstrap = async () => {
+  const port = env.getPort();
   const app = await NestFactory.create<NestFastifyApplication>(
-    CoreModule,
-    new FastifyAdapter({}),
+    ApiModule,
+    new FastifyAdapter(),
   );
-
-  const httpConverterService = app.get(HttpConverterService);
 
   setupSwagger(app);
   app.useGlobalPipes(
@@ -29,7 +27,6 @@ const bootstrap = async () => {
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     allowedHeaders: ['Content-Type'],
   });
-  // app.useGlobalFilters(new GlobalExceptionFilter(httpConverterService));
-  await app.listen(process.env.PORT ?? 3000, '0.0.0.0');
+  await app.listen(port, '0.0.0.0');
 };
 bootstrap();

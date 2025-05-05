@@ -1,4 +1,4 @@
-import { BaseQueryDto } from '../../dto/base.dto';
+import { BaseQueryDto } from '../../../base-dto/query.dto';
 
 class FiltersQueryDto extends BaseQueryDto {}
 

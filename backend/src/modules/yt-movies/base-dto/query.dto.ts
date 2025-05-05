@@ -7,7 +7,7 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
-import { ClientEnum } from 'src/modules/movie/movie.dto';
+import { ClientEnum } from 'src/core/download-manager/declare-types/ytdl-core.enum';
 
 const transformToArray = ({
   value,

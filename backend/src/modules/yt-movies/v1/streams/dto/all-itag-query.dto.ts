@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { BaseQueryDto } from '../../dto/base.dto';
+import { BaseQueryDto } from '../../../base-dto/query.dto';
 import { IsNumber, IsOptional } from 'class-validator';
 
 class StreamByItagQueryDto extends BaseQueryDto {

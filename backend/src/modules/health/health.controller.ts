@@ -6,7 +6,7 @@ import {
   UnHealthSwagger,
 } from './health.swagger';
 
-@Controller('health')
+@Controller('v1/health')
 @HealthApiTags
 class HealthController {
   @Get()

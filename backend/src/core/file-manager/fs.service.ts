@@ -2,7 +2,7 @@ import fs from 'fs';
 import fsPromise from 'fs/promises';
 import { Injectable } from '@nestjs/common';
 import { Readable } from 'stream';
-import type { TStreamFile } from './file.types';
+import type { TReturnStreamFilesHandler, TStreamFile } from './file.types';
 
 /**
  * Service that utilizes the fs default node package.
@@ -37,9 +37,9 @@ class FsService {
     });
   }
 
-  async createBulkFilesFromStreams(
-    transforms: TStreamFile[],
-  ): Promise<Record<string, string>> {
+  async createBulkFilesFromStreams<T extends ReadonlyArray<TStreamFile>>(
+    transforms: T,
+  ): Promise<TReturnStreamFilesHandler<T>> {
     const entries = await Promise.all(
       transforms.map(async (transform) => {
         const result: string = await this.createFileFromStream(
@@ -50,8 +50,7 @@ class FsService {
         return [transform.fileName, result] as const;
       }),
     );
-
-    return Object.fromEntries(entries);
+    return Object.fromEntries(entries) as TReturnStreamFilesHandler<T>;
   }
 
   async cleanUpFiles(...fileNames: string[]): Promise<void> {

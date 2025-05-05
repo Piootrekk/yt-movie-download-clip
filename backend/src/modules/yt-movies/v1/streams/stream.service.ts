@@ -1,10 +1,10 @@
 import { videoFormat } from '@distube/ytdl-core';
 import { Injectable } from '@nestjs/common';
+import { ClientEnum } from 'src/core/download-manager/declare-types/ytdl-core.enum';
 import { YtdlCoreService } from 'src/core/download-manager/ytdl-core.service';
 import { FfmpegService } from 'src/core/edit-manager/ffmpeg.service';
 import { TStreamFile } from 'src/core/file-manager/file.types';
 import { FsService } from 'src/core/file-manager/fs.service';
-import { ClientEnum } from 'src/modules/movie/movie.dto';
 import { Readable } from 'stream';
 
 @Injectable()
@@ -47,6 +47,7 @@ class StreamService {
     );
     return trimmedStream;
   }
+
   async mergeVideo(
     url: string,
     videoFormat: videoFormat,
@@ -77,12 +78,25 @@ class StreamService {
         extension: audioFormat.container,
         stream: audioStream,
       },
-    ] satisfies TStreamFile[];
+    ] as const satisfies TStreamFile[];
 
     const fileHandlers =
       await this.fsService.createBulkFilesFromStreams(fileStreams);
 
-    const mergedStream = this.ffmpegService.mergedAudioVideoToStream();
+    try {
+      const mergedStream = this.ffmpegService.mergedAudioVideoToStream(
+        fileHandlers.videoTemp,
+        fileHandlers.audioTemp,
+        start,
+        duration,
+      );
+      return mergedStream;
+    } finally {
+      await this.fsService.cleanUpFiles(
+        fileHandlers.audioTemp,
+        fileHandlers.videoTemp,
+      );
+    }
   }
 }
 

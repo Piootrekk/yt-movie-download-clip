@@ -6,4 +6,8 @@ type TStreamFile = {
   extension: string;
 };
 
-export type { TStreamFile };
+type TReturnStreamFilesHandler<T extends ReadonlyArray<TStreamFile>> = {
+  [K in T[number]['fileName']]: string;
+};
+
+export type { TStreamFile, TReturnStreamFilesHandler };
