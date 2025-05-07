@@ -24,19 +24,25 @@ class MovieStreamController {
   async getStreamById(
     @Query() query: StreamByItagQueryDto,
   ): Promise<StreamableFile> {
+    const container = await this.streamService.getContainer(
+      query.url,
+      query.itag,
+      query.clients,
+    );
+    const header = handleStreamHeader('video', container);
     const stream = await this.streamService.getStreamById(
       query.url,
       query.itag,
       query.clients,
       query.chunkSize,
     );
-    return new StreamableFile(stream);
+    return new StreamableFile(stream, header);
   }
 
   @Post('all')
   @StreamSwagger.streamAllSwagger
   async setStreamByFilters(@Body() body: AllByFiltersBodyDto) {
-    const header = handleStreamHeader('video', body.filters.container, 'video');
+    const header = handleStreamHeader('video', body.filters.container);
     const stream = this.streamService.streamVideo(
       body.url,
       body.filters,
@@ -48,7 +54,7 @@ class MovieStreamController {
   @Post('trim')
   @StreamSwagger.streamTrimmedSwagger
   async setStreamTrimmed(@Body() body: TrimmedFiltersBodyDto) {
-    const header = handleStreamHeader('video', body.filters.container, 'video');
+    const header = handleStreamHeader('video', body.filters.container);
     const stream = this.streamService.trimVideo(
       body.url,
       body.filters,
@@ -62,11 +68,7 @@ class MovieStreamController {
   @Post('merge')
   @StreamSwagger.streamMergedSwagger
   async setStreamMerged(@Body() body: MergeByFiltersBodyDto) {
-    const header = handleStreamHeader(
-      'video',
-      body.videoFilters.container,
-      'video',
-    );
+    const header = handleStreamHeader('video', body.videoFilters.container);
     const stream = await this.streamService.mergeVideo(
       body.url,
       body.videoFilters,

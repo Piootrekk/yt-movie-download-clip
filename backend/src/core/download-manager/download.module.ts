@@ -4,6 +4,7 @@ import { YtdlpService } from './ytdlp.service';
 
 @Module({
   providers: [YtdlCoreService, YtdlpService],
+  exports: [YtdlCoreService, YtdlpService],
 })
 class DownloadModule {}
 

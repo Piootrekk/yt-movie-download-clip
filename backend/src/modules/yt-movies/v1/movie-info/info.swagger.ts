@@ -6,7 +6,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { MovieErrorDto } from '../../base-dto/error-response.dto';
-import { FiltersResponseDto } from 'src/modules/movie/movie.dto';
+import { FiltersResponseDto } from './dto/filters-response.dto';
 
 const YtApiTag = ApiTags('YT download - info');
 

@@ -3,6 +3,7 @@ import { FsService } from './fs.service';
 
 @Module({
   providers: [FsService],
+  exports: [FsService],
 })
 class FileModule {}
 

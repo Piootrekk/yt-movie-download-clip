@@ -14,6 +14,16 @@ class StreamService {
     private ffmpegService: FfmpegService,
     private fsService: FsService,
   ) {}
+
+  async getContainer(url: string, itag: number, clients?: ClientEnum[]) {
+    const format = await this.ytdlCoreService.getFormatByItag(
+      url,
+      itag,
+      clients,
+    );
+    return format.container;
+  }
+
   async getStreamById(
     url: string,
     itag: number,
