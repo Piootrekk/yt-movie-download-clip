@@ -10,7 +10,7 @@ import { streamContentSchema } from '../../base-dto/stream-response.schema';
 
 const YtApiTag = ApiTags('YT download - stream');
 
-const streamAllSwagger = applyDecorators(
+const streamAll = applyDecorators(
   ApiOperation({
     summary: 'Stream full video movie',
   }),
@@ -24,7 +24,7 @@ const streamAllSwagger = applyDecorators(
   }),
 );
 
-const streamTrimmedSwagger = applyDecorators(
+const streamTrimmed = applyDecorators(
   ApiOperation({
     summary: 'Stream trimmed video movie',
   }),
@@ -37,7 +37,7 @@ const streamTrimmedSwagger = applyDecorators(
     content: streamContentSchema.content,
   }),
 );
-const streamMergedSwagger = applyDecorators(
+const streamMerged = applyDecorators(
   ApiOperation({
     summary: 'Stream merged video movie',
   }),
@@ -53,9 +53,9 @@ const streamMergedSwagger = applyDecorators(
 
 const StreamSwagger = {
   YtApiTag,
-  streamAllSwagger,
-  streamMergedSwagger,
-  streamTrimmedSwagger,
+  streamAll,
+  streamMerged,
+  streamTrimmed,
 };
 
 export { StreamSwagger };

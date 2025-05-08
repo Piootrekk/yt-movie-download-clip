@@ -5,6 +5,7 @@ import {
   Post,
   Query,
   StreamableFile,
+  UseFilters,
 } from '@nestjs/common';
 import { StreamService } from './stream.service';
 import { StreamByItagQueryDto } from './dto/all-itag-query.dto';
@@ -13,6 +14,7 @@ import { MergeByFiltersBodyDto } from './dto/merge-filters-body.dto';
 import { TrimmedFiltersBodyDto } from './dto/trimmed-filters-body.dto';
 import { StreamSwagger } from './stream.swagger';
 import { handleStreamHeader } from 'src/shared/header-stream';
+import { HttpConverterService } from 'src/shared/errors/error.service';
 
 @Controller('yt-movie/v1/stream')
 @StreamSwagger.YtApiTag
@@ -20,7 +22,8 @@ class MovieStreamController {
   constructor(private streamService: StreamService) {}
 
   @Get('all')
-  @StreamSwagger.streamAllSwagger
+  @UseFilters(HttpConverterService)
+  @StreamSwagger.streamAll
   async getStreamById(
     @Query() query: StreamByItagQueryDto,
   ): Promise<StreamableFile> {
@@ -40,7 +43,7 @@ class MovieStreamController {
   }
 
   @Post('all')
-  @StreamSwagger.streamAllSwagger
+  @StreamSwagger.streamAll
   async setStreamByFilters(@Body() body: AllByFiltersBodyDto) {
     const header = handleStreamHeader('video', body.filters.container);
     const stream = this.streamService.streamVideo(
@@ -52,7 +55,7 @@ class MovieStreamController {
   }
 
   @Post('trim')
-  @StreamSwagger.streamTrimmedSwagger
+  @StreamSwagger.streamTrimmed
   async setStreamTrimmed(@Body() body: TrimmedFiltersBodyDto) {
     const header = handleStreamHeader('video', body.filters.container);
     const stream = this.streamService.trimVideo(
@@ -66,7 +69,7 @@ class MovieStreamController {
   }
 
   @Post('merge')
-  @StreamSwagger.streamMergedSwagger
+  @StreamSwagger.streamMerged
   async setStreamMerged(@Body() body: MergeByFiltersBodyDto) {
     const header = handleStreamHeader('video', body.videoFilters.container);
     const stream = await this.streamService.mergeVideo(

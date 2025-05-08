@@ -1,6 +1,6 @@
 import { performance } from 'perf_hooks';
 
-const MeasureExecutionTime = () => {
+const MeasureExecutionTimeDecorator = () => {
   return function (
     _: unknown,
     propertyKey: string,
@@ -69,4 +69,4 @@ const MeasureExecutionTime = () => {
   };
 };
 
-export { MeasureExecutionTime };
+export { MeasureExecutionTimeDecorator };

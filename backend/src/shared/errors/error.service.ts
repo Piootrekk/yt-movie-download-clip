@@ -1,19 +1,15 @@
-import { HttpException, Injectable } from '@nestjs/common';
-import { IHttpConverterHandler } from './http-converter.interface';
+import { HttpException } from '@nestjs/common';
 import { ErrorHandler } from './handlers/error.handler';
 import { UnknownHandler } from './handlers/unknown.handler';
 import { HttpExceptionHandler } from './handlers/http-exception.handler';
+import { IHttpConverterHandler } from './handlers/error-handler.interface';
 
-@Injectable()
 class HttpConverterService {
-  private readonly handlers: IHttpConverterHandler[];
-  constructor(
-    erroHandler: ErrorHandler,
-    httpExcHandler: HttpExceptionHandler,
-    unknownHandler: UnknownHandler,
-  ) {
-    this.handlers = [httpExcHandler, erroHandler, unknownHandler];
-  }
+  private readonly handlers: IHttpConverterHandler[] = [
+    new HttpExceptionHandler(),
+    new ErrorHandler(),
+    new UnknownHandler(),
+  ];
 
   normalizeError(error: unknown, status?: number): HttpException {
     const handler = this.handlers.find((handler) => handler.canHandle(error));

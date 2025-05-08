@@ -9,7 +9,7 @@ import { applyDecorators } from '@nestjs/common';
 
 const HealthApiTags = ApiTags('health');
 
-const HealthSwagger = () => {
+const Health = () => {
   return applyDecorators(
     ApiOperation({ summary: 'Health Check' }),
     ApiOkResponse({
@@ -25,8 +25,16 @@ const HealthSwagger = () => {
   );
 };
 
-const UnHealthSwagger = () => {
-  return applyDecorators(ApiOperation({ summary: 'Global error catcher checker' }));
+const UnHealth = () => {
+  return applyDecorators(
+    ApiOperation({ summary: 'Global error catcher checker' }),
+  );
 };
 
-export { HealthApiTags, HealthSwagger, UnHealthSwagger };
+const HealthSwagger = {
+  HealthApiTags,
+  Health,
+  UnHealth,
+};
+
+export { HealthSwagger };

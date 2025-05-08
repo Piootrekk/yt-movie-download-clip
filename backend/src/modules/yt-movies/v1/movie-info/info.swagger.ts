@@ -10,7 +10,7 @@ import { FiltersResponseDto } from './dto/filters-response.dto';
 
 const YtApiTag = ApiTags('YT download - info');
 
-const YtFiltersSwagger = applyDecorators(
+const YtFilters = applyDecorators(
   ApiOperation({ summary: 'Get filters from yt movie' }),
   ApiBadRequestResponse({
     description: 'Fetching filters error',
@@ -27,7 +27,7 @@ const YtFiltersSwagger = applyDecorators(
 
 const InfoSwagger = {
   YtApiTag,
-  YtFiltersSwagger,
+  YtFilters,
 };
 
 export { InfoSwagger };

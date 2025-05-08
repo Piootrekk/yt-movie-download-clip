@@ -1,7 +1,6 @@
-import { HttpException, Injectable } from '@nestjs/common';
-import { IHttpConverterHandler } from '../http-converter.interface';
+import { HttpException } from '@nestjs/common';
+import { IHttpConverterHandler } from './error-handler.interface';
 
-@Injectable()
 class HttpExceptionHandler implements IHttpConverterHandler {
   canHandle(err: unknown): boolean {
     return err instanceof HttpException;
