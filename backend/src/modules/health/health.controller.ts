@@ -7,10 +7,10 @@ import {
 } from '@nestjs/common';
 import { HealthResponseDto } from './health.dto';
 import { HealthSwagger } from './health.swagger';
-import { HttpConverterService } from 'src/shared/errors/error.service';
+import { HttpExceptionFilter } from 'src/shared/errors/http-exception.filter';
 
 @Controller('health')
-@UseFilters(HttpConverterService)
+@UseFilters(HttpExceptionFilter)
 @HealthSwagger.HealthApiTags
 class HealthController {
   @Get()

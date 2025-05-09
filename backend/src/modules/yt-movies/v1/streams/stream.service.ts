@@ -54,6 +54,7 @@ class StreamService {
       stream,
       start,
       duration,
+      format.container,
     );
     return trimmedStream;
   }
@@ -99,6 +100,7 @@ class StreamService {
         fileHandlers.audioTemp,
         start,
         duration,
+        videoFormat.container,
       );
       return mergedStream;
     } finally {

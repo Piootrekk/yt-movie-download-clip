@@ -26,12 +26,13 @@ class FfmpegService {
     inputStream: Readable,
     startTimeInSec: string,
     durationTimeInSec: number,
+    format: string,
   ): Readable {
     const passThrough = new PassThrough();
     const command = ffmpeg(inputStream)
       .seekInput(startTimeInSec)
       .setDuration(durationTimeInSec)
-      .format('mp4')
+      .format(format)
       .outputOptions('-movflags frag_keyframe+empty_moov');
     command.pipe(passThrough);
     passThrough
@@ -52,6 +53,7 @@ class FfmpegService {
     audioFilePath: string,
     startTimeInSec: string,
     durationTimeInSec: number,
+    format: string,
   ): Readable {
     const passThrough = new PassThrough();
     const command = ffmpeg()
@@ -61,7 +63,7 @@ class FfmpegService {
       .input(audioFilePath)
       .seekInput(startTimeInSec)
       .audioCodec('aac')
-      .format('mp4')
+      .format(format)
       .duration(durationTimeInSec)
       .outputOptions('-movflags frag_keyframe+empty_moov');
     command.pipe(passThrough, { end: true });

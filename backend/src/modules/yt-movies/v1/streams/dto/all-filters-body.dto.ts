@@ -1,6 +1,6 @@
 import { videoFormat } from '@distube/ytdl-core';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNumber, IsOptional, IsUrl } from 'class-validator';
+import { IsNumber, IsObject, IsOptional, IsUrl } from 'class-validator';
 
 class AllByFiltersBodyDto {
   @ApiProperty({
@@ -12,6 +12,7 @@ class AllByFiltersBodyDto {
   @ApiProperty({
     type: Number,
     required: false,
+    example: 1024,
   })
   @IsNumber()
   @IsOptional()
@@ -20,6 +21,7 @@ class AllByFiltersBodyDto {
   @ApiProperty({
     type: Object,
   })
+  @IsObject()
   filters: videoFormat;
 }
 

@@ -6,6 +6,7 @@ class UnknownHandler implements IHttpConverterHandler {
     return true;
   }
   handle(_: unknown, status?: number): HttpException {
+    const httpExp = new HttpException('Unknown error', status || 500);
     return new HttpException('Unknown error', status || 500);
   }
 }

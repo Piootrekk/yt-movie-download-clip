@@ -14,15 +14,15 @@ import { MergeByFiltersBodyDto } from './dto/merge-filters-body.dto';
 import { TrimmedFiltersBodyDto } from './dto/trimmed-filters-body.dto';
 import { StreamSwagger } from './stream.swagger';
 import { handleStreamHeader } from 'src/shared/header-stream';
-import { HttpConverterService } from 'src/shared/errors/error.service';
+import { HttpExceptionFilter } from 'src/shared/errors/http-exception.filter';
 
 @Controller('yt-movie/v1/stream')
+@UseFilters(HttpExceptionFilter)
 @StreamSwagger.YtApiTag
 class MovieStreamController {
   constructor(private streamService: StreamService) {}
 
   @Get('all')
-  @UseFilters(HttpConverterService)
   @StreamSwagger.streamAll
   async getStreamById(
     @Query() query: StreamByItagQueryDto,

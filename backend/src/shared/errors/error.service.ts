@@ -5,7 +5,7 @@ import { HttpExceptionHandler } from './handlers/http-exception.handler';
 import { IHttpConverterHandler } from './handlers/error-handler.interface';
 
 class HttpConverterService {
-  private readonly handlers: IHttpConverterHandler[] = [
+  private handlers: IHttpConverterHandler[] = [
     new HttpExceptionHandler(),
     new ErrorHandler(),
     new UnknownHandler(),

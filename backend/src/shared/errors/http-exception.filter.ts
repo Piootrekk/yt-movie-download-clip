@@ -3,8 +3,8 @@ import { HttpConverterService } from './error.service';
 import { FastifyReply } from 'fastify';
 
 @Catch()
-class HttpExceptionError implements ExceptionFilter {
-  private readonly httpConverterService = new HttpConverterService();
+class HttpExceptionFilter implements ExceptionFilter {
+  private httpConverterService = new HttpConverterService();
 
   catch(exception: unknown, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
@@ -12,10 +12,14 @@ class HttpExceptionError implements ExceptionFilter {
     const normalizedError = this.httpConverterService.normalizeError(exception);
     const status = normalizedError.getStatus();
     const message = normalizedError.message;
+    const stack = normalizedError.stack;
+    const cause = normalizedError.cause;
     response.status(status).send({
       message,
+      stack,
+      cause,
     });
   }
 }
 
-export { HttpExceptionError };
+export { HttpExceptionFilter };

@@ -6,7 +6,9 @@ class ErrorHandler implements IHttpConverterHandler {
     return err instanceof Error;
   }
   handle(err: Error, code?: number): HttpException {
-    return new HttpException(err.message, code || 500);
+    const httpExp = new HttpException(err.message, code || 500);
+    httpExp.stack = err.stack;
+    return httpExp;
   }
 }
 

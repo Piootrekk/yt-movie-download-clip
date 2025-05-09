@@ -1,6 +1,7 @@
 import { applyDecorators } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
+  ApiCreatedResponse,
   ApiOkResponse,
   ApiOperation,
   ApiTags,
@@ -18,7 +19,7 @@ const streamAll = applyDecorators(
     description: 'Stream failed',
     type: MovieErrorDto,
   }),
-  ApiOkResponse({
+  ApiCreatedResponse({
     description: 'Streaming successfull',
     content: streamContentSchema.content,
   }),
@@ -32,7 +33,7 @@ const streamTrimmed = applyDecorators(
     description: 'Stream failed',
     type: MovieErrorDto,
   }),
-  ApiOkResponse({
+  ApiCreatedResponse({
     description: 'Streaming successfull',
     content: streamContentSchema.content,
   }),
@@ -45,7 +46,7 @@ const streamMerged = applyDecorators(
     description: 'Stream failed',
     type: MovieErrorDto,
   }),
-  ApiOkResponse({
+  ApiCreatedResponse({
     description: 'Streaming successfull',
     content: streamContentSchema.content,
   }),
