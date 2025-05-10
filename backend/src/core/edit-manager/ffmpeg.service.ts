@@ -17,6 +17,17 @@ class FfmpegService {
     this.setPath();
   }
 
+  private outputOptions = {
+    /* MP4 ONLY - Makes streamable before fully written (needed for .pipe() to browser)*/
+    streamable: '-movflags frag_keyframe+empty_moov',
+    /*	If re-encoding video*/
+    veryfast: '-preset veryfast',
+    /*Audio encoding - sets target audio bitrate */
+    targetAudioBitrate: '-b:a 128k',
+    /* Stops encoding when shortest stream ends */
+    shortest: '-shortest',
+  };
+
   protected setPath(): void {
     const envPath = env.getFfmpegPath();
     ffmpeg.setFfmpegPath(envPath || ffmpegInstaller.path);
@@ -33,7 +44,7 @@ class FfmpegService {
       .seekInput(startTimeInSec)
       .setDuration(durationTimeInSec)
       .format(format)
-      .outputOptions('-movflags frag_keyframe+empty_moov');
+      .outputOptions(this.outputOptions.streamable);
     command.pipe(passThrough);
     passThrough
       .on('start', (cmd) => console.log('FFmpeg command:', cmd))
@@ -65,7 +76,7 @@ class FfmpegService {
       .audioCodec('aac')
       .format(format)
       .duration(durationTimeInSec)
-      .outputOptions('-movflags frag_keyframe+empty_moov');
+      .outputOptions(this.outputOptions.streamable);
     command.pipe(passThrough, { end: true });
     passThrough
       .on('start', (cmd) => console.log('FFmpeg command:', cmd))

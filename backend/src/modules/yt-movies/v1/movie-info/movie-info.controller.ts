@@ -14,7 +14,7 @@ class MovieInfoController {
   @Get('filters')
   @InfoSwagger.YtFilters
   async getFilters(@Query() query: FiltersQueryDto): Promise<TFiltersResponse> {
-    return this.movieInfoService.getFormats(query.url, query.clients);
+    return this.movieInfoService.getFormats({ ...query });
   }
 }
 export { MovieInfoController };

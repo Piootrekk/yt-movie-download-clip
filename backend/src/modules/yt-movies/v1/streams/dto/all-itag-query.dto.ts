@@ -12,6 +12,7 @@ class StreamByItagQueryDto extends BaseQueryDto {
   @ApiProperty({
     type: Number,
     required: false,
+    default: 1024,
   })
   @IsNumber()
   @IsOptional()

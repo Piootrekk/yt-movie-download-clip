@@ -36,4 +36,7 @@ class BaseQueryDto {
   clients?: ClientEnum[];
 }
 
+type TBaseQueryDto = InstanceType<typeof BaseQueryDto>;
+
 export { BaseQueryDto };
+export type { TBaseQueryDto };
