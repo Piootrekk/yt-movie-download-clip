@@ -270,7 +270,6 @@ class FiltersResponseDto {
   both: BaseFilterContainerDto[];
 }
 
-
 // TODO fix types in ytdl.d.ts
 type TFiltersResponse = {
   video: videoFormat[];
@@ -278,5 +277,5 @@ type TFiltersResponse = {
   both: videoFormat[];
 };
 
-export { FiltersResponseDto };
+export { FiltersResponseDto, BaseFilterContainerDto, FiltersVideoDto };
 export type { TFiltersResponse };

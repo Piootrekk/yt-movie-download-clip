@@ -1,9 +1,11 @@
 import { Controller, Get, Query, UseFilters } from '@nestjs/common';
 import { FiltersQueryDto } from './dto/filters-query.dto';
 import { MovieInfoService } from './movie-info.service';
-import type { TFiltersResponse } from './dto/filters-response.dto';
 import { InfoSwagger } from './info.swagger';
 import { HttpExceptionFilter } from 'src/shared/errors/http-exception.filter';
+import { SelectedFiltersDto } from './dto/filter-selected.dto';
+import type { TFiltersResponse } from './dto/filters-response.dto';
+import type { TFiltersSelectedResponseDto } from './dto/filters-selected-response.dto';
 
 @Controller('v1/yt-movie')
 @UseFilters(HttpExceptionFilter)
@@ -15,6 +17,13 @@ class MovieInfoController {
   @InfoSwagger.YtFilters
   async getFilters(@Query() query: FiltersQueryDto): Promise<TFiltersResponse> {
     return this.movieInfoService.getFormats({ ...query });
+  }
+
+  @Get('selected-filters')
+  async getCurrentFilters(
+    @Query() query: SelectedFiltersDto,
+  ): Promise<TFiltersSelectedResponseDto> {
+    return this.movieInfoService.getSelectedFormats({ ...query });
   }
 }
 export { MovieInfoController };
