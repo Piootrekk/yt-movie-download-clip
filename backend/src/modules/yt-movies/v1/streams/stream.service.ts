@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { YtdlCoreService } from 'src/core/download-manager/ytdl-core.service';
 import { FfmpegService } from 'src/core/edit-manager/ffmpeg.service';
 import { FsService } from 'src/core/file-manager/fs.service';
@@ -70,6 +70,12 @@ class StreamService {
     start,
     duration,
   }: TMergeByFiltersBodyDto) {
+    if (audioFilters.container !== videoFilters.container) {
+      throw new HttpException(
+        `Cannot merge audio type (${audioFilters.container}) with video (${videoFilters.container}). Use matching container formats.`,
+        422,
+      );
+    }
     const videoStream = this.ytdlCoreService.createStream(
       url,
       videoFilters,

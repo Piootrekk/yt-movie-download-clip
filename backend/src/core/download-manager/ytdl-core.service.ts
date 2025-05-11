@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { ClientEnum } from './declare-types/ytdl-core.enum';
+import { ClientEnum } from './types/ytdl-core.enum';
 import ytdl from '@distube/ytdl-core';
 import { Readable } from 'stream';
 import type { videoFormat } from '@distube/ytdl-core';
@@ -29,6 +29,7 @@ class YtdlCoreService {
         if (format.hasAudio && format.hasVideo) both.push(format);
         else if (format.hasAudio) audio.push(format);
         else if (format.hasVideo) video.push(format);
+        else throw new Error('Smth went wrong in formats categorization');
       }
     }
     return { audio, video, both };

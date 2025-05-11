@@ -73,7 +73,7 @@ class FfmpegService {
       .videoCodec('copy')
       .input(audioFilePath)
       .seekInput(startTimeInSec)
-      .audioCodec('aac')
+      .audioCodec('copy')
       .format(format)
       .duration(durationTimeInSec)
       .outputOptions(this.outputOptions.streamable);

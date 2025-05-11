@@ -20,6 +20,7 @@ class MovieInfoController {
   }
 
   @Get('selected-filters')
+  @InfoSwagger.YtSelectedFilters
   async getCurrentFilters(
     @Query() query: SelectedFiltersDto,
   ): Promise<TFiltersSelectedResponseDto> {

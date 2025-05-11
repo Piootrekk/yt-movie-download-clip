@@ -5,7 +5,7 @@ import {
 } from './filters-response.dto';
 import { videoFormat } from '@distube/ytdl-core';
 import { Type } from 'class-transformer';
-import { IsArray } from 'class-validator';
+import { IsArray, IsOptional } from 'class-validator';
 
 class FiltersSelectedResponseDto {
   @ApiProperty({
@@ -13,6 +13,7 @@ class FiltersSelectedResponseDto {
     isArray: true,
   })
   @IsArray()
+  @IsOptional({ each: true })
   @Type(() => PartialType(BaseFilterContainerDto))
   audio: Partial<BaseFilterContainerDto>[];
 
@@ -21,6 +22,7 @@ class FiltersSelectedResponseDto {
     isArray: true,
   })
   @IsArray()
+  @IsOptional({ each: true })
   @Type(() => PartialType(FiltersVideoDto))
   video: Partial<FiltersVideoDto>[];
 
@@ -29,6 +31,7 @@ class FiltersSelectedResponseDto {
     isArray: true,
   })
   @IsArray()
+  @IsOptional({ each: true })
   @Type(() => PartialType(BaseFilterContainerDto))
   both: Partial<BaseFilterContainerDto>[];
 }
