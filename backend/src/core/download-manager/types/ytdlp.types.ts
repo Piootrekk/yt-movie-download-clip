@@ -22,4 +22,11 @@ type TYtDlpFormat = {
   video_ext: string;
 };
 
-export type { TYtdlpInfo, TYtDlpFormat };
+type TFormatsGroup = {
+  audio: TYtDlpFormat[];
+  video: TYtDlpFormat[];
+  both: TYtDlpFormat[];
+  empty: TYtDlpFormat[];
+};
+
+export type { TYtdlpInfo, TYtDlpFormat, TFormatsGroup };

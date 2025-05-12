@@ -29,7 +29,6 @@ class YtdlCoreService {
         if (format.hasAudio && format.hasVideo) both.push(format);
         else if (format.hasAudio) audio.push(format);
         else if (format.hasVideo) video.push(format);
-        else throw new Error('Smth went wrong in formats categorization');
       }
     }
     return { audio, video, both };
