@@ -25,7 +25,7 @@ class YtdlpService {
     clients?: ClientEnum[],
   ): Promise<TFormatsGroup> {
     const args = ['-J', url, '--skip-download'];
-    if (clients) {
+    if (clients && clients.length > 0) {
       const clientArgs = clients.join(',');
       args.push(`-extractor-args youtube:client=${clientArgs}`);
     }
@@ -59,7 +59,7 @@ class YtdlpService {
 
   createStreamById(url: string, id: string, clients?: ClientEnum[]): Readable {
     const args = ['-f', id, url, '-o', '-'];
-    if (clients) {
+    if (clients && clients.length > 0) {
       const clientArgs = clients.join(',');
       args.push(`-extractor-args youtube:client=${clientArgs}`);
     }
@@ -81,7 +81,6 @@ class YtdlpService {
     const audio: TYtDlpFormat[] = [];
     const video: TYtDlpFormat[] = [];
     const both: TYtDlpFormat[] = [];
-    const empty: TYtDlpFormat[] = [];
     const seenFormats = new Map<string, boolean>();
 
     for (const format of formats) {
@@ -93,10 +92,10 @@ class YtdlpService {
         else if (format.audio_ext !== 'none') audio.push(format);
         else if (format.video_ext !== 'none') video.push(format);
         else if (format.video_ext === 'none' && format.audio_ext === 'none')
-          empty.push(format);
+          both.push(format);
       }
     }
-    return { audio, video, both, empty };
+    return { audio, video, both };
   }
 }
 

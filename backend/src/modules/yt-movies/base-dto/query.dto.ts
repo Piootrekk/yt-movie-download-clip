@@ -5,7 +5,7 @@ import {
   IsArray,
   IsEnum,
   IsOptional,
-  IsString,
+  IsUrl,
 } from 'class-validator';
 import { ClientEnum } from 'src/core/download-manager/types/ytdl-core.enum';
 
@@ -24,7 +24,7 @@ class BaseQueryDto {
   @ApiProperty({
     type: String,
   })
-  @IsString()
+  @IsUrl()
   url: string;
 
   @ApiProperty({ enum: ClientEnum, isArray: true, required: false })

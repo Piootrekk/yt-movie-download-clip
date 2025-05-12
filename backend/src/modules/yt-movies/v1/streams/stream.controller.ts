@@ -27,11 +27,11 @@ class MovieStreamController {
   async getStreamById(
     @Query() query: StreamByItagQueryDto,
   ): Promise<StreamableFile> {
-    const container = this.streamService.getContainer({ ...query });
-    const stream = this.streamService.getStreamById({ ...query });
+    const promiseContainer = this.streamService.getContainer({ ...query });
+    const promiseStream = this.streamService.getStreamById({ ...query });
     const [containerResolved, streamResolved] = await Promise.all([
-      container,
-      stream,
+      promiseContainer,
+      promiseStream,
     ]);
     const header = handleStreamHeader('video', containerResolved);
     return new StreamableFile(streamResolved, header);

@@ -26,7 +26,6 @@ type TFormatsGroup = {
   audio: TYtDlpFormat[];
   video: TYtDlpFormat[];
   both: TYtDlpFormat[];
-  empty: TYtDlpFormat[];
 };
 
 export type { TYtdlpInfo, TYtDlpFormat, TFormatsGroup };

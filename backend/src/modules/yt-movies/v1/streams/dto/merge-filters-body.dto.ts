@@ -1,13 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsNumber,
-  IsObject,
-  IsOptional,
-  IsString,
-  IsUrl,
-} from 'class-validator';
+import { IsNumber, IsObject, IsOptional, IsUrl } from 'class-validator';
 import { videoFormat } from '@distube/ytdl-core';
-import { TrimmedBaseBodyDto } from './trimmed-filters-body.dto';
+import { TrimmedBaseBodyDto } from 'src/modules/yt-movies/base-dto/trimmed-filters-body.dto';
 
 class MergeByFiltersBodyDto extends TrimmedBaseBodyDto {
   @ApiProperty({
