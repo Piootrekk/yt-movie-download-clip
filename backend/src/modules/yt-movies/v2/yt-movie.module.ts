@@ -6,11 +6,12 @@ import { MovieInfoController } from './movie-info/movie-info.controller';
 import { MovieStreamController } from './streams/stream.controller';
 import { MovieInfoService } from './movie-info/movie-info.service';
 import { StreamService } from './streams/stream.service';
+import { MovieInfoMapper } from './movie-info/movie-info.mapper';
 
 @Module({
   controllers: [MovieInfoController, MovieStreamController],
   imports: [DownloadModule, FileModule, EditModule],
-  providers: [MovieInfoService, StreamService],
+  providers: [MovieInfoService, MovieInfoMapper, StreamService],
 })
 class YtMoviesV2Module {}
 

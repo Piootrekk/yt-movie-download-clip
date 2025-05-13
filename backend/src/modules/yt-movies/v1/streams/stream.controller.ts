@@ -33,7 +33,10 @@ class MovieStreamController {
       promiseContainer,
       promiseStream,
     ]);
-    const header = handleStreamHeader('video', containerResolved);
+    const header = handleStreamHeader({
+      fileName: 'video',
+      container: containerResolved,
+    });
     return new StreamableFile(streamResolved, header);
   }
 
@@ -42,7 +45,10 @@ class MovieStreamController {
   async setStreamByFilters(
     @Body() body: AllByFiltersBodyDto,
   ): Promise<StreamableFile> {
-    const header = handleStreamHeader('video', body.filters.container);
+    const header = handleStreamHeader({
+      fileName: 'video',
+      container: body.filters.container,
+    });
     const stream = this.streamService.streamVideo({ ...body });
     return new StreamableFile(stream, header);
   }
@@ -52,7 +58,10 @@ class MovieStreamController {
   async setStreamTrimmed(
     @Body() body: TrimmedFiltersBodyDto,
   ): Promise<StreamableFile> {
-    const header = handleStreamHeader('video', body.filters.container);
+    const header = handleStreamHeader({
+      fileName: 'video',
+      container: body.filters.container,
+    });
     const stream = this.streamService.trimVideo({ ...body });
     return new StreamableFile(stream, header);
   }
@@ -62,7 +71,10 @@ class MovieStreamController {
   async setStreamMerged(
     @Body() body: MergeByFiltersBodyDto,
   ): Promise<StreamableFile> {
-    const header = handleStreamHeader('video', body.videoFilters.container);
+    const header = handleStreamHeader({
+      fileName: 'video',
+      container: body.videoFilters.container,
+    });
     const stream = await this.streamService.mergeVideo({ ...body });
     return new StreamableFile(stream, header);
   }

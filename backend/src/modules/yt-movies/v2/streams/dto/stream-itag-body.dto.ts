@@ -1,14 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsObject } from 'class-validator';
-import { TYtDlpFormat } from 'src/core/download-manager/types/ytdlp.types';
 import { BaseQueryDto } from 'src/modules/yt-movies/base-dto/query.dto';
+import { TFiltersItemDto } from '../../movie-info/dto/filters-response.dto';
 
 class StreamByItagBodyDto extends BaseQueryDto {
   @ApiProperty({
     type: Object,
   })
   @IsObject()
-  filters: TYtDlpFormat;
+  filters: TFiltersItemDto;
 }
 
 type TStreamByItagBody = InstanceType<typeof StreamByItagBodyDto>;

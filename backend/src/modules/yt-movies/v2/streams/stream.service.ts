@@ -1,11 +1,11 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { YtdlpService } from 'src/core/download-manager/ytdlp.service';
-import { TStreamByItagQuery } from './dto/stream-itag-body.dto';
-import { TTrimmedBodyDto } from './dto/trimmed-stream.dto';
 import { FfmpegService } from 'src/core/edit-manager/ffmpeg.service';
 import { TMergedBodyDto } from './dto/merged-stream.dto';
-import { TStreamFile } from 'src/core/file-manager/file.types';
 import { FsService } from 'src/core/file-manager/fs.service';
+import type { TStreamFile } from 'src/core/file-manager/file.types';
+import type { TStreamByItagQuery } from './dto/stream-itag-body.dto';
+import type { TTrimmedBodyDto } from './dto/trimmed-stream.dto';
 
 @Injectable()
 class StreamService {
@@ -16,7 +16,7 @@ class StreamService {
   ) {}
 
   getStream({ url, filters, clients }: TStreamByItagQuery) {
-    return this.ytdlpService.createStreamById(url, filters.format_id, clients);
+    return this.ytdlpService.createStreamById(url, filters.itag, clients);
   }
 
   getTrimmedStream({
@@ -28,14 +28,14 @@ class StreamService {
   }: TTrimmedBodyDto) {
     const stream = this.ytdlpService.createStreamById(
       url,
-      filters.format_id,
+      filters.itag,
       clients,
     );
     const trimmedStream = this.ffmpegService.trimVideoToStream(
       stream,
       start,
       duration,
-      filters.ext,
+      filters.container,
     );
     return trimmedStream;
   }
@@ -48,31 +48,31 @@ class StreamService {
     videoFilters,
     audioFilters,
   }: TMergedBodyDto) {
-    if (videoFilters.ext !== audioFilters.ext) {
+    if (videoFilters.container !== audioFilters.container) {
       throw new HttpException(
-        `Cannot merge audio type (${audioFilters.ext}) with video (${videoFilters.ext}). Use matching container formats.`,
+        `Cannot merge audio type (${audioFilters.container}) with video (${videoFilters.container}). Use matching container formats.`,
         422,
       );
     }
     const videoStream = this.ytdlpService.createStreamById(
       url,
-      videoFilters.format_id,
+      videoFilters.itag,
       clients,
     );
     const audioStream = this.ytdlpService.createStreamById(
       url,
-      audioFilters.format_id,
+      audioFilters.itag,
       clients,
     );
     const fileStreams = [
       {
         fileName: 'videoTemp',
-        extension: videoFilters.ext,
+        extension: videoFilters.itag,
         stream: videoStream,
       },
       {
         fileName: 'audioTemp',
-        extension: audioFilters.ext,
+        extension: audioFilters.itag,
         stream: audioStream,
       },
     ] as const satisfies TStreamFile[];
@@ -84,7 +84,7 @@ class StreamService {
         fileHandlers.audioTemp,
         start,
         duration,
-        videoFilters.ext || audioFilters.ext,
+        videoFilters.container || audioFilters.container,
       );
       return mergedStream;
     } finally {

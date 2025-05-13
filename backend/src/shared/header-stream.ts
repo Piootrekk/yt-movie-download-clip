@@ -1,16 +1,19 @@
-type THeadersStream = { type: string; disposition: string };
+type THeadersStream = { type?: string; disposition: string };
+type THeaderArgs = {
+  fileName?: string;
+  container?: string;
+  type?: string;
+};
 
-const handleStreamHeader = (
-  fileName?: string,
-  container?: string,
-  type?: string,
-): THeadersStream => {
-  const sanitizedContaier = container || 'mp4';
+const handleStreamHeader = ({
+  fileName,
+  container,
+  type,
+}: THeaderArgs): THeadersStream => {
   const sanitizedType = type || 'video';
-  const sanitizedName =
-    fileName || `${sanitizedType}-${Date.now()}.${sanitizedContaier}`;
+  const sanitizedName = fileName || `${sanitizedType}-${Date.now()}`;
   return {
-    type: `${sanitizedType}/${sanitizedContaier}`,
+    type: container ? `${sanitizedType}/${container}` : undefined,
     disposition: `attachment; filename="${sanitizedName}"`,
   };
 };

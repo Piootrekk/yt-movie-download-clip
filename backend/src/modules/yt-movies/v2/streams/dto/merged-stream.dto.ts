@@ -1,21 +1,21 @@
 import { ApiProperty, IntersectionType } from '@nestjs/swagger';
 import { IsObject } from 'class-validator';
-import { TYtDlpFormat } from 'src/core/download-manager/types/ytdlp.types';
 import { BaseQueryDto } from 'src/modules/yt-movies/base-dto/query.dto';
 import { TrimmedBaseBodyDto } from 'src/modules/yt-movies/base-dto/trimmed-filters-body.dto';
+import { TFiltersItemDto } from '../../movie-info/dto/filters-response.dto';
 
 class MergedBodyDto extends IntersectionType(BaseQueryDto, TrimmedBaseBodyDto) {
   @ApiProperty({
     type: Object,
   })
   @IsObject()
-  videoFilters: TYtDlpFormat;
+  videoFilters: TFiltersItemDto;
 
   @ApiProperty({
     type: Object,
   })
   @IsObject()
-  audioFilters: TYtDlpFormat;
+  audioFilters: TFiltersItemDto;
 }
 
 type TMergedBodyDto = InstanceType<typeof MergedBodyDto>;

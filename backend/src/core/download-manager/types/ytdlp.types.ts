@@ -12,9 +12,9 @@ type TYtDlpFormat = {
   acodec: string;
   vcodec: string;
   url: string;
-  width: number;
-  height: number;
-  fps: number;
+  width?: number;
+  height?: number;
+  fps?: number;
   rows: number;
   columns: number;
   fragmets: Record<string, string>[];
