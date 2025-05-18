@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsArray, IsString } from 'class-validator';
 import { BaseQueryDto } from 'src/modules/yt-movies/base-dto/query.dto';
+import { TPrettify } from 'src/shared/types/prettify';
 
 class SelectedFiltersDto extends BaseQueryDto {
   @ApiProperty({
@@ -14,7 +15,7 @@ class SelectedFiltersDto extends BaseQueryDto {
   selected: string[];
 }
 
-type TSelectedFiltersDto = InstanceType<typeof SelectedFiltersDto>;
+type TSelectedFiltersDto = TPrettify<InstanceType<typeof SelectedFiltersDto>>;
 
 export { SelectedFiltersDto };
 

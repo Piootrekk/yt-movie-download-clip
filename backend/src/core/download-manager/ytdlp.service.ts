@@ -35,11 +35,11 @@ class YtdlpService {
       let stdout = '';
       let stderr = '';
 
-      childProcess.stdout.on('data', (data) => {
+      childProcess.stdout.on('data', (data: string) => {
         stdout += data.toString();
       });
 
-      childProcess.stderr.on('data', (data) => {
+      childProcess.stderr.on('data', (data: string) => {
         stderr += data.toString();
       });
       childProcess.on('close', (code) => {
@@ -50,7 +50,7 @@ class YtdlpService {
             ),
           );
 
-        const result: TYtdlpInfo = JSON.parse(stdout);
+        const result = JSON.parse(stdout) as TYtdlpInfo;
         const categorizedFormats = this.categorizeFormats(result.formats);
         resolve(categorizedFormats);
       });
@@ -66,7 +66,7 @@ class YtdlpService {
     let stderr = '';
 
     const subProcess = spawn(this.ytdlpCommand, args);
-    subProcess.stderr.on('data', (data) => {
+    subProcess.stderr.on('data', (data: string) => {
       stderr += data.toString();
     });
     subProcess.on('close', (code) => {

@@ -42,9 +42,7 @@ class MovieStreamController {
 
   @Post('all')
   @StreamSwagger.streamAll
-  async setStreamByFilters(
-    @Body() body: AllByFiltersBodyDto,
-  ): Promise<StreamableFile> {
+  setStreamByFilters(@Body() body: AllByFiltersBodyDto): StreamableFile {
     const header = handleStreamHeader({
       fileName: 'video',
       container: body.filters.container,
@@ -55,9 +53,7 @@ class MovieStreamController {
 
   @Post('trim')
   @StreamSwagger.streamTrimmed
-  async setStreamTrimmed(
-    @Body() body: TrimmedFiltersBodyDto,
-  ): Promise<StreamableFile> {
+  setStreamTrimmed(@Body() body: TrimmedFiltersBodyDto): StreamableFile {
     const header = handleStreamHeader({
       fileName: 'video',
       container: body.filters.container,

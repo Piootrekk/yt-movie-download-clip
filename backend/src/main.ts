@@ -29,4 +29,8 @@ const bootstrap = async () => {
   });
   await app.listen(port, '0.0.0.0');
 };
-bootstrap();
+
+bootstrap().catch((err) => {
+  console.error('Bootstrap failed:', err);
+  process.exit(1);
+});
