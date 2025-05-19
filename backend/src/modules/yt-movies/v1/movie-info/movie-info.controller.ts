@@ -1,4 +1,10 @@
-import { Controller, Get, Query, UseFilters } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Query,
+  UseFilters,
+  UseInterceptors,
+} from '@nestjs/common';
 import { FiltersQueryDto } from './dto/filters-query.dto';
 import { MovieInfoService } from './movie-info.service';
 import { InfoSwagger } from './info.swagger';
@@ -6,10 +12,12 @@ import { HttpExceptionFilter } from 'src/shared/errors/http-exception.filter';
 import { SelectedFiltersDto } from './dto/filter-selected.dto';
 import type { TFiltersResponse } from './dto/filters-response.dto';
 import type { TFiltersSelectedResponseDto } from './dto/filters-selected-response.dto';
+import { MeasureTimeInterceptor } from 'src/shared/measures/measure-time.interceptor';
 
 @Controller('v1/yt-movie')
 @UseFilters(HttpExceptionFilter)
 @InfoSwagger.YtApiTag
+@UseInterceptors(MeasureTimeInterceptor)
 class MovieInfoController {
   constructor(private movieInfoService: MovieInfoService) {}
 

@@ -1,0 +1,67 @@
+name: Movies downlaoder
+on:
+  push:
+    branches:
+      - "master"
+
+jobs:
+  changes-detect:
+    name: Detect changes in monorepo
+    runs-on: ubuntu-latest
+    outputs:
+      backend: ${{ steps.filter.outputs.backend }}
+      front: ${{ steps.filter.outputs.front }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Filters Changes
+        uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            backend:
+              - 'backend/**'
+            front:
+              - 'front/**'
+
+  backend-job:
+    name: Backend CI Job
+    needs: changes-detect
+    if: needs.changes-detect.outputs.backend
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Install dependencies
+        run: npm install
+      - name: Build the app
+        run: npm run build
+      - name: Lint the code
+        run: npm run lint
+        # test and prettier added soon
+  frontend-job:
+    name: Frontend CI Job
+    needs: changes-detect
+    if: needs.changes-detect.outputs.front
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: front
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Install dependencies
+        run: npm install
+      - name: Build the app
+        run: npm run build
+      - name: Lint the code
+        run: npm run lint
+        # test and prettier added soon

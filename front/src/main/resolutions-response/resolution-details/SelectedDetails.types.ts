@@ -1,5 +1,5 @@
 type TItemWithIcon = {
-  icon: React.ComponentType<any>;
+  icon: React.ComponentType<unknown>;
   title: string;
   value: string | number;
 };
