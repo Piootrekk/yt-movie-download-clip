@@ -14,6 +14,7 @@ import type {
   TVideoDetails,
   TAudioDetails,
 } from "./SelectedDetails.types";
+import { IconProps } from "../../../common/icon/generic-icon.types";
 
 type SelectedDetailsProps = {
   video?: TVideoDetails;
@@ -36,7 +37,7 @@ const SelectedDetails = ({ video, audio, both }: SelectedDetailsProps) => {
   const videoBitrate = video?.bitrate;
   const audioBitrate = audio?.bitrate;
 
-  const basicDetails: TItemWithIcon[] = [
+  const basicDetails: TItemWithIcon<IconProps>[] = [
     {
       title: "Resolution",
       value: width && height ? `${width}X${height}` : NOT_SPECIFIED,
