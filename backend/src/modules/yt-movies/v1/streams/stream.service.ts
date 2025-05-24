@@ -103,21 +103,21 @@ class StreamService {
     const fileHandlers =
       await this.fsService.createBulkFilesFromStreams(fileStreams);
 
-    try {
-      const mergedStream = this.ffmpegService.mergedAudioVideoToStream(
-        fileHandlers.videoTemp,
-        fileHandlers.audioTemp,
-        start,
-        duration,
-        videoFilters.container,
-      );
-      return mergedStream;
-    } finally {
-      await this.fsService.cleanUpFiles(
-        fileHandlers.audioTemp,
-        fileHandlers.videoTemp,
-      );
-    }
+    const mergedStream = this.ffmpegService.mergedAudioVideoToStream(
+      fileHandlers.videoTemp,
+      fileHandlers.audioTemp,
+      start,
+      duration,
+      videoFilters.container,
+    );
+    mergedStream.on('close', () => {
+      this.fsService
+        .cleanUpFiles(fileHandlers.audioTemp, fileHandlers.videoTemp)
+        .catch(() => {
+          throw new HttpException('Error during files cleanup', 500);
+        });
+    });
+    return mergedStream;
   }
 }
 

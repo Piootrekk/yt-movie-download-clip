@@ -4,8 +4,6 @@ import {
   Query,
   UseFilters,
   UseInterceptors,
-  UsePipes,
-  ValidationPipe,
 } from '@nestjs/common';
 import { FiltersQueryDto } from './dto/filters-query.dto';
 import { MovieInfoService } from './movie-info.service';

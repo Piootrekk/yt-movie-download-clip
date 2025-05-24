@@ -12,6 +12,10 @@ import type { videoFormat } from '@distube/ytdl-core';
 
 @Injectable()
 class YtdlCoreService {
+  validateURL(url: string) {
+    return ytdl.validateURL(url);
+  }
+
   async getFormats(url: string, clients?: ClientEnum[]) {
     const { formats } = await ytdl.getInfo(url, { playerClients: clients });
     const seenFormats = new Map<string, boolean>();

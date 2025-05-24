@@ -1,4 +1,4 @@
-type TItemWithIcon<T = {}> = {
+type TItemWithIcon<T> = {
   icon: React.ComponentType<T>;
   title: string;
   value: string | number;

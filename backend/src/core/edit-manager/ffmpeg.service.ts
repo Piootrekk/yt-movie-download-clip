@@ -52,9 +52,6 @@ class FfmpegService {
         console.error('FFmpeg error:', err.message);
         inputStream.destroy(err);
         throw new Error(err.message);
-      })
-      .on('end', () => {
-        console.log('Trimming finished.');
       });
     return passThrough;
   }
@@ -78,11 +75,8 @@ class FfmpegService {
       .duration(durationTimeInSec)
       .outputOptions(this.outputOptions.streamable);
     command.pipe(passThrough, { end: true });
-    passThrough
-      .on('start', (cmd) => console.log('FFmpeg command:', cmd))
-      .on('end', () => {
-        console.log('Trimming finished.');
-      });
+    passThrough.on('start', (cmd) => console.log('FFmpeg command:', cmd));
+
     return passThrough;
   }
 }
