@@ -1,5 +1,5 @@
 import Button from "../../../common/components/button/Button";
-import DownloadIcon from "../../../common/icon/DownloadIcon";
+import FetchIcon from "../../../common/icon/FetchIcon";
 import streamStyle from "./StreamForm.module.css";
 
 type StreamFormProps = {
@@ -56,7 +56,7 @@ const StreamForm = ({ audio, video, both }: StreamFormProps) => {
     <div className={streamStyle.submitContainer}>
       <NoteDisplayer notes={notes} />
       <Button className={streamStyle.button} disabled={isDisabled}>
-        <DownloadIcon size={24} />
+        <FetchIcon size={24} />
         <span>Fetch Stream</span>
       </Button>
     </div>

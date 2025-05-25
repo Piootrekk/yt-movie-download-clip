@@ -1,0 +1,19 @@
+name: E2e tests on dispatch
+on: [workflow_dispatch]
+jobs:
+  e2e-backend:
+    name: Test e2e for backend
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Install dependencies
+        run: npm install
+      - name: Run e2e tests
+        run: npm run test:e2e

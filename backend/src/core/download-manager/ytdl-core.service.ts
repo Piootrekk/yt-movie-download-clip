@@ -3,6 +3,7 @@ import { ClientEnum } from './types/ytdl-core.enum';
 import ytdl from '@distube/ytdl-core';
 import { Readable } from 'stream';
 import type { videoFormat } from '@distube/ytdl-core';
+import { TFilters } from './types/ytdlp.types';
 
 /**
  * Service that utilizes the {@link https://github.com/distubejs/ytdl-core | @distube/ytdl-core} package.
@@ -19,10 +20,11 @@ class YtdlCoreService {
   async getFormats(url: string, clients?: ClientEnum[]) {
     const { formats } = await ytdl.getInfo(url, { playerClients: clients });
     const seenFormats = new Map<string, boolean>();
-    const audio: videoFormat[] = [];
-    const video: videoFormat[] = [];
-    const both: videoFormat[] = [];
-
+    const sortedFormats: TFilters = {
+      video: [],
+      audio: [],
+      both: [],
+    };
     for (const format of formats) {
       const key = format.audioTrack
         ? `${format.itag}-${format.audioTrack.displayName}`
@@ -30,12 +32,12 @@ class YtdlCoreService {
 
       if (!seenFormats.has(key)) {
         seenFormats.set(key, true);
-        if (format.hasAudio && format.hasVideo) both.push(format);
-        else if (format.hasAudio) audio.push(format);
-        else if (format.hasVideo) video.push(format);
+        if (format.hasAudio && format.hasVideo) sortedFormats.both.push(format);
+        else if (format.hasAudio) sortedFormats.audio.push(format);
+        else if (format.hasVideo) sortedFormats.video.push(format);
       }
     }
-    return { audio, video, both };
+    return sortedFormats;
   }
 
   async getFormatByItag(

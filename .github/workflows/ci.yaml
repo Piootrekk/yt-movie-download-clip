@@ -43,7 +43,7 @@ jobs:
         run: npm run build
       - name: Lint the code
         run: npm run lint
-        # test and prettier added soon
+        # units tests and prettier added soon
   frontend-job:
     name: Frontend CI Job
     needs: changes-detect
@@ -64,4 +64,4 @@ jobs:
         run: npm run build
       - name: Lint the code
         run: npm run lint
-        # test and prettier added soon
+        # prettier added soon

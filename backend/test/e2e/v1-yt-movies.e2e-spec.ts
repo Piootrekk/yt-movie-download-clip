@@ -1,39 +1,21 @@
-import {
-  NestFastifyApplication,
-  FastifyAdapter,
-} from '@nestjs/platform-fastify';
-import { Test, TestingModule } from '@nestjs/testing';
+import { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { YtMoviesV1Module } from '../../src/modules/yt-movies/v1/yt-movie.module';
 import {
   FILTERS_TIMEOUT,
+  selectedItagMergeMock,
   STREAM_TIMEOUT,
   ytMoviesInfoMocks,
   ytSteamAllMock,
-  ytStreamMergedMock,
   ytStreamTrimmedMock,
 } from './yt-movies.mock';
-import { ValidationPipe } from '@nestjs/common';
+import { createTestApp } from './utils/bootstrap-app.utils';
+import { injectFilters } from './utils/inject-formats.utils';
 
 describe('V1 Movies Module (e2e)', () => {
   let app: NestFastifyApplication;
 
   beforeAll(async () => {
-    const moduleRef: TestingModule = await Test.createTestingModule({
-      imports: [YtMoviesV1Module],
-    }).compile();
-
-    app = moduleRef.createNestApplication<NestFastifyApplication>(
-      new FastifyAdapter(),
-    );
-    app.enableCors();
-    app.useGlobalPipes(
-      new ValidationPipe({
-        transform: true,
-        whitelist: true,
-      }),
-    );
-    await app.init();
-    await app.getHttpAdapter().getInstance().ready();
+    app = await createTestApp(YtMoviesV1Module);
   });
   afterAll(async () => {
     await app.close();
@@ -126,10 +108,14 @@ describe('V1 Movies Module (e2e)', () => {
     it(
       'stream video all (POST),',
       async () => {
+        const filters = await injectFilters(app);
         const result = await app.inject({
           method: 'POST',
           url: '/yt-movie/v1/stream/all',
-          payload: ytSteamAllMock,
+          payload: {
+            ...ytSteamAllMock,
+            filters: filters.both[0],
+          },
         });
         expect(result.statusCode).toBe(201);
         const buffer = result.rawPayload;
@@ -141,10 +127,14 @@ describe('V1 Movies Module (e2e)', () => {
     it(
       'stream video trimmed (POST),',
       async () => {
+        const filters = await injectFilters(app);
         const result = await app.inject({
           method: 'POST',
           url: '/yt-movie/v1/stream/trim',
-          payload: ytStreamTrimmedMock,
+          payload: {
+            ...ytStreamTrimmedMock,
+            filters: filters.both[0],
+          },
         });
         expect(result.statusCode).toBe(201);
         const buffer = result.rawPayload;
@@ -156,10 +146,19 @@ describe('V1 Movies Module (e2e)', () => {
     it(
       'stream video merge (POST),',
       async () => {
+        const filters = await injectFilters(app);
         const result = await app.inject({
           method: 'POST',
           url: '/yt-movie/v1/stream/merge',
-          payload: ytStreamMergedMock,
+          payload: {
+            ...ytStreamTrimmedMock,
+            videoFilters: filters.video.find(
+              (video) => video.itag === selectedItagMergeMock.videoItag,
+            ),
+            audioFilters: filters.audio.find(
+              (audio) => audio.itag === selectedItagMergeMock.audioItag,
+            ),
+          },
         });
         expect(result.statusCode).toBe(201);
         const buffer = result.rawPayload;

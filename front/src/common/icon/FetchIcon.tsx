@@ -4,7 +4,7 @@ import { IconProps } from "./generic-icon.types";
 
 import iconStyles from "./Icon.module.css";
 
-const DownloadIcon = ({ size, width, height, className }: IconProps) => {
+const FetchIcon = ({ size, width, height, className }: IconProps) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -25,4 +25,4 @@ const DownloadIcon = ({ size, width, height, className }: IconProps) => {
   );
 };
 
-export default DownloadIcon;
+export default FetchIcon;

@@ -1,3 +1,5 @@
+import { videoFormat } from '@distube/ytdl-core';
+
 type TYtdlpInfo = {
   id: string;
   title: string;
@@ -22,10 +24,16 @@ type TYtDlpFormat = {
   video_ext: string;
 };
 
-type TFormatsGroup = {
+type TFiltersGroup = {
   audio: TYtDlpFormat[];
   video: TYtDlpFormat[];
   both: TYtDlpFormat[];
 };
 
-export type { TYtdlpInfo, TYtDlpFormat, TFormatsGroup };
+type TFilters = {
+  audio: videoFormat[];
+  video: videoFormat[];
+  both: videoFormat[];
+};
+
+export type { TYtdlpInfo, TYtDlpFormat, TFiltersGroup, TFilters };

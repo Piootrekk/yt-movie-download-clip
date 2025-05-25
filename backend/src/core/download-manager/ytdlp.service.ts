@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ClientEnum } from './types/ytdl-core.enum';
 import { spawn } from 'child_process';
 import type {
-  TFormatsGroup,
+  TFiltersGroup,
   TYtDlpFormat,
   TYtdlpInfo,
 } from './types/ytdlp.types';
@@ -23,7 +23,7 @@ class YtdlpService {
   async getFormats(
     url: string,
     clients?: ClientEnum[],
-  ): Promise<TFormatsGroup> {
+  ): Promise<TFiltersGroup> {
     const args = ['-J', url, '--skip-download'];
     if (clients && clients.length > 0) {
       const clientArgs = clients.join(',');
@@ -77,7 +77,7 @@ class YtdlpService {
     return subProcess.stdout;
   }
 
-  private categorizeFormats(formats: TYtDlpFormat[]): TFormatsGroup {
+  private categorizeFormats(formats: TYtDlpFormat[]): TFiltersGroup {
     const audio: TYtDlpFormat[] = [];
     const video: TYtDlpFormat[] = [];
     const both: TYtDlpFormat[] = [];
